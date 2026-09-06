@@ -1,0 +1,76 @@
+/* ============================================================================
+ * EFG HOLDING — SUSTAINABILITY REPORT 2025 · DESIGN TOKENS
+ * ============================================================================
+ * Every colour below was measured off the print PDF itself, not read from a
+ * screenshot: the page was rendered at 200 dpi and sampled, and the values
+ * cross-checked against the vector fills pdfplumber reports for the same
+ * objects. The @page note records which printed page each one came from.
+ *
+ * RULE: never hard-code a colour, size or spacing in a component. If a value is
+ * missing, add it here first — with its @page reference.
+ * ========================================================================== */
+
+:root {
+  /* ---- 1. COLOUR ------------------------------------------------------- */
+  --sr-ink:          #414042;  /* body copy                        @page 20 */
+  --sr-ink-green:    #2A5A48;  /* body copy set in green           @page 21 */
+  --sr-black:        #231F20;  /* running head, folios, labels     @page 20 */
+  --sr-white:        #ffffff;
+
+  --sr-green-deep:   #124734;  /* H1, section dividers, menu icon  @page 20 */
+  --sr-green:        #015937;  /* section + sub-section headings   @page 21 */
+  --sr-olive:        #949300;  /* bar segment, goal bullets        @page 21 */
+  --sr-lime:         #B1C04E;  /* the pull-quote panel             @page 60 */
+  --sr-bar-ink:      #F0F0E6;  /* type reversed out of a bar       @page 21 */
+  --sr-cream:        #F0F0E5;  /* headings reversed out of green   @page 2  */
+
+  /* The GOALS panel is drawn at 40% opacity over white — both values are the
+   * literal fill and stroke from the file, with that alpha applied. @page 21 */
+  --sr-panel-fill:   rgba(220, 227, 225, .4);
+  --sr-panel-line:   rgba(148, 147, 0, .4);
+
+  /* The caption band that sits inside the bottom of a picture tile — the deep
+   * green at 86% over the photograph. Sampled across the band on p. 45: the
+   * photo shows through by 10–15 points of each channel, which is what gives
+   * these tiles their depth. */
+  --sr-band:         rgba(18, 71, 52, .86);
+
+  --sr-rule:         rgba(35, 31, 32, .28);   /* the 0.5pt running rule      */
+  --sr-hairline:     rgba(35, 31, 32, .12);
+  --sr-wash:         #F4F6F5;                 /* panels on white             */
+
+  /* ---- 2. TYPE ---------------------------------------------------------- */
+  /* ABC Normal (Dinamo). Three weights are used in the report: Book for page
+   * furniture, Regular for body, Bold for every heading. See fonts.css for the
+   * licence position — these files were lifted from the report PDF. */
+  --sr-sans: "ABC Normal", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --sr-book: "ABC Normal Book", var(--sr-sans);
+
+  /* Print sets body at 10/13pt. That is a print measure; on screen the same
+   * copy needs 15.5–17.5px and looser leading to read at arm's length. */
+  --sr-size-body:    clamp(15.5px, 1.15vw, 17.5px);
+  --sr-lh-body:      1.65;
+  --sr-size-lead:    clamp(17px, 1.35vw, 20px);
+  --sr-lh-lead:      1.55;
+
+  --sr-size-h1:      clamp(34px, 6.2vw, 64px);   /* print 35pt      @page 20 */
+  --sr-size-h2:      clamp(21px, 2.6vw, 30px);   /* print 20pt      @page 21 */
+  --sr-size-h3:      clamp(18px, 2vw, 23px);     /* print 16pt      @page 21 */
+  --sr-size-h4:      clamp(16px, 1.55vw, 19.5px);/* print 16pt      @page 49 */
+  --sr-size-small:   clamp(12px, 1vw, 14px);     /* print 9pt       @page 20 */
+  --sr-size-micro:   12px;                       /* print 7pt       @page 21 */
+
+  /* ---- 3. LAYOUT -------------------------------------------------------- */
+  --sr-measure:      1240px;   /* the content column                        */
+  --sr-gutter:       clamp(20px, 5vw, 64px);
+  --sr-prose:        76ch;     /* the reading measure for running prose     */
+  --sr-gap:          clamp(40px, 6vw, 76px);   /* between sections          */
+  --sr-gap-sm:       clamp(20px, 2.6vw, 32px);
+
+  /* ---- 4. RADIUS -------------------------------------------------------- */
+  /* The report uses exactly one, measured off the GOALS panel.     @page 21 */
+  --sr-radius: 9px;
+
+  /* ---- 5. HEADER -------------------------------------------------------- */
+  --sr-header-h: clamp(58px, 6vw, 76px);
+}

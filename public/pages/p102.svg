@@ -1,0 +1,42 @@
+<svg preserveAspectRatio="xMidYMid meet" class="pgsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" width="595.275" height="277.000" viewBox="0 282.000 595.275 277.000">
+<defs>
+<clipPath id="p102_clip_1">
+<path transform="matrix(1,0,0,-1,0,841.89)" d="M0 0H595.275V841.89H0Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="p102_clip_2">
+<path transform="matrix(1,0,0,-1,0,841.89)" d="M0 0H1190.551V841.89H0Z"/>
+</clipPath>
+<clipPath id="p102_clip_3">
+<path transform="matrix(1,0,0,-1,0,841.89)" d="M595.275 35.434H986.45608V324.56599H595.275Z"/>
+</clipPath>
+<clipPath id="p102_clip_4">
+<path transform="matrix(1,0,0,-1,0,841.89)" d="M180.609 294.854H414.66603V547.03506H180.609Z"/>
+</clipPath>
+<clipPath id="p102_clip_6">
+<path transform="matrix(1,0,0,-1,0,841.89)" d="M0 0H1190.55V841.89H0Z"/>
+</clipPath>
+</defs>
+<g clip-path="url(#p102_clip_1)">
+<path transform="matrix(1,0,0,-1,0,841.89)" d="M595.275 0H1190.551V841.89H595.275Z" fill="#124734"/>
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 0 841.89)" font-size="41.415" font-family="ABCNormal-Book"><tspan y="-570.0143" x="734.1732 759.2707 780.2681 806.4424 831.9126 857.13436 887.6572 917.7659 939.13607 967.9609 993.1826">STAKEHOLDER</tspan></text>
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 0 841.89)" font-size="41.415" font-family="ABCNormal-Bold" font-weight="bold"><tspan y="-533.7762" x="734.1732 759.06369 790.4148 821.0619 848.8928 879.70559 904.596 942.6978 967.58828 998.9394">ENGAGEMENT</tspan></text>
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 0 841.89)" font-size="21.7429" font-family="ABCNormal-Book"><tspan y="-639.0668" x="734.1732 747.6538 760.67788 775.4631 787.8565 793.53146 809.3385 825.4065 830.777 843.7575 849.43246 863.1957">SECTION FIVE</tspan></text>
+<g clip-path="url(#p102_clip_2)">
+
+</g>
+<g clip-path="url(#p102_clip_3)">
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 0 841.89)" font-size="280" font-family="ABCNormal-Book"><tspan y="-70.532" x="527.2441 707.0041">05</tspan></text>
+</g>
+<g clip-path="url(#p102_clip_4)">
+<g transform="matrix(.517825,0,0,.517825,180.09166,294.33705)">
+<image id="p102_image_5" width="454" height="489" xlink:href="ART/a8f80f5513b46.webp"/>
+</g>
+</g>
+
+
+<g clip-path="url(#p102_clip_6)">
+
+
+</g>
+</g>
+</svg>

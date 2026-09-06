@@ -1,0 +1,64 @@
+/* ============================================================================
+ * THE PRINTED PAGES
+ * ============================================================================
+ * The pages carry their own type, colour and geometry, so there is almost
+ * nothing to style here — only how a stack of A4 pages sits in a window.
+ *
+ * THE STACK IS THE HEADER'S COLUMN. `.sheets` takes the same 1240px measure
+ * and the same gutter as `.wrap`, so a page's left edge lands under the EFG
+ * lockup and its right edge under the last nav link. That also means the page
+ * is drawn larger than A4 — 1,112px against the printed 794 at full width, a
+ * touch over 140% — which is what makes the type comfortable on a screen.
+ *
+ * NO SHADOW, NO GROUND. The site is white and the pages are white; a page is
+ * marked by nothing but the space around it.
+ * ========================================================================== */
+
+.sheets {
+  width: 100%;
+  max-width: var(--sr-measure);
+  margin-inline: auto;
+  /* THE GAP IS THE ONLY SEPARATOR LEFT, and it is a web gap. Each page is now
+     cut to its own ink — 12pt of white above the first mark and below the last,
+     and no more (see the trim note in tools/build-pages.py) — so the space
+     between one page's last line and the next page's first is this rule plus
+     24pt of the print's own white. That is a paragraph's worth of air, not a
+     page break's: the report reads as one continuous column, which on a screen
+     is what it is. */
+  padding: clamp(8px, 1vw, 14px) var(--sr-gutter) clamp(24px, 3vw, 44px);
+  display: grid;
+  justify-items: center;
+  gap: clamp(10px, 1.1vw, 16px);
+}
+
+.pg { width: 100%; background: var(--sr-white); }
+/* A page is one or more windows of its drawing, stacked flush: the 12pt of
+   white each window keeps at a cut is the whole separation, because the cut is
+   inside a page, not between two of them. */
+.pg-win { display: block; width: 100%; }
+.pg svg, .pgsvg { display: block; width: 100%; height: auto; }
+
+/* Holds a window's own shape while it is still out of view, so the scrollbar is
+   honest and nothing jumps when it arrives. The ratio is set per window from
+   src/data/page-size.js: pages are no longer all A4-shaped, and an A4 placeholder
+   in front of one two fifths that height makes the stack jump on load. */
+.pg-win:empty { aspect-ratio: var(--win-ratio, 595.275 / 841.89); }
+
+/* Printing the site should print the pages, nothing else. */
+@media print {
+  .sheets { display: block; max-width: none; gap: 0; padding: 0; }
+  .pg { break-after: page; }
+}
+
+/* Entries on a printed page that a reader will try to click — the contents,
+   above all. The page is an SVG of the page, so its lines are text rather than
+   links; these put the links back on top, at the coordinates the PDF gives
+   them. See src/data/page-links.js. */
+.pg { position: relative; }
+.pg-links a {
+  position: absolute; display: block; border-radius: 2px;
+  transition: background-color .15s;
+}
+.pg-links a:hover { background: rgba(255, 255, 255, .13); }
+.pg-links a:focus-visible { outline: 2px solid var(--sr-olive); outline-offset: 2px; }
+@media print { .pg-links { display: none; } }

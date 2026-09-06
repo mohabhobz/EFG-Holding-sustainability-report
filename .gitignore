@@ -1,0 +1,9 @@
+node_modules
+dist
+
+# macOS
+.DS_Store
+
+# working files this project accumulates locally
+_to_delete/
+*.tar.gz

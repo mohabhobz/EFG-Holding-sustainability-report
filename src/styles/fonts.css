@@ -1,0 +1,71 @@
+/* ============================================================================
+ * TYPEFACE — ABC Normal (Dinamo Typefaces)
+ * ============================================================================
+ * ⚠ LICENCE. These .woff2 files were extracted from the Sustainability Report
+ * PDF, which was produced under a DESKTOP licence. Serving a font from a
+ * website is a separate purchase from Dinamo (licensing@abcdinamo.com), and
+ * that purchase has not been made. Until it is, this build is for internal
+ * review only — do not put it on a public domain.
+ *
+ * ⚠ THEY ARE SUBSETS. Only the glyphs the report itself uses are present —
+ * 92 in Regular, 84 in Bold, 73 in Book. That covers every character in this
+ * document (verified: zero missing glyphs across all eleven routes) but it will
+ * not cover text nobody has written yet. Any new copy must be re-checked, and
+ * the licensed full families dropped in here the day they arrive.
+ *
+ * Three faces, declared separately. A single @font-face with a weight RANGE
+ * would tell the browser the file already covers those weights, so it would
+ * neither pick a bolder file nor synthesise one — every bold in the report
+ * would silently render at Regular.
+ * ========================================================================== */
+
+@font-face {
+  font-family: 'ABC Normal';
+  src: url('../assets/fonts/ABCNormal-Regular.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'ABC Normal';
+  src: url('../assets/fonts/ABCNormal-Semibold.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'ABC Normal';
+  src: url('../assets/fonts/ABCNormal-Bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'ABC Normal Book';
+  src: url('../assets/fonts/ABCNormal-Book.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+/* ----------------------------------------------------------------------------
+ * THE NAMES THE PDF ITSELF USES
+ *
+ * The pages are inlined as the PDF's own SVG, and every <text> in it asks for
+ * the font by the name it carries inside the file — ABCNormal-Regular, not
+ * "ABC Normal" 400. These four aliases point those names at the same files, so
+ * the printed pages set in the real face instead of falling back to a system
+ * sans and losing every line break the layout depends on.
+ * -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'ABCNormal-Regular';
+  src: url('../assets/fonts/ABCNormal-Regular.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: 'ABCNormal-Book';
+  src: url('../assets/fonts/ABCNormal-Book.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: 'ABCNormal-Semibold';
+  src: url('../assets/fonts/ABCNormal-Semibold.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: 'ABCNormal-Bold';
+  src: url('../assets/fonts/ABCNormal-Bold.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: block;
+}

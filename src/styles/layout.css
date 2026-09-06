@@ -1,0 +1,141 @@
+/* ============================================================================
+ * SHELL — header, contents overlay, section divider, prev/next, footer
+ * ========================================================================== */
+
+.wrap {
+  width: 100%;
+  max-width: var(--sr-measure);
+  margin-inline: auto;
+  padding-inline: var(--sr-gutter);
+}
+
+/* ---- Header ---------------------------------------------------------------
+ * White, sticky, with the report's own hairline rule under it — the same
+ * 0.5pt rule that runs across the top of every printed spread. The links are
+ * the five numbered sections; everything else lives behind Contents.
+ * -------------------------------------------------------------------------- */
+.hdr {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--sr-white);
+  border-bottom: 1px solid var(--sr-rule);
+}
+.hdr-in {
+  display: flex; align-items: center; gap: clamp(12px, 1.8vw, 26px);
+  height: var(--sr-header-h);
+}
+.hdr-brand {
+  flex: none; display: flex; align-items: center;
+  color: var(--sr-green-deep);
+}
+/* The lockup is one piece — the square mark and the wordmark stay together at
+   every width; the artwork is the annual report's own file. */
+.logo { display: block; }
+.logo svg { display: block; height: clamp(19px, 1.7vw, 24px); width: auto; }
+.hdr-brand:hover { opacity: .75; }
+.hdr-brand { transition: opacity .2s; }
+
+.hdr-nav { flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.hdr-nav ul { display: flex; align-items: center; justify-content: flex-end; gap: clamp(9px, 1.35vw, 20px); }
+.hdr-nav a {
+  display: block; white-space: nowrap; text-decoration: none;
+  font-size: clamp(12.5px, 1.02vw, 14.5px); line-height: 1.2;
+  color: var(--sr-ink); padding-block: 4px;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.hdr-nav a:hover { color: var(--sr-green); }
+.hdr-nav a[aria-current='page'] { color: var(--sr-green); border-bottom-color: var(--sr-olive); }
+
+/* ---- The Contents control ---------------------------------------------------
+ * The annual report's menu icon, to the number: a 44 × 44 button — the minimum
+ * comfortable touch target — holding a 24px-wide glyph of three 2px bars, 5px
+ * apart, drawn in currentColor. The AR's sits on artwork so its colour is
+ * white; ours sits on the white header, so it takes the report's deep green.
+ * The 44px box is pulled 8px into the gutter, as the AR pulls its own, so the
+ * target is generous without the glyph sitting off the measure.
+ *
+ * IT IS THERE AT EVERY WIDTH, and that is a correction. The bar carries the
+ * five NUMBERED sections; the other six entries — the foreword, the CEO's
+ * note, the abbreviations, the closing statement, the appendix, the contents
+ * itself — live only in this overlay. Hiding the control above 1100px, which
+ * is what the annual report does with its menu, left those six with no link at
+ * all on a desktop: reachable only by stepping through with the arrows. They
+ * were fine on a phone, where the control shows. So it stays.
+ * -------------------------------------------------------------------------- */
+.hdr-btn {
+  display: flex; flex: none; margin-left: auto;
+  /* pulled by exactly the glyph's own padding (44 − 24) ÷ 2, so the BARS line
+     up with the right edge of the page below, not the 44px touch box */
+  margin-right: -10px;
+  width: 44px; height: 44px; align-items: center; justify-content: center;
+  color: var(--sr-green-deep); transition: opacity .2s;
+}
+.hdr-btn:hover { opacity: .75; }
+.hdr-btn .glyph { display: flex; flex-direction: column; gap: 5px; width: 24px; }
+.hdr-btn .glyph i { display: block; height: 2px; width: 100%; background: currentColor; }
+
+/* The five labels need about 700px of row and the bar has 1,112px at the
+   design width, so they and the control sit together. Below 1100px they do not
+   fit, and the control carries the whole index on its own. */
+@media (max-width: 1099px) {
+  .hdr-nav { display: none; }
+}
+
+/* ---- Contents overlay ------------------------------------------------------
+ * The printed contents page, at full height: deep green ground, the title in
+ * cream, every entry as a name. The printed folios are deliberately not shown —
+ * a web page has no page 44. -------------------------------------------------- */
+.ix { position: fixed; inset: 0; z-index: 50; overflow-y: auto; background: var(--sr-green-deep); animation: ix-in 200ms ease-out; }
+.ix[hidden] { display: none; }
+@keyframes ix-in { from { opacity: 0 } to { opacity: 1 } }
+.ix-in {
+  width: 100%; max-width: var(--sr-measure); margin-inline: auto;
+  /* The foot is trimmed on a wide screen so the eleven rows clear the fold —
+     a contents list you have to scroll to finish is a contents list that has
+     stopped doing its job. */
+  padding: 22px var(--sr-gutter) clamp(24px, 3vw, 40px);
+}
+.ix-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.ix-top h2 {
+  font-size: clamp(30px, 3.3vw, 46px); line-height: 1.06; font-weight: 700;
+  letter-spacing: .02em; text-transform: uppercase; color: var(--sr-cream);
+}
+.ix-top p { margin-top: 12px; max-width: 46ch; color: rgba(255,255,255,.72); font-size: var(--sr-size-small); line-height: 1.5; }
+.ix-close { padding: 8px; margin: -8px -8px 0 0; color: var(--sr-cream); transition: opacity .2s; }
+.ix-close:hover { opacity: .7; }
+
+/* THE LIST IS SIZED TO THE PANEL, NOT TO A FIXED MEASURE.
+ * It was set at the phone's type size in a panel three times the width, which
+ * left eleven small rows stranded in the top-left corner of a large dark
+ * field. Name and row both scale with the viewport now, so the list reads the
+ * same on a desktop as it does on a phone: eleven generous rows filling the
+ * screen. The measure is capped so the rows do not become a stretched ribbon
+ * on a very wide monitor. */
+.ix-list { margin-top: clamp(20px, 1.7vw, 26px); max-width: min(900px, 100%); }
+.ix-list a {
+  /* Sized by the SHORTER of the two axes, so a wide but short window gets a
+     tighter row rather than a list that runs off the fold. */
+  display: block; padding-block: clamp(9px, min(0.95vw, 1.35vh), 14px);
+  text-decoration: none; color: var(--sr-white);
+  transition: opacity .2s;
+}
+.ix-list a:hover { opacity: .72; }
+
+/* NO RULE BETWEEN THE ROWS. There was a hairline under every entry, and with
+   eleven of them the panel read as a table of eleven cells rather than a list
+   of eleven places to go. The space between rows already separates them; the
+   only line left in the list is the one that means something — the olive mark
+   under the entry you are on. */
+
+/* inline-block, not block: that mark is a rule under the current entry's name,
+   and it should be the width of the words. A full-row rule would read as a
+   divider rather than as a selection. */
+.ix-name {
+  display: inline-block; line-height: 1.45;
+  font-size: clamp(16px, min(1.55vw, 2.35vh), 23px);
+}
+.ix-list li.is-current .ix-name { box-shadow: inset 0 -2px 0 var(--sr-olive); }
+
+/* The section divider, prev/next and footer rules that used to live here went
+   with the components they styled. The site is the header and the printed
+   pages; nothing else is drawn. */

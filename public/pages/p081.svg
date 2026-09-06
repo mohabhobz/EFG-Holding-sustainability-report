@@ -1,0 +1,46 @@
+<svg preserveAspectRatio="xMidYMid meet" class="pgsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" width="595.275" height="841.890" viewBox="0 0.000 595.275 841.890">
+<defs>
+<clipPath id="p081_clip_1">
+<path transform="matrix(1,0,0,-1,-595.275,841.89)" d="M595.275 0H1190.55V841.89H595.275Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="p081_clip_2">
+<path transform="matrix(1,0,0,-1,-595.275,841.89)" d="M595.275 36H892.913V293.937H595.275Z"/>
+</clipPath>
+<mask id="p081_mask_3">
+<g transform="matrix(.64737686,0,0,.64737686,-396.3622,293.9396)">
+<image id="p081_image_4" width="305" height="385" xlink:href="ART/a0d485cf305ca.webp"/>
+</g>
+</mask>
+<clipPath id="p081_clip_6">
+<path transform="matrix(1,0,0,-1,-595.275,841.89)" d="M0 0H1190.551V841.89H0Z"/>
+</clipPath>
+<clipPath id="p081_clip_7">
+<path transform="matrix(1,0,0,-1,-595.275,841.89)" d="M0 0H1190.55V841.89H0Z"/>
+</clipPath>
+</defs>
+<g>
+<g clip-path="url(#p081_clip_1)">
+<path transform="matrix(1,0,0,-1,-595.275,841.89)" d="M595.275 0H1190.551V841.89H595.275Z" fill="#124734"/>
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 -595.275 841.89)" font-size="41.415" font-family="ABCNormal-Book"><tspan y="-570.0143" x="734.1732 764.15768 793.64517 819.86087 845.0826 872.16799 902.7737 928.94796 959.55368 988.50277">GOVERNANCE</tspan></text>
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 -595.275 841.89)" font-size="41.415" font-family="ABCNormal-Bold" font-weight="bold"><tspan y="-533.7762" x="734.1732 762.66677 771.61239 796.5028 822.0973 853.61416 865.6245 894.65646 921.4105">&#x0026; ETHICS </tspan></text>
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 -595.275 841.89)" font-size="21.7429" font-family="ABCNormal-Book"><tspan y="-639.0668" x="734.1732 747.6538 760.67788 775.4631 787.8565 793.53146 809.3385 825.4065 830.777 843.6053 859.41238 875.17599">SECTION FOUR</tspan></text>
+<g clip-path="url(#p081_clip_2)">
+<text fill="#f0f0e5" xml:space="preserve" transform="matrix(1 0 -0 1 -595.275 841.89)" font-size="280" font-family="ABCNormal-Book"><tspan y="-70.5281" x="527.2441 707.0041">04</tspan></text>
+</g>
+<g mask="url(#p081_mask_3)">
+<g transform="matrix(.64737686,0,0,.64737686,-396.3622,293.9396)">
+<image id="p081_image_5" width="305" height="385" xlink:href="ART/a697c809949a4.webp"/>
+</g>
+</g>
+<g clip-path="url(#p081_clip_6)">
+
+</g>
+
+
+<g clip-path="url(#p081_clip_7)">
+
+
+</g>
+</g>
+</g>
+</svg>
