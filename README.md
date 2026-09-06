@@ -234,6 +234,50 @@ the stack. `src/components/SectionCover.jsx` — the SR-cover-style section
 opener — is in the tree, unused, waiting on the section artwork; passing
 `cover="<slug>"` to `Spread` brings it back.
 
+**Under 900px the page is read rather than shown.** This is the one place the
+site does not draw the printed page, and it is forced. A page draws 1,112px wide
+on a desktop, so the report's 10pt body text renders at 18.7px and reads the way
+it reads on paper. On a 390px phone the same page draws 350px — a scale of 0.588
+— and that text renders at **5.9px**. There is no arrangement of an A4 sheet
+that is legible on a phone: the sheet is wider than the screen at any readable
+size. Splitting the pages into their columns does not rescue it either — the
+report is set to a wide single measure, and 76 % of its ink sits in blocks
+wider than 520pt.
+
+So below 900px each page is replaced by its own reading, built from the page
+itself by `tools/build-mobile.py` into `public/mobile/mNNN.json` and rendered by
+`src/components/MobilePage.jsx`. Two kinds of thing come out of a page:
+
+| | |
+|---|---|
+| **text** | the page's own words, at the page's own sizes, weights and colours, set in one column. The scale is multiplied by 1.6, so the body lands at 16px |
+| **art** | a rectangle of the page — a photograph, a chart, a diagram, a table — drawn from the PDF's own SVG, full width, untouched |
+
+A coloured panel with prose in it becomes a card in the panel's own colour, so
+the page's structure survives the reading. Reading order is the order an
+[XY-cut](https://en.wikipedia.org/wiki/Recursive_X-Y_cut) reads the page in —
+split on the blank rows, then on the blank columns inside each row — which for
+this report is the order a person reads it.
+
+**Nothing is rewritten.** Not a word changes, nothing is reordered, no heading
+is invented and no colour is chosen: every string, size, weight and colour is
+lifted from the PDF. **76 % of the report's 180,000 characters** are read this
+way; the rest is on pages that are wholly graphic, and those stay pictures. Two
+things necessarily differ, and only two: a line breaks where 350px makes it
+break rather than where 495pt did, and the type is 1.6× the printed size.
+
+**Anything that is not plainly prose stays a picture** — a photograph, a filled
+panel, a chart, a table, a block set in columns the cut could not separate, a
+block with almost no text in it. Nothing the designer composed is re-composed by
+a heuristic.
+
+A run of the builder reports what it found: 129 pages, 367 text blocks, 173 art
+blocks, 218 KB of JSON in total — about 1.7 KB a page, fetched only when the
+page comes near.
+
+**The desktop is untouched by all of this.** At 900px and up the site still
+draws the printed pages, and the switch is a single `matchMedia` in `Spread.jsx`.
+
 **A pair of arrows steps through the report.** `src/components/PageNav.jsx` is
 the AR's own `layout/PageNav.jsx` (Figma Frame 1403, drawn identically on all
 44 of its frames) in plain CSS: fixed 40px in from the right and up from the

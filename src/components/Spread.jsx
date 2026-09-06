@@ -22,6 +22,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import SectionCover from './SectionCover';
+import MobilePage from './MobilePage';
 import { pageLinks } from '../data/page-links';
 import { pageSize } from '../data/page-size';
 
@@ -125,14 +126,43 @@ function Page({ number, eager }) {
   );
 }
 
+/* BELOW 900px THE PAGE IS READ RATHER THAN SHOWN.
+ * A printed page draws 1,112px wide on a desktop, where its 10pt body text
+ * renders at 18.7px; on a 390px phone the same page draws 350px and that text
+ * renders at 5.9px. No arrangement of an A4 sheet is legible on a phone, so
+ * under 900px each page is replaced by its own reading — the page's own words,
+ * sizes, weights, colours and order, set in one column, with everything that is
+ * not prose still drawn as the printed artwork. See MobilePage.jsx.
+ *
+ * 900px is where the sheet stops being legible: the page draws ~860px there,
+ * which puts the body at 14.4px, and every step down from it is worse. */
+const NARROW = '(max-width: 899px)';
+
+function useNarrow() {
+  const [narrow, setNarrow] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(NARROW).matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(NARROW);
+    const on = (e) => setNarrow(e.matches);
+    mq.addEventListener('change', on);
+    setNarrow(mq.matches);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return narrow;
+}
+
 /* `cover` is a section slug. The print opens each numbered section on a
  * two-page divider spread; those two pages are out of `pages`, and this stands
  * in their place — see src/components/SectionCover.jsx. */
 export default function Spread({ pages, title, cover }) {
+  const narrow = useNarrow();
   return (
-    <article className="sheets" aria-label={title}>
+    <article className={narrow ? 'sheets is-read' : 'sheets'} aria-label={title}>
       {cover && <SectionCover slug={cover} />}
-      {pages.map((n, i) => <Page key={n} number={n} eager={i < (cover ? 1 : 2)} />)}
+      {pages.map((n, i) => (narrow
+        ? <MobilePage key={n} number={n} eager={i < (cover ? 1 : 2)} />
+        : <Page key={n} number={n} eager={i < (cover ? 1 : 2)} />))}
     </article>
   );
 }

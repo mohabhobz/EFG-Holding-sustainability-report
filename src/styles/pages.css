@@ -27,6 +27,10 @@
      is what it is. */
   padding: clamp(8px, 1vw, 14px) var(--sr-gutter) clamp(24px, 3vw, 44px);
   display: grid;
+  /* minmax(0, 1fr), not the default auto: a grid column sized to its content
+     takes the widest thing in it, and one drawing with an intrinsic width wider
+     than the screen would drag the whole column out with it. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: clamp(10px, 1.1vw, 16px);
 }
@@ -62,3 +66,47 @@
 .pg-links a:hover { background: rgba(255, 255, 255, .13); }
 .pg-links a:focus-visible { outline: 2px solid var(--sr-olive); outline-offset: 2px; }
 @media print { .pg-links { display: none; } }
+
+/* ============================================================================
+ * THE PHONE'S READING
+ * ============================================================================
+ * Under 900px a printed page is replaced by its own reading: the page's words
+ * at the page's sizes, in one column, with everything that is not prose still
+ * drawn as the printed artwork. See src/components/MobilePage.jsx and
+ * tools/build-mobile.py. Nothing here styles the report — the size, weight and
+ * colour of every line come from the PDF and arrive inline. This only sets the
+ * measure, the leading and the space between things.
+ * ========================================================================== */
+.sheets.is-read { gap: clamp(26px, 7vw, 40px); padding-inline: 0; }
+
+.mb { width: 100%; min-width: 0; padding-inline: 20px; }
+.mb-art, .mb-card, .mb-p { max-width: 100%; }
+.mb-p {
+  margin: 0 0 .72em;
+  line-height: 1.55;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+/* A heading is the print's, so it is known by its size, not by a tag: anything
+   over 19px is set tighter and given air above it. */
+.mb-p[style*="font-size: 2"], .mb-p[style*="font-size: 3"] { line-height: 1.18; margin-top: .5em; }
+.mb-p strong { font-weight: 700; }
+.mb-bullet { padding-left: 1.1em; position: relative; }
+.mb-bullet::before {
+  content: '▶'; position: absolute; left: 0; top: .08em;
+  font-size: .62em; color: var(--sr-olive);
+}
+
+/* A coloured panel in the print stays a coloured panel here. */
+.mb-card {
+  margin: 0 0 1em; padding: 18px 18px 8px; border-radius: 2px;
+}
+.mb-card .mb-card { margin-inline: -6px; }
+
+/* Artwork keeps the page's own drawing, full width. */
+.mb-art { margin: 0 0 1em; }
+.mb-art svg { display: block; width: 100%; height: auto; }
+.mb-hold { width: 100%; background: rgba(0,0,0,.03); }
+.mb-page-hold { aspect-ratio: 3 / 4; }
+
+@media print { .sheets.is-read { display: none; } }
