@@ -5,5 +5,8 @@ dist
 .DS_Store
 
 # working files this project accumulates locally
+_source
 _to_delete/
+__pycache__/
+*.tgz
 *.tar.gz

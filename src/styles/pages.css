@@ -1,14 +1,15 @@
 /* ============================================================================
- * THE PRINTED PAGES
+ * THE STACK OF PAGES
  * ============================================================================
- * The pages carry their own type, colour and geometry, so there is almost
- * nothing to style here — only how a stack of A4 pages sits in a window.
+ * Every page carries its own type, colour and geometry inside `.rp` — see
+ * report.css — so there is almost nothing to style here: only how a stack of
+ * sheets sits in the window.
  *
- * THE STACK IS THE HEADER'S COLUMN. `.sheets` takes the same 1240px measure
- * and the same gutter as `.wrap`, so a page's left edge lands under the EFG
- * lockup and its right edge under the last nav link. That also means the page
- * is drawn larger than A4 — 1,112px against the printed 794 at full width, a
- * touch over 140% — which is what makes the type comfortable on a screen.
+ * THE STACK IS THE HEADER'S COLUMN. `.sheets` takes the same measure and the
+ * same gutter as `.wrap`, so a page's left edge lands under the EFG lockup and
+ * its right edge under the last nav link. That also means the page is drawn
+ * larger than A4 — 1,112px against the printed 794 at full width, a touch over
+ * 140% — which is what makes the type comfortable on a screen.
  *
  * NO SHADOW, NO GROUND. The site is white and the pages are white; a page is
  * marked by nothing but the space around it.
@@ -18,95 +19,25 @@
   width: 100%;
   max-width: var(--sr-measure);
   margin-inline: auto;
-  /* THE GAP IS THE ONLY SEPARATOR LEFT, and it is a web gap. Each page is now
-     cut to its own ink — 12pt of white above the first mark and below the last,
-     and no more (see the trim note in tools/build-pages.py) — so the space
-     between one page's last line and the next page's first is this rule plus
-     24pt of the print's own white. That is a paragraph's worth of air, not a
-     page break's: the report reads as one continuous column, which on a screen
-     is what it is. */
   padding: clamp(8px, 1vw, 14px) var(--sr-gutter) clamp(24px, 3vw, 44px);
   display: grid;
   /* minmax(0, 1fr), not the default auto: a grid column sized to its content
-     takes the widest thing in it, and one drawing with an intrinsic width wider
-     than the screen would drag the whole column out with it. */
+     takes the widest thing in it, and one table or drawing with an intrinsic
+     width wider than the screen would drag the whole column out with it. */
   grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: clamp(10px, 1.1vw, 16px);
 }
 
-.pg { width: 100%; background: var(--sr-white); }
-/* A page is one or more windows of its drawing, stacked flush: the 12pt of
-   white each window keeps at a cut is the whole separation, because the cut is
-   inside a page, not between two of them. */
-.pg-win { display: block; width: 100%; }
-.pg svg, .pgsvg { display: block; width: 100%; height: auto; }
+/* The skeleton the Suspense boundary shows while a section loads. */
+.pg { position: relative; width: 100%; background: var(--sr-white); }
 
-/* Holds a window's own shape while it is still out of view, so the scrollbar is
-   honest and nothing jumps when it arrives. The ratio is set per window from
-   src/data/page-size.js: pages are no longer all A4-shaped, and an A4 placeholder
-   in front of one two fifths that height makes the stack jump on load. */
-.pg-win:empty { aspect-ratio: var(--win-ratio, 595.275 / 841.89); }
-
-/* Printing the site should print the pages, nothing else. */
-@media print {
-  .sheets { display: block; max-width: none; gap: 0; padding: 0; }
-  .pg { break-after: page; }
+/* `.pg-wait` holds one printed page's aspect — 595.28 × 841.89pt — so the
+   column does not jump when the real page lands, and breathes while it waits. */
+.pg-wait {
+  aspect-ratio: 595.275 / 841.89;
+  background: #f4f4f2;
+  animation: pg-breathe 1.6s ease-in-out infinite;
 }
-
-/* Entries on a printed page that a reader will try to click — the contents,
-   above all. The page is an SVG of the page, so its lines are text rather than
-   links; these put the links back on top, at the coordinates the PDF gives
-   them. See src/data/page-links.js. */
-.pg { position: relative; }
-.pg-links a {
-  position: absolute; display: block; border-radius: 2px;
-  transition: background-color .15s;
-}
-.pg-links a:hover { background: rgba(255, 255, 255, .13); }
-.pg-links a:focus-visible { outline: 2px solid var(--sr-olive); outline-offset: 2px; }
-@media print { .pg-links { display: none; } }
-
-/* ============================================================================
- * THE PHONE'S READING
- * ============================================================================
- * Under 900px a printed page is replaced by its own reading: the page's words
- * at the page's sizes, in one column, with everything that is not prose still
- * drawn as the printed artwork. See src/components/MobilePage.jsx and
- * tools/build-mobile.py. Nothing here styles the report — the size, weight and
- * colour of every line come from the PDF and arrive inline. This only sets the
- * measure, the leading and the space between things.
- * ========================================================================== */
-.sheets.is-read { gap: clamp(26px, 7vw, 40px); padding-inline: 0; }
-
-.mb { width: 100%; min-width: 0; padding-inline: 20px; }
-.mb-art, .mb-card, .mb-p { max-width: 100%; }
-.mb-p {
-  margin: 0 0 .72em;
-  line-height: 1.55;
-  text-wrap: pretty;
-  overflow-wrap: break-word;
-}
-/* A heading is the print's, so it is known by its size, not by a tag: anything
-   over 19px is set tighter and given air above it. */
-.mb-p[style*="font-size: 2"], .mb-p[style*="font-size: 3"] { line-height: 1.18; margin-top: .5em; }
-.mb-p strong { font-weight: 700; }
-.mb-bullet { padding-left: 1.1em; position: relative; }
-.mb-bullet::before {
-  content: '▶'; position: absolute; left: 0; top: .08em;
-  font-size: .62em; color: var(--sr-olive);
-}
-
-/* A coloured panel in the print stays a coloured panel here. */
-.mb-card {
-  margin: 0 0 1em; padding: 18px 18px 8px; border-radius: 2px;
-}
-.mb-card .mb-card { margin-inline: -6px; }
-
-/* Artwork keeps the page's own drawing, full width. */
-.mb-art { margin: 0 0 1em; }
-.mb-art svg { display: block; width: 100%; height: auto; }
-.mb-hold { width: 100%; background: rgba(0,0,0,.03); }
-.mb-page-hold { aspect-ratio: 3 / 4; }
-
-@media print { .sheets.is-read { display: none; } }
+@keyframes pg-breathe { 0%, 100% { opacity: .55; } 50% { opacity: .9; } }
+@media (prefers-reduced-motion: reduce) { .pg-wait { animation: none; } }

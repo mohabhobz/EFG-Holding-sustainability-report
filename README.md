@@ -1,9 +1,12 @@
 # EFG Holding — Sustainability Report 2025 · web
 
-**The printed report, as printed.** Every page on this site is the PDF's own
-page: the same text in the report's own typeface at the same coordinates, the
-same vector rules, panels and charts, the same photographs. Nothing is
-re-flowed, re-coloured or re-composed.
+**The printed report, as printed — but built as a web page, not photographed
+as one.** Every word on this site is a real word: an HTML element carrying the
+print's own typeface, size, weight, colour and tracking, at the PDF's own
+coordinates. It selects, copies, searches, translates, reads aloud and scales.
+Everything that is genuinely artwork — the photographs, the illustrations, the
+charts, the coloured panels, the rules — is the PDF's own drawing, untouched.
+Nothing is re-flowed, re-coloured or re-composed.
 
 Four things the web adds or takes away, and only four: the header, so a reader
 can jump between sections instead of scrolling 119 pages; the annual report's
@@ -29,89 +32,81 @@ Or double-click **`start-local.command`**. See `REVIEW.md`.
 
 ## How it works
 
-`tools/build-pages.py` reads the PDF and writes one SVG per printed page into
-`public/pages/`. PyMuPDF emits the page with its **text as text** — real
-`<text>` nodes carrying the font name, size, colour and per-glyph position out
-of the file — its vector art as paths, and its photographs as images. So the
-page is not a picture of the page; it is the page.
+**Two files per printed page.** `tools/build-pages.py` reads the PDF and writes,
+for each of the 129 printed pages:
 
-Three things the generator does beyond the straight conversion:
+| | |
+|---|---|
+| `public/art/aNNN.svg` | the page's vector art and photographs — illustrations, charts, coloured panels, rules — with **every piece of type taken out of it** |
+| `public/text/tNNN.json` | **every run of type on the page**: where it sits, how big it is, which face, which weight, which colour, and the width the print gives it |
+
+`src/components/PageRegion.jsx` draws a page as the artwork with the type laid
+over it at the PDF's own coordinates. Positions are percentages of the page box
+and type sizes are `cqw` — hundredths of the container's own width — so the page
+is the same page at 1,112px, at 340px and at every width between. Nothing is
+rasterised; nothing is re-laid-out.
+
+**Every word is a word.** 3,845 runs of real HTML text carrying the print's own
+face, size, weight, colour and tracking. It selects, copies, searches with
+⌘F, translates, reads aloud to a screen reader and reflows on a phone. What
+stays as artwork is what is genuinely artwork.
 
 **It splits the spreads.** The file is A3 spreads — one PDF page is two printed
-pages — so each half is cropped out and written separately as `p018.svg`,
-`p019.svg` and so on. The one exception is the cover, which is a single A4 page
-and is emitted whole. There is no printed page 1; the inside front cover is not
-in the file.
+pages — so the cropbox is set to each half in turn. The cover is the one
+exception: a single A4 page, emitted whole. There is no printed page 1.
 
-**It lifts the artwork out.** PyMuPDF writes every photograph into the SVG as
-base64, which is ~700 KB a spread and cannot be cached. They go to
-`public/pageart/` as WebP instead, deduplicated by content hash — 271 files for
-569 placements — and the SVG keeps a short token that `Spread.jsx` swaps for the
-real path.
+**It lifts the photographs out.** PyMuPDF writes every photograph into the SVG
+as base64. They are extracted to `public/pageart/` as WebP and deduplicated by
+content — 271 files for 569 placements — leaving the artwork 2.2 MB for the
+whole report instead of 40.
 
 **It namespaces every id.** Clip paths are file-local in a standalone SVG and
-document-global the moment several are inlined into one page, so each id is
-prefixed with its page (`p071_clip_3`).
+document-global once several are inlined into one page, so every id is prefixed
+with its page.
 
-## Why the pages are inlined, and fetched
+**Seven faces are not type.** Webdings for the arrow bullet in every GOALS
+panel, Bebas for two display lines, DM Sans, Helvetica Neue, two Arabic faces
+and Aptos — 48 runs. They are CID-keyed subsets with no character map, so no
+browser can set them, and they are marks rather than words. They are taken from
+the same page rendered with every glyph as an outline and left in the artwork.
 
-`Spread.jsx` fetches a page and injects it, rather than pointing an `<img>` at
-it, because an `<img>` gets its own document: the report's `@font-face` would
-not reach it, every line would set in a system sans, the layout's line breaks
-would go with it, and the text could not be selected, searched or read aloud.
+## The two things that make it exact
 
-They are fetched rather than imported because bundling them put 2.4 MB in the
-Environmental Stewardship chunk — twenty-eight pages to download before seeing
-the first. As files they arrive one at a time, when scrolled near, and the
-browser caches each one. A route chunk is now a list of page numbers, and the
-shell is 67 KB gzipped.
+**The baseline.** CSS cannot place a baseline, so a run is positioned as
+`baseline − factor × size`. The factor is where Chromium actually puts the
+baseline in a line box at `line-height: 1`, measured against the report's own
+woff2 files rather than assumed — 0.837 em for all four faces, written to
+`src/data/type-metrics.js`. Taking it from the PDF's own ascent and descent
+instead gives 0.9075 and puts every line three pixels high.
 
-A page enters the DOM only when it comes within 1,400px of the viewport; until
-then its slot holds the exact printed aspect ratio, so the scrollbar is honest
-and nothing jumps.
+**The tracking.** The report is justified: the PDF opens the word spaces to
+reach the measure, and a browser handed the same words in the same face at the
+same size sets them about 5 % narrower. `tools/measure-text.mjs` lays every run
+out in a headless Chromium at 1px per point, measures it, and writes back the
+word-spacing that makes it exactly the printed width — or, where the print has
+tracked a display line rather than justified it, a letter-spacing. **3,484 of
+3,845 runs carry a correction**, and after it the median error is 0 % and the
+worst 0.11 %.
 
-## Fidelity — checked, not asserted
+```bash
+python3 tools/build-pages.py     # artwork + type
+node    tools/measure-text.mjs   # the tracking, against the real face
+python3 tools/build-mobile.py    # the phone's reading
+```
 
-Every one of the 129 pages is rendered in a real browser and compared against
-the same page rendered from the PDF, at 2× print size.
+**Checked, not asserted.** Every one of the 124 page windows is rendered from
+the site at 1,112px and compared with the PDF rendered at the same size. After
+blurring both by 2px to take anti-aliasing out of it, the mean difference is
+**5.2 / 255**. Measured in the browser rather than in pixels, a run's baseline
+lands within **0.12pt** of the print's and its width within **0.2pt** — a fifth
+of a point on a 456pt line.
 
-| Section | Pages | Mean channel diff | Pixels differing |
-|---|---:|---:|---:|
-| Cover + Contents | 2 | 1.47 | 1.09 % |
-| Abbreviations | 1 | 1.40 | 1.79 % |
-| Chairperson's Foreword | 2 | 2.22 | 1.96 % |
-| A Note From Our CEO | 2 | 3.36 | 3.03 % |
-| 1 · Introduction | 10 | 1.86 | 2.44 % |
-| 2 · Environmental Stewardship | 28 | 2.91 | 4.11 % |
-| 3 · Social Investment | 34 | 3.16 | 4.31 % |
-| 4 · Governance & Ethics | 22 | 3.49 | 5.09 % |
-| 5 · Stakeholder Engagement | 25 | 3.01 | 3.57 % |
-| From Clarity to Impact | 1 | 2.97 | 4.77 % |
-| Appendix 1 | 2 | 1.85 | 2.85 % |
-| **All** | **129** | **2.96 / 255** | **3.97 %**, worst page 9.3 % |
-
-**What that residue is.** Blur both images by 2px — which removes glyph
-anti-aliasing and JPEG ringing while leaving any real difference of position,
-size or colour untouched — and the difference collapses to **0.041 % on
-average, 0.27 % at worst, no page above 1 %.** So nothing is displaced,
-recoloured, resized or missing: the residue is the browser's rasteriser
-disagreeing with the PDF's about the edge of a letter.
-
-Re-run it against a local build with `node tools/fidelity.mjs`.
-
-### The one thing that needed fixing
-
-Seven other typefaces appear in the file besides ABC Normal — Webdings for the
-arrow bullet in every GOALS panel, Bebas for two display lines, DM Sans,
-Helvetica Neue, two Arabic faces and Aptos. They are embedded as CID-keyed
-subsets with no character map, and for 58 of those glyphs the PDF carries no
-ToUnicode table either, so the conversion wrote U+FFFD and the page rendered a
-replacement box where the print has a triangle.
-
-The generator now takes those 100 runs, on 48 pages, from the same page
-rendered with every glyph as an outline, matching them to the text version by
-absolute origin — the two agree to a hundredth of a point. The 5,902 ABC Normal
-runs stay as text: selectable, searchable, set in the real face.
+The residue is glyph placement. The PDF positions every letter individually;
+a browser is given a run of words and spaces them itself, so a letter inside a
+line can sit a third of a point from where the print puts it. It is invisible at
+reading size — the two are indistinguishable side by side at 2× — and it is the
+price of the text being text. Matching it exactly would mean one element per
+letter, 100,000 of them, and text that could no longer be selected as words.
 
 ## What the web adds, and what it takes away
 
@@ -119,17 +114,14 @@ runs stay as text: selectable, searchable, set in the real face.
 belong to a bound document and to nothing else: the running head "Sustainability
 Report 2025", the 0.5pt rule under it, the deep-green three-bar square in the
 top corner — the print's own contents affordance, which the site's header
-already is — and the folio at the foot. The generator strips all four, 514
-objects across 126 pages, matching each on what it actually is rather than on
-where it roughly sits: the rule by its 0.5pt #231f20 stroke on baseline 45.888,
-the square by its path at 39.79193, the head and folio by being 9pt lines on
-baselines 41.9 and 819.9. The folio test is deliberately narrow — the footnote
-on pp. 40–41 sits at baseline 803 in 7pt, and a looser "anything near the foot"
-rule would have taken it with the page numbers.
-
-Verified: the body of every page still matches the PDF exactly. Comparing with
-the two furniture bands masked out, the difference after blurring away
-anti-aliasing is **0.009 % on average, 0.065 % at worst**.
+already is — and the folio at the foot. Two of them are type and are dropped
+from the text (189 runs); two are paths and are cut out of the artwork. Each is
+matched on what it actually is rather than on where it roughly sits: the rule by
+its 0.5pt #231f20 stroke on baseline 45.888, the square by its path at 39.79193,
+the head and folio by being 9pt runs on baselines 41.9 and 819.9. The folio test
+is deliberately narrow — the footnote on pp. 40–41 sits at baseline 803 in 7pt,
+and a looser "anything near the foot" rule would have taken it with the page
+numbers.
 
 **The white a bound book needs is gone: this is web content, not a stack of
 sheets.** A book has to give every leaf the same height and the same margins — a
@@ -150,8 +142,7 @@ white around each:
 | the foot | cut back to 12pt below the last |
 | a hole inside | any blank run over 60pt closed to 12pt each side |
 
-A hole is closed by drawing the page as two windows on the same file — `pNNN.svg`
-and `pNNN_2.svg` — stacked flush. Seven pages need it: the four section openers,
+A hole is closed by drawing the page as two windows of itself, stacked flush. Seven pages need it: the four section openers,
 where the paragraph and the illustration were half a screen apart, and pages 10,
 55 and the cover. What separates one page from the next is then the stack's own
 gap in `pages.css`, 10–16px: a paragraph's worth of air, not a page break's.
@@ -160,9 +151,9 @@ gap in `pages.css`, 10–16px: a paragraph's worth of air, not a page break's.
 scroll gone.** The Chairperson's foreword went from 3,165px to 1,657px, the
 CEO's note from 3,690px to 2,177px, Social Investment from 47,765px to 38,000px.
 
-**Nothing inside a page moves.** A window is the same SVG with its viewBox opened
-on a different slice, so every coordinate, every type size and the full width are
-the PDF's own — the fidelity figures above are unchanged. Only white goes, and
+**Nothing inside a page moves.** A window is the same page seen through a
+shorter box, so every coordinate, every type size and the full width are the
+PDF's own — the fidelity figures above are unchanged. Only white goes, and
 white is defined strictly: verified at 144dpi, **no discarded strip on any of the
 129 pages contains a single pixel darker than 254/255**.
 

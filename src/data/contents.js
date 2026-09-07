@@ -21,7 +21,7 @@ export const contents = [
   { eyebrow: 'Section 4', label: 'Governance & Ethics',           page: '78',  href: '/governance-ethics',           nav: true  },
   { eyebrow: 'Section 5', label: 'Stakeholder Engagement',        page: '100', href: '/stakeholder-engagement',      nav: true  },
   { eyebrow: '',          label: 'From Clarity to Impact',        page: '125', href: '/from-clarity-to-impact',      nav: false },
-  { eyebrow: '',          label: 'Appendix 1 – 2025 Carbon Emissions', page: '128', href: '/appendix-carbon',        nav: false },
+  { eyebrow: '',          label: 'Appendix 1 - 2025 Carbon Emissions', page: '128', href: '/appendix-carbon',        nav: false },
 ];
 
 /** What the header bar shows. */

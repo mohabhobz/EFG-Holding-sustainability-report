@@ -4,6 +4,7 @@
 @import './pages.css';
 @import './hero.css';
 @import './pagenav.css';
+@import './report.css';
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 

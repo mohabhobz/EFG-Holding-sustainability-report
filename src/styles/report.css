@@ -1,0 +1,2124 @@
+/* ============================================================================
+ * THE REPORT, AS A WEB PAGE
+ * ============================================================================
+ * A page of the report is a page of HTML: a heading is an `h1`, a paragraph is
+ * a `p` holding the whole paragraph, a photograph is an `img`. Nothing is
+ * positioned by coordinate, nothing is cut into lines — a line breaks where the
+ * reader's screen makes it break.
+ *
+ * THE PROPORTIONS ARE THE PRINT'S. The printed sheet is a system: every
+ * measurement on it is a fraction of the page's width, and it is those
+ * fractions — not the points — that make the page look like the page. They are
+ * read off the PDF (spread 3, printed pages 4–5) and written here as `cqw`,
+ * hundredths of the sheet's own width, so the design holds at any size.
+ *
+ *   sheet              595.275pt wide, drawn at 1,112px
+ *   left margin          70.87pt →  11.905 cqw
+ *   right margin         68.37pt →  11.485 cqw
+ *   measure             456.04pt →  76.610 cqw   → 852px
+ *   body                    10pt →   1.680 cqw   →  18.7px   #231f20
+ *   body leading            14pt →   1.4
+ *   paragraph space        8.5pt →   0.85 em
+ *   heading                 27pt →   4.536 cqw   →  50.4px   #124734
+ *   heading leading       32.4pt →   1.2
+ *   portrait            221.48pt →  37.206 cqw, right edge 8.84 cqw from trim
+ *   signature            86.52pt →  14.535 cqw
+ *   name                    12pt →   2.016 cqw   #124734
+ *   role                    11pt →   1.848 cqw   #231f20
+ *
+ * A phone cannot hold those fractions — 1.68 % of 390px is 6.5px — so every
+ * size has a floor, and below 700px the margins come in and the portrait drops
+ * below the title. That is the only place the design is answered to rather
+ * than followed.
+ *
+ * An inline style belongs on the exception, not the rule: a phrase the print
+ * sets in bold or in another colour inside a paragraph. Everything a whole
+ * element does belongs here.
+ * ========================================================================== */
+
+/* The sheet and its contents are two elements on purpose: a container query
+   unit resolves against the nearest ANCESTOR container, so an element cannot
+   size its own padding or type against itself. `.rp` is the sheet's width and
+   nothing else; everything measured in cqw lives inside it. */
+.rp {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 1112px;
+  margin-inline: auto;
+}
+
+.rp-in {
+  padding: 8.47cqw 11.485cqw 9cqw 11.905cqw;
+  color: var(--sr-black);
+  font-family: var(--sr-book);
+  font-size: max(16px, 1.68cqw);
+  line-height: 1.4;
+}
+
+/* ---- headings ------------------------------------------------------------ */
+.rp-in h1 {
+  margin: 0;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(31px, 4.536cqw);
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--sr-green-deep);
+}
+
+.rp-in h2 {
+  margin: 3.5cqw 0 1.2cqw;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(20px, 2.7cqw);
+  line-height: 1.25;
+  color: var(--sr-green);
+}
+
+/* ---- running text ---------------------------------------------------------
+ * Justified across the full measure, as the print sets it. Hyphenation comes
+ * with justification; a phone gets ragged-right instead, because at forty
+ * characters a line there is nothing to justify with.
+ * -------------------------------------------------------------------------- */
+.rp-in p {
+  margin: 0 0 var(--rp-para, .85em);
+  text-align: justify;
+  hyphens: auto;
+}
+.rp-in p:last-child { margin-bottom: 0; }
+
+.rp-in strong { font-family: var(--sr-sans); font-weight: 700; }
+
+/* ---- the opening ----------------------------------------------------------
+ * On the sheet the portrait is 221.5pt of 595 at the top right, its right edge
+ * a little past the text measure, and the title sits beside it with the two
+ * bottoms 37.5pt apart. `align-items: end` and that offset on the title are
+ * exactly those two facts.
+ * -------------------------------------------------------------------------- */
+.rp-open {
+  display: grid;
+  grid-template-columns: 1fr var(--rp-portrait, 37.206cqw);
+  column-gap: .42cqw;
+  align-items: end;
+  margin: 0 var(--rp-portrait-bleed, -3.065cqw) 3.7cqw 0;
+}
+.rp-open h1 { margin-bottom: 6.305cqw; }
+.rp-portrait { display: block; width: 100%; height: auto; }
+
+/* ---- the sign-off -------------------------------------------------------- */
+.rp-signature {
+  display: block;
+  width: max(120px, var(--rp-sig-w, 14.535cqw));
+  height: auto;
+  margin: 0 0 var(--rp-sig-gap, .43cqw);
+}
+.rp-name {
+  margin: 0;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(17px, 2.016cqw);
+  line-height: 1.35;
+  color: var(--sr-green-deep);
+  text-align: left;
+}
+.rp-role {
+  margin: 0;
+  font-size: max(16px, 1.848cqw);
+  line-height: 1.35;
+  text-align: left;
+}
+
+/* A NOTE FROM OUR CEO — printed pages 6 and 7. The same page as the Foreword
+ * with three measurements of its own: the portrait is 239.99pt rather than
+ * 221.48 and sits flush with the measure, the paragraph space is 7.09pt rather
+ * than 8.5, and the signature stands 6.87pt clear of the name. @page 6–7 */
+.rp-ceo {
+  --rp-portrait: 40.316cqw;
+  --rp-portrait-bleed: -.433cqw;
+  --rp-para: .709em;
+  --rp-sig-gap: 1.154cqw;
+  --rp-sig-w: 15.434cqw;
+}
+
+/* ============================================================================
+ * THE GREEN SPREAD — printed pages 2 and 3
+ * ============================================================================
+ * Contents and Abbreviations are one deep-green spread with its own measures:
+ * the margin comes in from 70.87pt to 35pt because the page is a full bleed,
+ * and the display face is 45pt rather than 27pt.
+ *
+ *   ground            #124734    the whole sheet, edge to edge
+ *   type              #F0F0E5 / #FFFFFF
+ *   margin              35.25pt →  5.922 cqw
+ *   display               45pt →  7.560 cqw, leading 50.99pt → 1.133
+ *   contents entry        13pt →  2.184 cqw, leading 14pt → 1.077
+ *   entry to entry      20.7pt →  1.126 cqw of space between
+ *   illustration      240.51pt → 40.400 cqw   (corners are baked into the file)
+ *   abbreviation          11pt →  1.848 cqw, leading 20pt → 1.818
+ *   term column           58pt →  9.744 cqw
+ * ========================================================================== */
+/* The ground bleeds to the window's edge, the sheet stays 1,112px — so the
+   green is the whole width of the screen while the measures inside it are
+   still fractions of a printed page. */
+.rp-bleed { background: var(--sr-green-deep); }
+.rp-dark .rp-in { padding: 12cqw 11.485cqw 10cqw 5.922cqw; color: var(--sr-cream); }
+
+.rp-in h1.rp-title {
+  margin: 0 0 8.51cqw;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(36px, 7.56cqw);
+  line-height: 1.133;
+  text-transform: uppercase;
+  color: #faf7f5;
+}
+
+/* ---- the contents ---------------------------------------------------------
+ * Illustration left, entries right, the folio pushed to the far margin. The
+ * entries are the only list in the report a reader clicks, so each row is a
+ * link across its whole width rather than the label alone.
+ * -------------------------------------------------------------------------- */
+.rp-contents {
+  display: grid;
+  grid-template-columns: 40.4cqw 1fr;
+  column-gap: 3.22cqw;
+  align-items: start;
+}
+.rp-contents .rp-title { grid-column: 1 / -1; }
+.rp-contents-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rp-toc {
+  /* The folio is left-aligned at x 519.2pt — 87.22 cqw — which is past the
+     text measure, so the list is allowed to reach into the right margin the
+     way the print does. */
+  margin: 0 -2.4cqw 0 0;
+  padding: 2.88cqw 0 0;
+  list-style: none;
+  font-size: max(16px, 2.184cqw);
+  line-height: 1.077;
+  color: var(--sr-white);
+}
+.rp-toc li + li { margin-top: 1.126cqw; }
+.rp-toc a {
+  display: grid;
+  grid-template-columns: 37.74cqw 1fr;
+  align-items: end;
+  color: inherit;
+  text-decoration: none;
+}
+.rp-toc a:hover .rp-toc-label,
+.rp-toc a:focus-visible .rp-toc-label { text-decoration: underline; }
+.rp-toc-eyebrow {
+  display: block;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+}
+.rp-toc-folio { font-variant-numeric: tabular-nums; }
+
+/* ---- the abbreviations --------------------------------------------------- */
+.rp-abbr dl {
+  display: grid;
+  grid-template-columns: 9.744cqw 1fr;
+  margin: 0;
+  font-size: max(16px, 1.848cqw);
+  line-height: 1.818;
+}
+.rp-abbr dt,
+.rp-abbr dd { margin: 0; }
+
+@media (max-width: 700px) {
+  .rp-dark .rp-in { padding: 40px 20px 56px; }
+  .rp-in h1.rp-title { margin-bottom: 30px; }
+  .rp-contents { display: block; }
+  .rp-contents-art { width: 58%; max-width: 240px; margin-bottom: 30px; }
+  .rp-toc { margin-right: 0; padding-top: 0; line-height: 1.3; }
+  .rp-toc a { grid-template-columns: 1fr auto; column-gap: 16px; }
+  .rp-toc li + li { margin-top: 14px; }
+  .rp-abbr dl { display: block; line-height: 1.35; }
+  .rp-abbr dt { font-family: var(--sr-sans); font-weight: 700; margin-top: 14px; }
+  .rp-abbr dt:first-child { margin-top: 0; }
+}
+
+/* ---- the phone ------------------------------------------------------------
+ * The sheet's 11.9 % margin is 46px on a 390px screen and its 1.68 % body is
+ * 6.5px. Below 700px the margins come in, the type sits on its floor, and the
+ * portrait drops below the title rather than beside it — a third of a phone is
+ * a thumbnail.
+ * -------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+  .rp-in { padding: 26px 20px 56px; line-height: 1.55; }
+  .rp-in p { text-align: left; hyphens: manual; margin-bottom: 1.1em; }
+  .rp-open { display: block; margin: 0 0 26px; }
+  .rp-open h1 { margin-bottom: 18px; }
+  .rp-portrait { width: 62%; }
+  .rp-signature { width: 150px; margin-bottom: 6px; }
+}
+
+/* ============================================================================
+ * SECTION PAGES — the grid used from printed page 10 onwards
+ * ============================================================================
+ * The sections do not use the letters' grid. Their margin is 36pt rather than
+ * 70.87, which gives a 526.85pt measure across the sheet, and their body is set
+ * in #414042 on a 13pt leading rather than #231F20 on 14pt. Read off page 10.
+ *
+ *   margin left           36.00pt →  6.048 cqw
+ *   margin right          33.00pt →  5.543 cqw
+ *   measure              526.85pt → 88.500 cqw
+ *   h1                        35pt →  5.879 cqw, leading 39pt → 1.114   #124734
+ *   lead                      14pt →  2.352 cqw, leading 19pt → 1.357   #414042
+ *   body                      10pt →  1.680 cqw, leading 13pt → 1.3     #414042
+ *   paragraph space           13pt →  1.3 em
+ * ========================================================================== */
+.rp-sec .rp-in {
+  padding: 9.5cqw 5.543cqw 7cqw 6.048cqw;
+  color: var(--sr-ink);
+  font-size: max(16px, 1.68cqw);
+  line-height: 1.3;
+  --rp-para: 1.3em;
+}
+.rp-sec .rp-in h1 {
+  margin: 0 0 3.5cqw;
+  font-size: max(30px, 5.879cqw);
+  line-height: 1.114;
+}
+.rp-sec .rp-in p { text-align: left; hyphens: manual; }
+
+/* The opening sentence of a section, set larger than the text under it. */
+.rp-lead {
+  font-size: max(18px, 2.352cqw) !important;
+  line-height: 1.357;
+  margin-bottom: 1.55em !important;
+}
+
+/* Two columns of running text, as printed page 14 sets them. */
+.rp-cols { columns: 2; column-gap: 2.024cqw; }
+.rp-cols p { break-inside: auto; }
+.rp-cols--pair p { break-inside: avoid; }
+
+/* A picture that runs the full width of the sheet, bleeding past the margins. */
+.rp-figure { display: block; width: 100%; height: auto; margin-top: 4cqw; }
+.rp-bleed-img { margin-inline: -6.048cqw -5.543cqw; width: calc(100% + 11.591cqw); max-width: none; }
+
+@media (max-width: 700px) {
+  .rp-sec .rp-in { padding: 30px 20px 44px; line-height: 1.5; }
+  .rp-sec .rp-in h1 { margin-bottom: 20px; }
+  .rp-cols { columns: 1; }
+  .rp-bleed-img { margin-inline: -20px; width: calc(100% + 40px); }
+}
+
+/* ============================================================================
+ * THE SECTION OPENER — the printed divider spread
+ * ============================================================================
+ * Cream leaf with the section's paper-cut emblem, green leaf with the number
+ * spelled out, the title, and the numeral set enormous and running off the
+ * left edge. Both leaves keep the printed page's proportion, so the pair is
+ * the printed spread. Measured on pages 8–9.
+ *
+ *   eyebrow    cap 14.76pt → 21.74pt setting →  3.652 cqw   baseline 180.96
+ *   title      cap 28.24pt → 41.60pt setting →  6.988 cqw   baseline 255.62
+ *   numeral    cap 192.75  → 283.9pt setting → 47.690 cqw   baseline 770.35
+ *   text left  132.85pt → 22.320 cqw ;  numeral left −59.2pt → −9.945 cqw
+ *   emblem     208.16pt of the cream leaf → 34.97 %
+ * ========================================================================== */
+.so { display: grid; grid-template-columns: 1fr 1fr; }
+/* The printed leaf that carries the emblem is not the same paper on every
+   divider: sections one to three sit on #FAF7F5, four and five on white. The
+   emblem is cut from the sheet with its own ground, so the leaf has to be the
+   ground the emblem was cut from or a square shows behind it. Each opener
+   passes its own colour; see SectionOpener.jsx. */
+/* THE LEAF IS SHORTER THAN THE PRINTED PAGE, ON PURPOSE. Everything on it is
+   anchored to an edge — the eyebrow and title to the top, the numeral to the
+   bottom, the emblem to the centre — and all of it is measured in cqw, against
+   the leaf's WIDTH. So the height can come in without moving or resizing one
+   thing on it: what comes out is the empty middle the print needs and a screen
+   does not. A full A4 leaf is 141.4cqw tall and put the divider at 786px on a
+   laptop, most of it blank, with the reader scrolling past nothing. 106cqw is
+   589px — it lands inside a viewport — and still leaves 6.6cqw of clear air
+   between a two-line title and the top of the numeral. Raise `--so-leaf` back
+   to 141.4 for the printed proportion. */
+.so { --so-leaf: 106; }
+
+/* AND IT STOPS GROWING. The leaves are full-bleed, so on a wide monitor each
+   one is half the window and the numeral — 47.69cqw, a fraction of the leaf's
+   width — grows with it; at 1920 the band was 1018px again. Past a 1440 window
+   each leaf holds at 720px and sits against the centre line, and the two
+   grounds are painted on the band behind them so the bleed is unbroken. The
+   divider is then 763px at any width from 1440 up: a band that fits a screen. */
+.so {
+  background: linear-gradient(to right,
+    var(--so-paper, #faf7f5) 0 50%, var(--sr-green-deep) 50% 100%);
+}
+.so-art { justify-self: end; }
+.so-title { justify-self: start; }
+.so-art, .so-title { width: 100%; max-width: 720px; }
+.so-art {
+  display: grid;
+  place-items: center;
+  background: var(--so-paper, #faf7f5);
+  aspect-ratio: 100 / var(--so-leaf);
+}
+.so-art img { width: 34.97%; height: auto; }
+.so-title {
+  container-type: inline-size;
+  position: relative;
+  overflow: hidden;
+  background: var(--sr-green-deep);
+  aspect-ratio: 100 / var(--so-leaf);
+}
+.so-title-in { padding: 27.34cqw 6cqw 0 22.32cqw; }
+.so-eyebrow {
+  margin: 0 0 6.1cqw;
+  font-family: var(--sr-sans);
+  font-weight: 400;
+  font-size: max(15px, 3.652cqw);
+  line-height: 1;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  color: #faf7f5;
+}
+/* The print sets the first line of a divider title in ABCNormal-Book and the
+   second in ABCNormal-Bold — SOCIAL / INVESTMENT, GOVERNANCE / & ETHICS,
+   STAKEHOLDER / ENGAGEMENT. The bold is the default; `.so-light` is the first
+   line. */
+.so-title h1 .so-light { font-weight: 400; }
+.so-title h1 {
+  margin: 0;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(26px, 6.988cqw);
+  line-height: 1.12;
+  text-transform: uppercase;
+  color: #faf7f5;
+}
+.so-num {
+  position: absolute;
+  left: -12.6cqw;
+  bottom: 8.5cqw;
+  font-family: var(--sr-sans);
+  font-weight: 400;
+  font-size: 47.69cqw;
+  line-height: .8;
+  color: #faf7f5;
+  pointer-events: none;
+}
+
+/* On a phone the leaves stack, and the numeral joins the flow instead of being
+   anchored to a corner — absolutely placed, a two-line title such as
+   ENVIRONMENTAL STEWARDSHIP runs straight into it. */
+@media (max-width: 899px) {
+  .so { grid-template-columns: 1fr; background: none; }
+  .so-art, .so-title { max-width: none; justify-self: stretch; }
+  .so-art { aspect-ratio: auto; padding: 34px 0; order: 2; }
+  .so-art img { width: 52%; max-width: 260px; }
+  .so-title { aspect-ratio: auto; display: flex; flex-direction: column; }
+  .so-title-in { padding: 46px 20px 0; }
+  .so-eyebrow { margin-bottom: 14px; }
+  .so-num {
+    position: static;
+    align-self: flex-start;
+    margin: 4px 0 0 -6cqw;
+    font-size: 42cqw;
+  }
+}
+
+/* ---- our business: the group and its four arms · printed page 11 ---------- */
+.rp-wordmark { display: block; width: 39.31cqw; height: auto; margin: 4.5cqw 0 2.2cqw; }
+.rp-strapline {
+  margin: 0 0 3cqw;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(15px, 3.024cqw);
+  line-height: 1.2;
+  color: var(--sr-olive);
+}
+.rp-arms { margin: 0 0 3.5cqw; }
+.rp-arm {
+  display: grid;
+  grid-template-columns: 31.6cqw 1fr;
+  column-gap: 4cqw;
+  align-items: start;
+  padding: 2.1cqw 0;
+}
+/* Each mark is set at its own printed width — 115.07pt for EFG Hermes,
+   114.11 for EFG Finance, 110.42 for Bank NXT, 144.29 for the Foundation —
+   carried in on `--w` because it is a measurement of that one logo. */
+.rp-arm img { width: var(--w); max-width: 100%; height: auto; }
+.rp-arm p { margin: 0; }
+
+/* ---- the highlights panel and the awards table · printed page 12 ---------- */
+.rp-panel {
+  background: var(--sr-green-deep);
+  color: var(--sr-white);
+  padding: 1.6cqw 1.453cqw 1.68cqw;
+  margin-bottom: 2.7cqw;
+}
+.rp-panel h1 { color: var(--sr-white) !important; margin: 0 0 1.2cqw !important; }
+.rp-panel h1 .rp-panel-light { font-weight: 400; }
+.rp-panel p { margin: 0; font-size: max(16px, 2.352cqw); line-height: 1.079; }
+
+.rp-table { width: 100%; border-collapse: collapse; font-size: max(15px, 2.016cqw); line-height: 1.167; color: var(--sr-green-deep); }
+.rp-table td { border-top: 1px solid var(--sr-green-deep); padding: 1.6cqw 1cqw; text-align: center; vertical-align: middle; }
+.rp-table td + td { border-left: 1px solid var(--sr-green-deep); }
+.rp-table strong { display: block; }
+
+/* ---- the executives · printed page 13 ------------------------------------- */
+.rp-banner {
+  background: var(--sr-green-deep);
+  color: var(--sr-white);
+  padding: 1.35cqw 3cqw;
+  font-size: max(16px, 2.352cqw);
+  line-height: 1.2;
+  margin-bottom: 4.5cqw;
+}
+.rp-sec .rp-in p.rp-banner { text-align: center; }
+.rp-execs { display: grid; gap: 5cqw; }
+.rp-exec { display: grid; grid-template-columns: 1fr 1fr; column-gap: 3.5cqw; align-items: start; }
+.rp-exec img { width: 100%; max-width: 18cqw; height: auto; }
+.rp-exec-body p { margin: 0 0 1.1em; }
+.rp-exec-body p:last-child { margin-bottom: 0; }
+.rp-exec-name { font-family: var(--sr-sans); font-weight: 700; color: var(--sr-green-deep); font-size: max(16px, 1.902cqw); }
+.rp-exec-role { font-family: var(--sr-sans); font-weight: 700; color: var(--sr-black); font-size: max(16px, 1.902cqw); }
+.rp-exec-note { color: var(--sr-black); font-size: max(15px, 1.848cqw); }
+/* The middle executive is mirrored in print: type on the left, ranged right. */
+.rp-exec--mirror .rp-exec-body { order: -1; }
+.rp-sec .rp-exec--mirror .rp-exec-body p { text-align: right; }
+
+/* ---- the three ESG cards · printed page 14 -------------------------------- */
+.rp-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.061cqw;
+  margin: 4.5cqw 3.48cqw 0 2.965cqw;
+}
+.rp-card {
+  background: var(--sr-green-deep);
+  border: 2px solid var(--sr-olive);
+  border-radius: 1.7cqw;
+  color: var(--sr-cream);
+  text-align: center;
+  padding: 2.4cqw 1.4cqw 2.8cqw;
+}
+/* `.rp-sec .rp-in h2` is (0,3,1) and would otherwise win over a plain
+   `.rp-card h2`, setting the card title in 20pt dark green on dark green. */
+.rp-sec .rp-in .rp-card h2 {
+  margin: 0 0 2.2cqw;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(15px, 2.016cqw);
+  line-height: 1.08;
+  min-height: 2.16em;      /* the print sets every card title on two lines */
+  text-transform: uppercase;
+  color: var(--sr-cream);
+}
+.rp-card img { display: block; width: 100%; height: auto; margin: 0 0 2.2cqw; }
+.rp-sec .rp-card p { margin: 0; font-size: max(14px, 1.68cqw); line-height: 1.2; text-align: center; }
+
+/* ---- the SDG contribution table · printed pages 15–17 --------------------- */
+.rp-sdg-wheel { float: right; width: 20.18cqw; height: auto; margin: 0 0 2cqw 3cqw; }
+.rp-sdg { width: 100%; border-collapse: collapse; margin-top: 3.8cqw; clear: both; }
+.rp-sdg caption {
+  background: #224634;
+  color: var(--sr-white);
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(14px, 2.016cqw);
+  line-height: 1.47;
+  text-align: left;
+  padding: 0 .475cqw;
+  text-transform: uppercase;
+}
+.rp-sdg td { border-bottom: .5px solid #666; padding: 1.9cqw .475cqw; vertical-align: middle; }
+.rp-sdg tr:last-child td { border-bottom: 0; }
+.rp-sdg-name { font-family: var(--sr-sans); font-weight: 700; color: var(--sr-black); font-size: max(15px, 1.68cqw); line-height: 1.3; width: 48.5cqw; }
+.rp-sdg-name ul { margin: .4em 0 0; padding-left: 1.15em; font-weight: 400; list-style: none; }
+.rp-sdg-name li { text-indent: -1.15em; }
+.rp-sdg-name li::before { content: '-\00a0\00a0'; }
+.rp-sdg-goals { display: flex; flex-wrap: wrap; gap: .677cqw; }
+.rp-sdg-goals img { width: 3.974cqw; min-width: 30px; height: auto; }
+
+@media (max-width: 700px) {
+  .rp-wordmark { width: 44%; max-width: 170px; margin: 24px 0 14px; }
+  .rp-arm { grid-template-columns: 1fr; row-gap: 10px; padding: 14px 0; }
+  .rp-arm img { width: var(--wm); max-width: 62%; }
+  .rp-panel { padding: 18px 18px 20px; margin-bottom: 22px; }
+  .rp-table { font-size: 15px; }
+  .rp-table td { padding: 12px 8px; }
+  .rp-banner { padding: 14px 18px; margin-bottom: 26px; }
+  .rp-execs { gap: 30px; }
+  .rp-exec { grid-template-columns: 1fr; row-gap: 14px; }
+  .rp-exec img { max-width: 150px; }
+  .rp-exec--mirror .rp-exec-body { order: 0; }
+  .rp-sec .rp-exec--mirror .rp-exec-body p { text-align: left; }
+  .rp-cards { grid-template-columns: 1fr; gap: 16px; margin: 26px 0 0; }
+  .rp-card { border-radius: 14px; padding: 20px 18px 24px; }
+  .rp-card img { max-width: 190px; margin-inline: auto; }
+  .rp-sdg-wheel { float: none; width: 44%; max-width: 190px; margin: 0 0 18px; }
+  .rp-sdg { margin-top: 26px; }
+  .rp-sdg td { padding: 14px 6px; }
+  .rp-sdg-name { width: auto; font-size: 15px; }
+  .rp-sdg-goals img { width: 34px; min-width: 34px; }
+}
+
+/* ============================================================================
+ * SECTION TWO — ENVIRONMENTAL STEWARDSHIP, printed pages 18 to 43
+ * ============================================================================
+ * The section's own furniture, every measurement and colour read off the pages.
+ *
+ *   h2                   20pt →  3.360 cqw  #015937   (a second line often #124734)
+ *   h3                   16pt →  2.688 cqw  #015937   (an accented half #949300)
+ *   green body           10pt →  1.680 cqw  #2A5A48
+ *   GOALS panel     #DCE3E1 on a 1pt #949300 rule, label 21pt #015937
+ *   pull quote      #B1C04F ground, white 10pt, attribution 10/8pt #124734
+ *   split bar       #124734 / #949300
+ *   stat numeral         57pt →  9.575 cqw  #124734, unit 22.6pt → 3.796 cqw
+ *   dark note       #124734 on a 0.9pt white rule, heading 13pt #949300
+ *   glance band     #2B9C7A, 19.8pt #124734
+ *   stat columns    #949300 and #2B9C7A, value 19.3pt, label 9.3pt
+ *   list rows       #E0DECC, 13pt #124734
+ * ========================================================================== */
+.rp-sec .rp-in h2 {
+  margin: 5cqw 0 1.6cqw;
+  font-size: max(19px, 3.36cqw);
+  line-height: 1.3;
+  color: #015937;
+  text-transform: uppercase;
+}
+.rp-sec .rp-in h3 {
+  margin: 4cqw 0 1.5cqw;
+  font-family: var(--sr-sans);
+  font-weight: 700;
+  font-size: max(17px, 2.688cqw);
+  line-height: 1.3;
+  color: #015937;
+}
+.rp-sec .rp-in :is(h2, h3):first-child { margin-top: 0; }
+.rp-accent { color: #949300; }
+.rp-deep { color: #124734; }
+.rp-sec .rp-green p { color: var(--sr-ink-green); }
+
+/* ---- the GOALS panel ----------------------------------------------------- */
+.rp-goals {
+  display: grid;
+  grid-template-columns: 20cqw 1fr;
+  gap: 2cqw;
+  align-items: center;
+  margin: 2.6cqw 0 3.4cqw;
+  padding: 1.8cqw 2.2cqw;
+  background: #dce3e1;
+  border: 1px solid #949300;
+}
+.rp-sec .rp-goals h3 { margin: 0; font-size: max(20px, 3.528cqw); }
+.rp-goals ul { margin: 0; padding: 0; list-style: none; color: #015937; }
+.rp-goals li { position: relative; margin-bottom: .55em; padding-left: 1.4em; }
+.rp-goals li:last-child { margin-bottom: 0; }
+.rp-goals li::before { content: '▶'; position: absolute; left: 0; top: .1em; font-size: .7em; }
+
+/* ---- a pull quote -------------------------------------------------------- */
+.rp-quote { margin: 3cqw 0; padding: 2.2cqw 2.6cqw; background: #b1c04f; }
+.rp-sec .rp-quote p { color: var(--sr-white); font-style: italic; text-align: justify; }
+.rp-sec .rp-quote .rp-quote-name {
+  margin: 1.5em 0 0;
+  font-family: var(--sr-sans); font-weight: 700; font-style: normal;
+  font-size: max(15px, 1.68cqw); color: var(--sr-green-deep); text-align: left;
+}
+.rp-sec .rp-quote .rp-quote-role {
+  margin: 0; font-style: normal; font-size: max(12px, 1.344cqw);
+  color: var(--sr-green-deep); text-align: left;
+}
+.rp-quote--right :is(.rp-quote-name, .rp-quote-role) { text-align: right !important; }
+
+/* ---- a male / female split bar ------------------------------------------- */
+.rp-bars { margin: 2.4cqw 0 3.2cqw; }
+.rp-bar-group + .rp-bar-group { margin-top: 2.4cqw; }
+.rp-sec .rp-bar-title {
+  margin: 0 0 .45em; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(13px, 1.848cqw); color: var(--sr-black);
+}
+.rp-bar-head, .rp-bar { display: flex; width: 36.3cqw; min-width: 240px; }
+.rp-bar-head span, .rp-bar span { display: grid; place-items: center; }
+.rp-bar-head { font-size: max(10px, 1.176cqw); color: var(--sr-black); padding-bottom: .3em; }
+.rp-bar { min-height: 21px; height: 3.61cqw;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(10px, 1.176cqw); color: var(--sr-cream); }
+.rp-bar .m { background: var(--sr-green-deep); }
+.rp-bar .f { background: var(--sr-olive); }
+
+/* ---- a big number lockup ------------------------------------------------- */
+.rp-stat { margin: 2cqw 0 2.6cqw; color: var(--sr-green-deep); }
+.rp-stat-fig {
+  display: flex; align-items: baseline; gap: .12em; flex-wrap: nowrap; white-space: nowrap;
+  font-family: var(--sr-sans); font-weight: 700; line-height: .95;
+}
+.rp-stat-n { font-size: max(38px, 9.575cqw); }
+.rp-stat-u { font-size: max(16px, 3.796cqw); }
+.rp-sec .rp-stat p {
+  margin: .35em 0 0; color: var(--sr-green-deep);
+  font-size: max(14px, 1.68cqw); line-height: 1.25;
+}
+.rp-stat--inline { display: flex; align-items: center; gap: 1.4cqw; }
+.rp-stat--inline p { margin: 0 !important; }
+
+/* ---- the dark note ------------------------------------------------------- */
+.rp-note {
+  margin: 3cqw 0; padding: 2.2cqw 3.8cqw;
+  background: var(--sr-green-deep); border: 1px solid var(--sr-white);
+}
+.rp-sec .rp-note h3 { margin: 0 0 .6em; font-size: max(15px, 2.184cqw); color: var(--sr-olive); }
+/* Printed page 30 sets the panel's paragraph in the regular weight, not bold. */
+.rp-sec .rp-note p {
+  color: var(--sr-white); font-family: var(--sr-sans); font-weight: 400;
+  text-align: justify;
+}
+
+/* ---- the progress band and the two stat columns -------------------------- */
+.rp-sec .rp-in p.rp-glance, .rp-sec .rp-in p.rp-band { text-align: center; }
+.rp-glance {
+  margin: 3.4cqw 0 2.2cqw; padding: 1.1cqw 1.4cqw;
+  background: #2b9c7a; color: var(--sr-green-deep); text-align: center;
+  font-family: var(--sr-sans); font-size: max(17px, 3.326cqw); line-height: 1.35;
+}
+.rp-glance b { font-weight: 700; }
+.rp-statcols { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; align-items: start; }
+.rp-statcol { padding: 1.8cqw 1.8cqw 2.2cqw; color: var(--sr-white); }
+.rp-statcol--olive { background: var(--sr-olive); }
+.rp-statcol--teal { background: #2b9c7a; }
+.rp-sec .rp-statcol h3 {
+  margin: 0 0 1cqw; text-align: center; text-transform: uppercase;
+  color: var(--sr-green-deep); font-size: max(20px, 4.452cqw);
+}
+.rp-statcol dl { display: grid; grid-template-columns: 1fr auto; margin: 0; align-items: center; }
+.rp-statcol dt, .rp-statcol dd {
+  padding: .55em 0; border-top: 1px solid rgba(255, 255, 255, .45);
+  font-family: var(--sr-sans); font-weight: 700;
+}
+.rp-statcol dt { font-size: max(15px, 3.242cqw); }
+.rp-statcol dd { margin: 0; font-size: max(10px, 1.562cqw); text-align: right; line-height: 1.2; padding-left: 1em; }
+
+/* ---- a banded list ------------------------------------------------------- */
+.rp-band {
+  padding: .7cqw 1cqw; background: #2b9c7a; color: var(--sr-green-deep);
+  text-align: center; text-transform: uppercase;
+  font-family: var(--sr-sans); font-weight: 700; font-size: max(20px, 4.452cqw);
+}
+.rp-rows { margin: 1.1cqw 0 0; padding: 0; list-style: none; }
+.rp-rows li {
+  position: relative; margin-bottom: 1.1cqw;
+  padding: 1.5cqw 2cqw 1.5cqw 6.2cqw;
+  background: #e0decc; color: var(--sr-green-deep);
+  font-size: max(15px, 2.184cqw); line-height: 1.35;
+}
+.rp-rows li::before { content: '▶'; position: absolute; left: 3.1cqw; top: 1.6cqw; font-size: .72em; }
+
+/* ---- an icon above a heading, as the sector blocks set it ---------------- */
+/* Every sector mark gets the SAME slot, and sits centred inside it.
+   These marks are drawn at different proportions — a box is nearly square, a
+   ship is wide and low, wheat is tall — so sizing them by width makes the tall
+   one huge, and sizing them by height makes the wide one look small. A fixed
+   slot with `object-fit: contain` gives them one optical size, and because the
+   slot is a constant height the headings under them all start on the same
+   line. The printed marks average 50 x 41pt, which is the slot below. */
+.rp-icon {
+  display: block;
+  width: var(--slot-w, 9cqw);
+  height: var(--slot-h, 7.4cqw);
+  min-width: 50px;
+  min-height: 41px;
+  object-fit: contain;
+  object-position: center;
+  margin: 0 0 1.4cqw;
+}
+/* A mark standing beside a figure is sized by width instead, because there it
+   is the width that has to balance the number next to it. */
+.rp-stat--inline .rp-icon {
+  width: var(--w, 9cqw); height: auto;
+  min-width: 0; min-height: 0; object-fit: fill;
+}
+.rp-media { display: block; width: 100%; height: auto; margin: 0 0 2cqw; }
+.rp-logo { display: block; width: var(--w); max-width: 100%; height: auto; margin: 0 0 2cqw; }
+.rp-figure-fig { margin: 2.4cqw 0 3cqw; }
+.rp-sec .rp-caption {
+  margin: .8em 0 0; text-align: center; color: #808080;
+  font-size: max(13px, 1.68cqw); line-height: 1.2;
+}
+
+@media (max-width: 700px) {
+  .rp-sec .rp-in h2 { margin: 30px 0 12px; }
+  .rp-sec .rp-in h3 { margin: 26px 0 10px; }
+  .rp-goals { grid-template-columns: 1fr; gap: 10px; padding: 18px; margin: 18px 0 24px; }
+  .rp-quote { padding: 18px; margin: 22px 0; }
+  .rp-sec .rp-quote p { text-align: left; }
+  .rp-bar-head, .rp-bar { width: 100%; min-width: 0; }
+  .rp-bar { height: 24px; }
+  .rp-note { padding: 18px 20px; margin: 22px 0; }
+  .rp-sec .rp-note p { text-align: left; }
+  .rp-glance { padding: 12px; margin: 26px 0 16px; }
+  .rp-statcols { grid-template-columns: 1fr; gap: 16px; }
+  .rp-statcol { padding: 16px; }
+  .rp-band { padding: 8px 12px; }
+  .rp-rows li { padding: 14px 16px 14px 44px; margin-bottom: 10px; }
+  .rp-rows li::before { left: 20px; top: 15px; }
+  .rp-icon { width: 56px; height: 46px; min-width: 0; min-height: 0; margin-bottom: 12px; }
+  .rp-stat--inline .rp-icon { width: 54px; height: auto; }
+  .rp-logo { width: var(--wm, 150px) !important; }
+  .rp-stat { margin: 16px 0 20px; }
+}
+
+/* ---- two things side by side, the picture half the width ----------------- */
+.rp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; align-items: start; margin: 2.6cqw 0 3cqw; }
+.rp-two > * { min-width: 0; }
+/* Only the paragraph that ends a column drops its trailing space, so the two
+   columns finish level; the paragraphs above it keep the print's 13pt. */
+.rp-sec .rp-two > p:last-child,
+.rp-sec .rp-two > * > p:last-child { margin-bottom: 0; }
+.rp-flags { display: block; width: 24.5cqw; min-width: 150px; height: auto; margin: 0 0 2cqw; }
+.rp-head-logo { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; flex-wrap: wrap; }
+.rp-head-logo h2 { flex: 1 1 20ch; }
+.rp-head-logo .rp-logo, .rp-head-logo .rp-stat { margin-bottom: 0; flex: none; }
+.rp-head-logo h3 { flex: 1 1 18ch; margin-top: 0; }
+.rp-sec .rp-caption--large { font-size: max(15px, 2.352cqw); color: var(--sr-green-deep); }
+.rp-sec .rp-lead--sm { font-size: max(17px, 2.016cqw) !important; line-height: 1.35; color: var(--sr-green-deep); }
+.rp-stat-u--stack { white-space: pre-line; line-height: 1.05; }
+.rp-sec .rp-stat p.rp-stat-big { font-family: var(--sr-sans); font-weight: 700; font-size: max(18px, 3.796cqw); text-transform: uppercase; line-height: 1.05; margin-top: .1em; }
+.rp-sectors { display: grid; grid-template-columns: 1fr 1fr; gap: 5cqw 4cqw; }
+.rp-sectors > section { min-width: 0; }
+
+@media (max-width: 700px) {
+  .rp-two { grid-template-columns: 1fr; gap: 18px; margin: 18px 0 22px; }
+  .rp-flags { width: 60%; min-width: 0; margin-bottom: 14px; }
+  .rp-head-logo { gap: 14px; }
+  .rp-sectors { grid-template-columns: 1fr; gap: 34px; }
+}
+
+/* ============================================================================
+ * SECTION TWO, PART TWO — printed pages 32 to 43
+ * ============================================================================
+ *   scope boxes      155.8 x 198.9pt, 0.5pt #124734 rule, title 26pt #2A5A48
+ *   metric           label 8.9pt #124734, value 18.8pt #53B077
+ *   findings panel   1pt #124734 rule; scope 1 #9CA0A1, 2 #54B078, 3 #204534
+ *   decarbonisation  83.4 x 80.4pt boxes on a 1.54pt #124734 rule
+ *   progress panel   #124734, title 19.8/22pt white, headings 16.8pt #949300
+ *   participants     85.2pt rows on a 0.5pt #949300 rule, photo 154.9pt
+ *   pillars          1.05pt #124734 boxes; Graduate Outcome on #949300
+ * ========================================================================== */
+.rp-scopes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4.8cqw; margin: 3.4cqw 0; }
+.rp-scope { border: .5px solid var(--sr-green-deep); border-radius: 1.2cqw; padding: 2.2cqw 2cqw; }
+.rp-sec .rp-scope h3 {
+  margin: 0 0 1.4cqw; font-family: var(--sr-book); font-weight: 400;
+  font-size: max(22px, 4.368cqw); color: var(--sr-ink-green); text-transform: uppercase;
+}
+.rp-sec .rp-scope p { font-size: max(15px, 2.016cqw); line-height: 1.3; }
+
+.rp-metrics { display: grid; gap: 2.6cqw; }
+.rp-metric { display: grid; grid-template-columns: 1fr auto; gap: 2cqw; align-items: center; }
+.rp-sec .rp-metric-label {
+  margin: 0 0 .35em; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 1.495cqw); line-height: 1.2; text-transform: uppercase;
+  color: var(--sr-green-deep);
+}
+.rp-sec .rp-metric-value {
+  margin: 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(20px, 3.158cqw); line-height: 1.1; color: #53b077;
+}
+.rp-metric-value small { font-size: .5em; }
+.rp-metric img { width: 5.7cqw; min-width: 36px; height: auto; }
+
+.rp-findings { border: 1px solid var(--sr-green-deep); border-radius: 1cqw; padding: 3cqw 2.4cqw; margin: 3cqw 0; }
+.rp-scope-block + .rp-scope-block { border-top: 1px solid var(--sr-green-deep); margin-top: 2.6cqw; padding-top: 2.6cqw; }
+.rp-scope-block { display: grid; grid-template-columns: 22cqw 1fr; gap: 2cqw; }
+.rp-sec .rp-scope-name {
+  margin: 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(16px, 2.486cqw); line-height: 1.1; text-transform: uppercase;
+}
+.rp-sec .rp-scope-kind {
+  margin: .3em 0 0; font-size: max(11px, 1.546cqw); line-height: 1.2;
+  text-transform: uppercase; color: var(--sr-green-deep);
+}
+.rp-sec .rp-fgroup-title {
+  margin: 0 0 1.2cqw; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 1.344cqw); line-height: 1.2; text-transform: uppercase;
+  color: var(--sr-green-deep);
+}
+.rp-fgroup + .rp-fgroup { margin-top: 2.4cqw; }
+.rp-fitems { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6cqw 2cqw; }
+.rp-fitem { display: grid; grid-template-columns: 1fr auto; gap: 1cqw; align-items: center; }
+.rp-sec .rp-fitem-value {
+  margin: 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.419cqw); line-height: 1.05;
+}
+.rp-fitem-value small { font-size: .48em; }
+.rp-sec .rp-fitem-note {
+  margin: .25em 0 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(10px, 1.008cqw); line-height: 1.2; color: #000;
+}
+.rp-fitem img { width: 5cqw; min-width: 30px; height: auto; }
+.rp-scope--1 :is(.rp-scope-name, .rp-fitem-value) { color: #9ca0a1; }
+.rp-scope--2 :is(.rp-scope-name, .rp-fitem-value) { color: #54b078; }
+.rp-scope--3 :is(.rp-scope-name, .rp-fitem-value) { color: #204534; }
+
+.rp-decarb { display: grid; gap: 2.4cqw; margin: 3cqw 0; }
+.rp-decarb-row { display: grid; grid-template-columns: 14.2cqw 1fr; gap: 3cqw; align-items: start; }
+.rp-decarb-row img { width: 100%; height: auto; }
+.rp-sec .rp-decarb-row h3 { margin: 0 0 .4em; font-size: max(15px, 2.184cqw); color: var(--sr-green-deep); }
+.rp-decarb-row ul { margin: 0; padding: 0; list-style: none; font-size: max(14px, 1.848cqw); line-height: 1.35; }
+.rp-decarb-row li::before { content: '- '; }
+
+.rp-notice {
+  margin: 3cqw 0; padding: 1.9cqw 3.2cqw;
+  background: var(--sr-green-deep); color: var(--sr-white);
+}
+.rp-sec .rp-notice p { color: var(--sr-white); text-align: justify; margin: 0; }
+
+.rp-progress { margin: 3.4cqw 0; padding: 3cqw 4.2cqw 3.6cqw; background: var(--sr-green-deep); color: var(--sr-white); }
+.rp-sec .rp-progress-title {
+  margin: 0 0 2.6cqw; text-align: center; color: var(--sr-white);
+  font-family: var(--sr-sans); font-size: max(18px, var(--rp-progress-size, 3.326cqw));
+  line-height: 1.3;
+}
+.rp-sec .rp-progress-title b { font-weight: 700; display: block; }
+.rp-sec .rp-progress h3 {
+  margin: 0 0 1.4cqw; padding-bottom: .5em; text-align: center;
+  border-bottom: 1px solid var(--sr-olive);
+  color: var(--sr-olive); font-size: max(16px, 2.822cqw); text-transform: uppercase;
+}
+.rp-progress ul { list-style: disc; margin: 0 0 3cqw; padding-left: 1.4em; font-size: max(14px, 2.016cqw); line-height: 1.35; }
+.rp-progress ul:last-child { margin-bottom: 0; }
+.rp-progress li { margin-bottom: .5em; }
+
+.rp-participants { margin: 3cqw 0; display: grid; gap: 2.9cqw; }
+.rp-participant {
+  display: grid; grid-template-columns: 1fr 29.6cqw; gap: 2cqw; align-items: stretch;
+  border: .5px solid var(--sr-olive); border-radius: 1cqw; overflow: hidden;
+}
+.rp-participant-body { padding: 1.8cqw 2cqw 1.8cqw 7cqw; align-self: center; }
+.rp-sec .rp-participant-body h3 { margin: 0 0 .35em; font-size: max(15px, 2.184cqw); color: var(--sr-green-deep); }
+.rp-sec .rp-participant-body p { margin: 0; font-size: max(15px, 2.184cqw); line-height: 1.3; }
+.rp-participant img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.rp-curriculum {
+  margin: 3cqw 0 2.1cqw; padding: 1.5cqw; text-align: center;
+  border: 1px solid var(--sr-green-deep); border-radius: 1cqw;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(18px, 3.326cqw); color: var(--sr-green-deep);
+}
+.rp-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.1cqw; }
+.rp-pillar-head, .rp-pillar-body {
+  border: 1px solid var(--sr-green-deep); border-radius: 1cqw; padding: 1.6cqw 1.8cqw;
+}
+.rp-pillar-head { min-height: 16.7cqw; }
+.rp-sec .rp-pillar-n {
+  margin: 0 0 .3em; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.52cqw); color: #54b078;
+}
+.rp-sec .rp-pillar-t {
+  margin: 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.52cqw); line-height: 1.25; color: var(--sr-green-deep);
+}
+.rp-sec .rp-pillar-body p { margin: 0; font-size: max(14px, 2.016cqw); line-height: 1.3; color: var(--sr-green-deep); }
+.rp-outcome { margin: 3cqw 0; padding: 2.2cqw 2.6cqw; background: var(--sr-olive); color: var(--sr-white); }
+.rp-sec .rp-outcome h3 { margin: 0 0 .35em; color: var(--sr-white); font-size: max(18px, 3.326cqw); }
+.rp-sec .rp-outcome p { margin: 0; color: var(--sr-white); font-size: max(14px, 2.016cqw); line-height: 1.3; }
+
+.rp-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 1cqw; }
+.rp-badges img { width: 9.4cqw; min-width: 54px; height: auto; }
+
+@media (max-width: 700px) {
+  .rp-scopes { grid-template-columns: 1fr; gap: 14px; margin: 22px 0; }
+  .rp-scope { padding: 16px; border-radius: 10px; }
+  .rp-metrics { gap: 18px; }
+  .rp-metric img { width: 42px; min-width: 0; }
+  .rp-findings { padding: 18px 16px; margin: 22px 0; }
+  .rp-scope-block { grid-template-columns: 1fr; gap: 10px; }
+  .rp-scope-block + .rp-scope-block { margin-top: 18px; padding-top: 18px; }
+  .rp-fitems { grid-template-columns: 1fr; gap: 12px; }
+  .rp-fitem img { width: 34px; min-width: 0; }
+  .rp-decarb-row { grid-template-columns: 58px 1fr; gap: 14px; }
+  .rp-notice { padding: 16px 18px; margin: 22px 0; }
+  .rp-sec .rp-notice p { text-align: left; }
+  .rp-progress { padding: 20px 18px 24px; margin: 26px 0; }
+  .rp-progress ul { margin-bottom: 22px; }
+  .rp-participant { grid-template-columns: 1fr; }
+  .rp-participant-body { padding: 16px 18px; }
+  .rp-participant img { height: 150px; }
+  .rp-pillars { grid-template-columns: 1fr; gap: 12px; }
+  .rp-pillar-head { min-height: 0; }
+  .rp-curriculum { padding: 14px; margin: 22px 0 14px; }
+  .rp-outcome { padding: 18px; margin: 22px 0; }
+  .rp-badges { flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 14px; }
+  .rp-badges img { width: 46px; min-width: 0; }
+}
+
+/* ---- odds and ends of section two ---------------------------------------- */
+.rp-link { color: #9f9e19; font-family: var(--sr-sans); font-weight: 700; text-decoration: underline; }
+.rp-sec .rp-h3--sm { font-size: max(16px, 2.52cqw); }
+.rp-sec p.rp-olive {
+  font-family: var(--sr-sans); font-weight: 600; color: var(--sr-olive);
+  font-size: max(15px, 2.016cqw); line-height: 1.25;
+}
+.rp-sec p.rp-total {
+  margin: 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(24px, 4.653cqw); line-height: 1.05; color: var(--sr-green-deep);
+}
+.rp-total sup { font-size: .6em; vertical-align: super; }
+.rp-bullets { list-style: disc; margin: 0 0 1.3em; padding-left: 1.3em; color: var(--sr-green-deep); font-size: max(15px, 1.848cqw); line-height: 1.4; }
+.rp-sec p.rp-footnote { margin-top: 2cqw; font-size: max(11px, 1.176cqw); color: var(--sr-ink); }
+
+.rp-demat {
+  display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch;
+  gap: 0 1.4cqw; margin: 3cqw 0; padding: 1.9cqw 4.4cqw 2.6cqw;
+  background: var(--sr-green-deep);
+}
+.rp-demat-box {
+  background: var(--sr-white); border-radius: 2.4cqw; padding: 2.4cqw 1.8cqw 2cqw;
+  display: grid; grid-template-rows: 1fr auto; justify-items: center; text-align: center;
+}
+.rp-demat-box img { width: 62%; max-width: 12cqw; height: auto; margin-bottom: 1.6cqw; }
+.rp-sec .rp-demat-box p {
+  margin: 0; padding-top: 1.2cqw; border-top: 1px solid var(--sr-olive);
+  text-align: center; font-size: max(13px, 1.68cqw); line-height: 1.25;
+}
+.rp-demat-arrow { align-self: center; color: var(--sr-white); font-size: 3.4cqw; }
+.rp-sec p.rp-demat-caption {
+  grid-column: 1 / -1; margin: 1.8cqw 0 0; text-align: center;
+  color: var(--sr-white); font-size: max(13px, 1.68cqw); line-height: 1.3;
+}
+
+@media (max-width: 700px) {
+  .rp-demat { grid-template-columns: 1fr; gap: 12px; padding: 18px; margin: 22px 0; }
+  .rp-demat-box { border-radius: 16px; padding: 18px; }
+  .rp-demat-box img { max-width: 110px; margin-bottom: 12px; }
+  .rp-demat-arrow { transform: rotate(90deg); font-size: 20px; }
+  .rp-sec p.rp-demat-caption { margin-top: 14px; }
+}
+
+/* ---- the school's partners · printed page 44 ----------------------------- */
+.rp-allies { display: grid; gap: 2.2cqw; margin: 3cqw 0; }
+.rp-ally { display: grid; grid-template-columns: 1fr 24cqw; gap: 1.1cqw; align-items: center; }
+.rp-ally--flip { grid-template-columns: 24cqw 1fr; }
+.rp-ally--flip .rp-ally-box { order: 2; }
+.rp-ally-box {
+  background: #e0decc; border: 1.05px solid var(--sr-green-deep);
+  border-radius: 1cqw; padding: 1.8cqw 2.2cqw;
+}
+.rp-sec .rp-ally-box h4 {
+  margin: 0 0 .4em; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(14px, 1.764cqw); line-height: 1.25; color: var(--sr-ink);
+}
+.rp-sec .rp-ally-box p { margin: 0; font-size: max(13px, 1.596cqw); line-height: 1.3; }
+.rp-ally > img { width: 100%; max-width: 23cqw; height: auto; justify-self: center; }
+
+/* ---- a photograph with the printed caption band · page 45 ---------------- */
+.rp-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.9cqw; margin: 3cqw 0; }
+.rp-tile { margin: 0; }
+.rp-tile img { display: block; width: 100%; height: auto; }
+.rp-sec .rp-tile figcaption {
+  background: var(--sr-green-deep); color: var(--sr-white);
+  padding: .55em 1em; font-size: max(14px, 2.436cqw); line-height: 1.2;
+}
+
+@media (max-width: 700px) {
+  .rp-allies { gap: 18px; margin: 22px 0; }
+  .rp-ally, .rp-ally--flip { grid-template-columns: 1fr; gap: 12px; }
+  .rp-ally--flip .rp-ally-box { order: 0; }
+  .rp-ally > img { max-width: 150px; justify-self: start; }
+  .rp-ally-box { padding: 16px 18px; border-radius: 10px; }
+  .rp-tiles { grid-template-columns: 1fr; gap: 16px; margin: 22px 0; }
+}
+
+/* ---- Tanmeyah's three products · printed page 50 ------------------------- */
+.rp-products { display: grid; gap: 2.3cqw; margin: 3cqw 0; }
+.rp-product { display: grid; grid-template-columns: 27.3cqw 1fr; gap: 1.1cqw; align-items: stretch; }
+.rp-product--flip { grid-template-columns: 1fr 27.3cqw; }
+.rp-product--flip img { order: 2; }
+.rp-product img { width: 100%; height: 100%; object-fit: cover; border: .7px solid var(--sr-olive); border-radius: 1cqw; }
+.rp-product-box {
+  display: grid; align-items: center;
+  background: #fafaf2; border: .5px solid var(--sr-olive); border-radius: 1cqw;
+  padding: 2cqw 3cqw;
+}
+.rp-sec .rp-product-box p { margin: 0; font-size: max(14px, 2.016cqw); line-height: 1.45; }
+
+/* ---- the fintech ecosystem · printed page 53 ----------------------------- */
+.rp-sec p.rp-hub {
+  margin: 3.4cqw auto 2.6cqw; max-width: 44cqw;
+  border: 1px solid var(--sr-green-deep); border-radius: 999px;
+  padding: 1.9cqw 2cqw; text-align: center;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(18px, 3.293cqw); line-height: 1.35; color: #015937;
+}
+.rp-spokes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3cqw 2.6cqw; }
+.rp-sec .rp-spoke h4 {
+  margin: 0 0 .3em; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.688cqw); line-height: 1.15; text-transform: uppercase;
+}
+.rp-sec .rp-spoke p { margin: 0; font-size: max(14px, 2.016cqw); line-height: 1.3; color: var(--sr-green-deep); }
+
+.rp-media--small { width: 60%; max-width: 26cqw; }
+.rp-sec .rp-sdg-cap {
+  margin: 0 0 .6em; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(11px, 1.344cqw); text-transform: uppercase; color: var(--sr-green-deep);
+}
+
+@media (max-width: 700px) {
+  .rp-products { gap: 16px; margin: 22px 0; }
+  .rp-product, .rp-product--flip { grid-template-columns: 1fr; gap: 10px; }
+  .rp-product--flip img { order: 0; }
+  .rp-product img { height: 180px; border-radius: 10px; }
+  .rp-product-box { padding: 16px 18px; border-radius: 10px; }
+  .rp-sec p.rp-hub { max-width: none; padding: 16px; margin: 22px 0 18px; border-radius: 20px; }
+  .rp-spokes { grid-template-columns: 1fr; gap: 18px; }
+  .rp-media--small { width: 55%; max-width: 170px; }
+}
+
+/* ============================================================================
+ * SECTION THREE, pages 58 to 77
+ * ============================================================================
+ *   advisory box     #FAFAF2 on a 0.3pt #949300 rule, heading 13pt #949300
+ *   glance row       1pt #231F20 rule, heading 15pt, body 14pt, both #124734
+ *   circle photo     101.6pt on a 2pt white rule over #2B9C7A
+ *   stat card        #F4F4E5, figure 28pt #949300, label 12pt #124734
+ *   cream quote      #F4F4E5, 10pt #124734
+ * ========================================================================== */
+.rp-advisories { display: grid; gap: 2.9cqw; margin: 3cqw 0; }
+.rp-advisory {
+  display: grid; grid-template-columns: 1fr 20cqw; gap: 2.5cqw; align-items: center;
+  background: #fafaf2; border: .5px solid var(--sr-olive); border-radius: 1.2cqw;
+  padding: 2cqw 2.4cqw;
+}
+.rp-sec .rp-advisory h3 {
+  margin: 0 0 .5em; font-size: max(14px, 2.184cqw); line-height: 1.25;
+  color: var(--sr-olive);
+}
+.rp-sec .rp-advisory p { margin: 0; font-size: max(13px, 1.596cqw); line-height: 1.35; color: var(--sr-black); }
+.rp-advisory img { width: 100%; max-width: 18cqw; height: auto; justify-self: center; }
+
+/* ---- the Foundation's year, printed page 74 ------------------------------ */
+.rp-glances { display: grid; gap: 2cqw; margin: 2.4cqw 0 3cqw; }
+.rp-glance-row { display: grid; grid-template-columns: 1fr 29.5cqw; gap: 2cqw; align-items: stretch; }
+.rp-glance-row--flip { grid-template-columns: 29.5cqw 1fr; }
+.rp-glance-row--flip .rp-glance-box { order: 2; }
+.rp-glance-box {
+  display: grid; align-content: center; text-align: center;
+  border: 1px solid var(--sr-black); border-radius: 1.2cqw; padding: 1.6cqw 2cqw;
+  color: var(--sr-green-deep);
+}
+.rp-sec .rp-glance-box h3 {
+  margin: 0 0 .35em; font-family: var(--sr-sans); font-weight: 600;
+  font-size: max(15px, 2.52cqw); color: var(--sr-green-deep);
+}
+.rp-sec .rp-glance-box p { margin: 0; text-align: center; font-size: max(14px, 2.352cqw); line-height: 1.45; }
+.rp-glance-row img { width: 100%; height: 100%; object-fit: cover; border-radius: 1.2cqw; }
+.rp-glance-head {
+  margin: 3cqw 0 0; padding: 1.2cqw; text-align: center;
+  border: 1.12px solid var(--sr-green-deep); border-radius: 1.2cqw;
+  font-family: var(--sr-sans); font-size: max(18px, 3.326cqw); line-height: 1.35;
+  color: var(--sr-green-deep);
+}
+.rp-glance-head b { font-weight: 700; display: block; }
+
+/* ---- the Montessori figures, printed page 76 ----------------------------- */
+/* The print sets the poster 315.7pt wide (53.03cqw) and centres each circle
+   exactly on its right edge, so the circles' left halves lie over the poster.
+   The gap is therefore nothing and the figures column is pulled back by half
+   a circle. */
+.rp-montessori { display: grid; grid-template-columns: 53cqw 1fr; gap: 0; align-items: center; margin: 3cqw 0; }
+.rp-mfigures { margin-left: -8.71cqw; }
+.rp-montessori > img { width: 100%; height: auto; }
+.rp-mfigures { display: grid; gap: 1.8cqw; }
+.rp-mfigure { display: grid; grid-template-columns: 17.1cqw 1fr; align-items: center; }
+.rp-mfigure img {
+  width: 100%; height: auto; border-radius: 50%;
+  border: 2px solid var(--sr-white); background: #2b9c7a; position: relative; z-index: 1;
+}
+.rp-mfigure div { background: #f4f4e5; padding: 1.4cqw 1.6cqw 1.4cqw 4cqw; margin-left: -2.4cqw; }
+.rp-sec .rp-mfigure b {
+  display: block; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(20px, 4.704cqw); line-height: 1; color: var(--sr-olive);
+}
+.rp-sec .rp-mfigure span { font-size: max(13px, 2.016cqw); color: var(--sr-green-deep); }
+
+/* ---- a quote on cream, printed page 77 ----------------------------------- */
+.rp-quote--cream { background: #f4f4e5; }
+.rp-sec .rp-quote--cream p { color: var(--sr-green-deep); font-style: normal; }
+.rp-sec .rp-quote--cream .rp-quote-lead { font-family: var(--sr-sans); font-weight: 700; }
+
+/* ---- a heading with the printed rule running off it ---------------------- */
+.rp-ruled { display: flex; align-items: center; gap: 1.6cqw; margin: 3.4cqw 0 2cqw; }
+.rp-sec .rp-ruled h3 { margin: 0; font-size: max(18px, 3.696cqw); }
+.rp-ruled i { flex: 1; height: 1px; background: var(--sr-olive); }
+.rp-ruled u { flex: none; width: .9cqw; height: .9cqw; min-width: 7px; min-height: 7px;
+  border-radius: 50%; background: var(--sr-olive); }
+
+@media (max-width: 700px) {
+  .rp-advisory { grid-template-columns: 1fr; gap: 14px; padding: 16px 18px; }
+  .rp-advisory img { max-width: 150px; justify-self: start; }
+  .rp-glance-row, .rp-glance-row--flip { grid-template-columns: 1fr; }
+  .rp-glance-row--flip .rp-glance-box { order: 0; }
+  .rp-glance-row img { height: 170px; }
+  .rp-glance-head { padding: 14px; margin-top: 22px; }
+  .rp-montessori { grid-template-columns: 1fr; gap: 16px; }
+  .rp-mfigures { margin-left: 0; }
+  .rp-mfigure { grid-template-columns: 74px 1fr; }
+  .rp-mfigure div { padding: 12px 14px 12px 26px; margin-left: -14px; }
+  .rp-ruled { margin: 24px 0 14px; }
+}
+.rp-tiles--two { grid-template-columns: 1fr 1fr; }
+.rp-sec p.rp-story { font-size: max(15px, 2.016cqw); line-height: 1.4; color: var(--sr-green-deep); }
+@media (max-width: 700px) { .rp-tiles--two { grid-template-columns: 1fr; } }
+
+/* ---- two photographs side by side, printed page 78 -----------------------
+   The print sets them 253.9 and 254.9pt wide with a 13.4pt alley, in a band
+   240pt deep; equal columns and a fixed aspect keep both bands level however
+   the two crops differ by a pixel. */
+.rp-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2.25cqw; margin: 2.6cqw 0 3cqw; }
+.rp-pair img { display: block; width: 100%; aspect-ratio: 254 / 240; object-fit: cover; }
+
+/* ---- the olive rule the print draws across the measure ------------------- */
+.rp-hr { border: 0; border-top: 1.122pt solid var(--sr-olive); margin: 3.4cqw 0 3cqw; }
+
+/* ---- the banded glance card, printed page 79 ----------------------------
+   One rounded card in three bands: a deep-green head, an olive band carrying
+   the mark and the four figures, and a deep-green foot for the partnerships.
+   Measured off the print: card 498.3 x 361.5pt (83.71 x 60.73cqw), corner
+   13pt, head 80.4pt, band 135.3pt, foot 145.8pt, inner rule inset 20.1pt. */
+.rp-card-glance {
+  width: 83.71cqw; margin: 0 auto 3cqw; border-radius: 2.18cqw; overflow: hidden;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  font-family: var(--sr-sans);
+}
+.rp-card-glance-head { padding: 3.5cqw 3.4cqw 3.2cqw; text-align: center; }
+.rp-sec .rp-card-glance-head b,
+.rp-sec .rp-card-glance-head span {
+  display: block; font-size: max(17px, 3.326cqw); line-height: 1.2;
+}
+.rp-sec .rp-card-glance-head b { font-weight: 700; }
+.rp-sec .rp-card-glance-head span { font-weight: 400; }
+
+.rp-card-glance-band {
+  display: grid; grid-template-columns: auto 1fr; align-items: center;
+  gap: 3.2cqw; padding: 2.97cqw 3.4cqw; background: var(--sr-olive);
+}
+/* The mark is drawn white on the olive, so it is lifted with its own alpha
+   and sized by the width the print gives it — 125.28 x 99.84pt. */
+.rp-card-glance-band img {
+  display: block; width: 21.05cqw; min-width: 84px; height: auto; margin: 0;
+}
+.rp-card-glance-band ul { margin: 0; padding: 0; list-style: none; }
+.rp-card-glance-band li {
+  font-size: max(13px, 2.268cqw); line-height: 1.46; font-weight: 400;
+}
+.rp-card-glance-band li b { font-weight: 700; }
+
+.rp-card-glance-foot { padding: 2.5cqw 3.4cqw 3.5cqw; }
+/* `.rp-sec .rp-in h3` outranks a plain `.rp-card-glance-foot h3`, so this
+   carries the section's own specificity to win the colour and the size back. */
+.rp-sec .rp-in .rp-card-glance-foot h3 {
+  margin: 0 0 1.1cqw; text-align: center; text-transform: uppercase;
+  color: var(--sr-olive); font-size: max(15px, 2.822cqw); line-height: 1.2;
+}
+.rp-card-glance-foot ul {
+  margin: 0; padding: 0 0 0 1.15em; list-style: disc;
+  border-top: 1.122pt solid var(--sr-olive); padding-top: 1.9cqw;
+}
+.rp-card-glance-foot li {
+  margin-bottom: .5em; font-size: max(13px, 2.016cqw); line-height: 1.4;
+}
+.rp-card-glance-foot li:last-child { margin-bottom: 0; }
+
+@media (max-width: 700px) {
+  .rp-pair { grid-template-columns: 1fr; gap: 12px; }
+  .rp-card-glance { width: 100%; border-radius: 14px; }
+  .rp-card-glance-head { padding: 20px 16px 18px; }
+  .rp-card-glance-band { grid-template-columns: 1fr; gap: 14px; padding: 18px 16px; justify-items: center; }
+  .rp-card-glance-band img { width: 140px; }
+  .rp-card-glance-foot { padding: 16px 16px 20px; }
+  .rp-card-glance-foot ul { padding-top: 14px; }
+}
+
+/* ============================================================================
+ * SECTION FOUR — GOVERNANCE & ETHICS, printed pages 80 to 101
+ * ============================================================================
+ * Measured on the printed sheets. As everywhere else, a cqw is 1/100 of the
+ * 595.275pt page, so every number below is a printed measurement divided by
+ * 5.95275.
+ * ========================================================================== */
+
+/* ---- a run-in sub-head, 13pt bold in the olive, pages 83, 86, 98 -------- */
+.rp-sec .rp-in h4.rp-subhead {
+  margin: 2.3cqw 0 .3cqw;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.184cqw); line-height: 1.3;
+  color: var(--sr-olive);
+}
+/* ---- a 15pt kicker in the deep green, pages 85, 94, 100 ----------------- */
+.rp-sec .rp-in h4.rp-kicker {
+  margin: 3.4cqw 0 1.2cqw;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.52cqw); line-height: 1.25;
+  color: var(--sr-green-deep);
+}
+
+/* ---- the print's bulleted lists: an olive ● against ink copy ------------ */
+.rp-dots { margin: 0 0 1.3em; padding: 0; list-style: none; }
+.rp-dots li {
+  position: relative; padding-left: 1.55em; margin-bottom: .6em;
+  line-height: 1.3;
+}
+.rp-dots li:last-child { margin-bottom: 0; }
+.rp-dots li::before {
+  content: '●'; position: absolute; left: 0; top: 0;
+  color: #9f9e19;                 /* the olive the PDF gives the bullet glyph */
+  font-size: .85em;
+}
+
+/* ---- a mark set into the outer margin with the copy running past it ----- */
+.rp-logo--float { float: right; margin: .3cqw 0 1.4cqw 2.4cqw; }
+
+/* ---- the policy environment, printed page 84 ---------------------------
+   A deep-green title bar over two columns of boxes; each box has its own
+   green cap and a hairline body, and every policy name is the link the PDF
+   gives it. Title bar 36→559.2pt, boxes 251.7pt wide with a 19.9pt alley,
+   caps 19.5pt deep. */
+.rp-policy { margin: 1.5cqw 0 4cqw; }
+.rp-sec .rp-in .rp-policy > h3 {
+  margin: 0; padding: 1.35cqw 1.6cqw;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  text-align: center; text-transform: uppercase;
+  font-size: max(15px, 3.024cqw); line-height: 1.15;
+}
+.rp-policy-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.343cqw; margin-top: 2.35cqw; }
+.rp-policy-col { display: grid; gap: 1cqw; align-content: start; }
+.rp-policy-box { border: 1px solid #e6e7e8; border-top: 0; }
+.rp-sec .rp-in .rp-policy-box h4 {
+  margin: 0; padding: .45cqw 1cqw;
+  background: var(--sr-green-deep); color: var(--sr-olive);
+  text-transform: uppercase;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 2.016cqw); line-height: 1.25;
+}
+.rp-policy-box ul { margin: 0; padding: .9cqw 0 1.1cqw; list-style: none; }
+.rp-policy-box li { margin: 0 .7cqw; }
+/* `display: table` makes the rule stop at the end of the words, which is how
+   the print draws it. */
+.rp-policy-box a {
+  display: table; padding: .28cqw 0 .3cqw;
+  border-bottom: .59pt solid var(--sr-olive);
+  color: var(--sr-olive); text-decoration: none;
+  font-size: max(12px, 1.982cqw); line-height: 1.25;
+}
+.rp-policy-box a:hover, .rp-policy-box a:focus-visible { color: var(--sr-green-deep); border-color: var(--sr-green-deep); }
+
+/* ---- the glance card without the olive band, printed page 85 ------------ */
+.rp-card-glance--plain .rp-card-glance-foot { padding-top: 0; }
+.rp-card-glance--plain .rp-card-glance-foot ul {
+  border-top: 1.122pt solid var(--sr-olive); padding-top: 2.4cqw;
+}
+.rp-card-glance-foot li b { font-weight: 700; }
+
+/* ---- Asset Management as of 1Q 26, printed page 87 ---------------------
+   An olive panel with a deep-green cap, then seven rows split into a figure
+   and what it counts, divided by hairline white rules. Panel 255.1pt wide,
+   cap 74.7pt deep, split at 99.7pt from the panel's left edge. */
+.rp-two--tight { gap: 1.7cqw; }
+.rp-am { background: var(--sr-olive); color: var(--sr-white); font-family: var(--sr-sans); align-self: start; }
+.rp-sec .rp-in .rp-am h4 {
+  margin: 0; padding: 2.5cqw 1.3cqw;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  text-align: center; text-transform: uppercase;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 3.713cqw); line-height: 1.1;
+}
+.rp-am dl { margin: 0; padding: 0 1.294cqw; }
+.rp-am-row {
+  display: grid; grid-template-columns: 15.455cqw 1fr; align-items: center;
+  gap: .8cqw; padding: 1.1cqw 0;
+}
+.rp-am-row + .rp-am-row { border-top: .388pt solid var(--sr-white); }
+.rp-am dt {
+  text-align: center; font-weight: 700;
+  font-size: max(12px, 1.949cqw); line-height: 1.25;
+}
+.rp-am dd {
+  margin: 0; text-align: center; font-weight: 400;
+  font-size: max(12px, 1.949cqw); line-height: 1.25;
+}
+
+/* ---- two photographs with the print's own narrow alley, page 93 --------- */
+.rp-pair--tight { gap: .89cqw; }
+.rp-pair--tight img { aspect-ratio: 258.7 / 193.2; }
+.rp-media--half { width: 43.81cqw; }
+
+/* ---- Prioritizing Privacy, printed page 96 -----------------------------
+   A hairline title box over a hairline body box, both 523.9pt wide, with an
+   olive rule between the lead and the list. */
+.rp-privacy { margin: 3.4cqw 0; }
+.rp-sec .rp-in .rp-privacy h4 {
+  margin: 0; padding: 1.1cqw 1cqw;
+  border: .5pt solid var(--sr-black);
+  text-align: center; text-transform: uppercase;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.52cqw); line-height: 1.2;
+  color: var(--sr-green-deep);
+}
+.rp-privacy-body {
+  margin-top: 1.88cqw; padding: 2.2cqw 2.6cqw 2.4cqw;
+  border: .5pt solid var(--sr-black); color: var(--sr-green-deep);
+}
+.rp-sec .rp-privacy-body p {
+  margin: 0 0 1.9cqw; padding-bottom: 1.9cqw;
+  border-bottom: 1pt solid var(--sr-olive);
+  color: var(--sr-green-deep);
+  font-size: max(14px, 2.016cqw); line-height: 1.35;
+}
+.rp-privacy-body .rp-dots { color: var(--sr-green-deep); font-size: max(13px, 1.68cqw); }
+
+/* ---- Information Security by Numbers, printed page 97 ------------------
+   One hairline box, four figures to a row, each figure under its caption. */
+.rp-isnum { margin: 3.4cqw 0; padding: 2.4cqw 3.377cqw 3cqw; border: 1.122pt solid var(--sr-green-deep); }
+.rp-sec .rp-in .rp-isnum h4 {
+  margin: 0 0 2cqw; text-align: center;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(17px, 3.326cqw); line-height: 1.2;
+  color: var(--sr-green-deep);
+}
+.rp-isnum dl {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2cqw 1.6cqw;
+  margin: 0; padding-top: 2cqw; border-top: 1.122pt solid var(--sr-green-deep);
+}
+.rp-isnum dl > div { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.rp-isnum dt {
+  color: var(--sr-green-deep); font-size: max(12px, 1.68cqw); line-height: 1.2;
+  min-height: 3.6em;
+}
+.rp-isnum dd {
+  margin: .4cqw 0 0; color: var(--sr-green-deep);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(22px, 4.737cqw); line-height: 1;
+}
+
+/* ---- the three certifications, printed page 100 ------------------------ */
+.rp-certs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3cqw; margin: 2.4cqw 0 2cqw; }
+.rp-certs figure { margin: 0; }
+/* The three marks are drawn at different heights but the print starts every
+   caption on the same line, so each one sits in a slot as deep as the tallest
+   (120.1pt) and rests on its floor. */
+.rp-certs img {
+  display: block; width: auto; max-width: 100%;
+  height: 20.176cqw; min-height: 84px;
+  object-fit: contain; object-position: left bottom;
+  margin: 0 0 1.4cqw;
+}
+.rp-sec .rp-certs figcaption {
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(13px, 2.184cqw); line-height: 1.2;
+  color: var(--sr-green-deep);
+}
+.rp-sec .rp-in p.rp-certs-note {
+  margin-bottom: 3cqw; color: var(--sr-green-deep);
+  font-size: max(13px, 2.016cqw); line-height: 1.35;
+}
+
+/* ---- a 19.8pt heading in the deep green, set as it reads, page 101 ------ */
+.rp-sec .rp-in h2.rp-h-plain {
+  font-size: max(18px, 3.326cqw); line-height: 1.2;
+  color: var(--sr-green-deep); text-transform: none;
+}
+
+/* ---- the AI strategy, printed page 101 --------------------------------- */
+.rp-sec .rp-in p.rp-ai-band {
+  margin: 3.4cqw 0 2.8cqw; padding: 1.4cqw 1.6cqw;
+  background: var(--sr-green-deep); color: var(--sr-olive);
+  text-align: center;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.889cqw); line-height: 1.2;
+}
+.rp-ai-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.87cqw; margin-bottom: 3.4cqw; }
+.rp-sec .rp-in .rp-ai-cards p {
+  display: flex; align-items: center; justify-content: center;
+  margin: 0; padding: 1.8cqw 1.6cqw; min-height: 18.7cqw;
+  background: #f4f4e5; border: .5pt solid var(--sr-green-deep);
+  text-align: center; color: var(--sr-green-deep);
+  font-size: max(14px, 2.184cqw); line-height: 1.2;
+}
+.rp-ai-areas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.33cqw; margin: 2cqw 0 1cqw; }
+.rp-ai-areas section { padding: 1.6cqw 1.5cqw 2cqw; border: .5pt solid var(--sr-black); }
+.rp-sec .rp-in .rp-ai-areas h4 {
+  margin: 0 0 1.6cqw;
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.688cqw); line-height: 1.06;
+  color: #015937;
+}
+.rp-ai-areas ul { margin: 0; padding-left: 1.2em; list-style: disc; }
+.rp-ai-areas li {
+  margin-bottom: .5em; color: #2a5a48;
+  font-size: max(13px, 1.848cqw); line-height: 1.2;
+}
+
+@media (max-width: 700px) {
+  .rp-policy-cols { grid-template-columns: 1fr; gap: 12px; }
+  .rp-policy-col { gap: 12px; }
+  .rp-logo--float { float: none; margin: 8px 0 14px; }
+  .rp-two--tight { grid-template-columns: 1fr; gap: 18px; }
+  .rp-am-row { grid-template-columns: 96px 1fr; }
+  .rp-media--half { width: 100%; }
+  .rp-pair--tight { gap: 10px; }
+  .rp-isnum { padding: 18px 16px 20px; }
+  .rp-isnum dl { grid-template-columns: 1fr 1fr; gap: 18px 12px; }
+  .rp-isnum dt { min-height: 0; }
+  .rp-certs { grid-template-columns: 1fr; gap: 18px; }
+  .rp-certs img { height: 84px; }
+  .rp-ai-cards, .rp-ai-areas { grid-template-columns: 1fr; gap: 12px; }
+  .rp-sec .rp-in .rp-ai-cards p { min-height: 0; }
+  .rp-privacy-body { padding: 16px 18px 18px; }
+}
+
+/* ============================================================================
+ * SECTION FIVE — STAKEHOLDER ENGAGEMENT, printed pages 102 to 126
+ * ============================================================================
+ * The section repeats a handful of printed devices; each is a component here,
+ * measured off the sheets and written in cqw (a printed point ÷ 5.95275).
+ * ========================================================================== */
+
+/* ---- a dash-bulleted list, printed page 109 ----------------------------- */
+.rp-dashes { margin: 0 0 1.3em; padding: 0; list-style: none; }
+.rp-dashes li { position: relative; padding-left: 1.5em; margin-bottom: .9em; line-height: 1.3; }
+.rp-dashes li:last-child { margin-bottom: 0; }
+.rp-dashes li::before { content: '–'; position: absolute; left: 0; top: 0; }
+
+/* ---- plain photo grids, pages 106 and 107 ------------------------------- */
+.rp-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.9cqw; margin: 2.4cqw 0 3cqw; }
+.rp-grid3 img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.rp-grid3--tall img { aspect-ratio: 165.7 / 203.4; }
+.rp-grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.75cqw; margin: 2.4cqw 0 3cqw; }
+.rp-grid5 img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+/* ---- the stakeholder ecosystem, printed page 105 -----------------------
+   Six chips for the stakeholders, an olive banner with the print's downward
+   point, and four columns each with a cap, a mark, a lead, its bullets and
+   its impact line. Chips 77.8 x 50.3pt with an 11.4pt alley; banner 319.6 x
+   34.8pt; caps 119.7 x 22.1pt with a 14.8pt alley. */
+.rp-eco { margin: 3.4cqw 0 2cqw; }
+.rp-sec .rp-in .rp-eco > h3 {
+  margin: 0 0 2.4cqw; text-align: center;
+  font-size: max(16px, 3.024cqw); color: var(--sr-green-deep);
+}
+.rp-eco-chips {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.915cqw;
+  margin: 0 0 3.2cqw; padding: 0; list-style: none;
+}
+.rp-eco-chips li {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 8.45cqw; padding: .6cqw .4cqw;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(11px, 1.68cqw); line-height: 1.15;
+}
+.rp-sec .rp-in p.rp-eco-banner {
+  position: relative; width: 53.69cqw; margin: 0 auto 5.4cqw;
+  padding: 1.15cqw 1cqw; background: var(--sr-olive); color: var(--sr-white);
+  text-align: center; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(14px, 2.688cqw); line-height: 1.2;
+}
+/* the print finishes the banner with a point aimed at the four columns */
+.rp-eco-banner::after {
+  content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+  border-left: 2.36cqw solid transparent; border-right: 2.36cqw solid transparent;
+  border-top: 2.36cqw solid var(--sr-olive);
+}
+.rp-eco-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.486cqw; }
+.rp-sec .rp-in .rp-eco-cols h4 {
+  margin: 0; padding: .55cqw 1cqw;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(11px, 1.68cqw); line-height: 1.3;
+}
+/* The print starts every column's lead on the same line and sets every
+   impact line at the foot, so the mark gets a fixed slot and the impact is
+   pushed down. */
+.rp-eco-cols > section { display: flex; flex-direction: column; }
+.rp-eco-body {
+  display: flex; flex-direction: column; flex: 1;
+  padding: 1.6cqw 0 1.6cqw 1.4cqw; border-left: 1px solid var(--sr-green-deep);
+}
+.rp-eco-body img {
+  display: block; width: auto; max-width: 100%;
+  height: 7.4cqw; min-height: 44px; object-fit: contain; object-position: left bottom;
+  margin: 0 0 2cqw;
+}
+.rp-sec .rp-eco-body p.rp-eco-lead {
+  margin: 0 0 1.4cqw; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 1.68cqw); line-height: 1.2; color: var(--sr-green-deep);
+}
+.rp-eco-body ul { margin: 0 0 1.8cqw; padding-left: 1.1em; list-style: disc; }
+.rp-eco-body li { margin-bottom: .35em; font-size: max(11px, 1.344cqw); line-height: 1.25; }
+.rp-sec .rp-eco-body p.rp-eco-impact {
+  margin: auto 0 0; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(10px, 1.176cqw); line-height: 1.25; color: var(--sr-olive);
+}
+
+/* ---- the learning and development figures, printed page 109 ------------
+   A rounded outline, the title over a rule, then four captions over a second
+   rule and the four figures. Box 522.2 x 204pt, rules inset 20.1pt. */
+.rp-lnd {
+  margin: 3.4cqw 0 2cqw; padding: 2.6cqw 3.377cqw 3cqw;
+  border: 1.122pt solid var(--sr-green-deep); border-radius: 3.4cqw;
+}
+.rp-sec .rp-in .rp-lnd h4 {
+  margin: 0 0 1.8cqw; text-align: center;
+  font-family: var(--sr-sans); font-weight: 700; text-transform: uppercase;
+  font-size: max(18px, 3.326cqw); line-height: 1.22; color: var(--sr-green-deep);
+}
+.rp-lnd dl {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 1.6cqw; margin: 0;
+  padding-top: 2cqw; border-top: 1.122pt solid var(--sr-green-deep);
+}
+.rp-lnd dl > div:not(.rp-lnd-rule) { display: contents; }
+.rp-lnd dt {
+  grid-row: 1; text-align: center; color: var(--sr-green-deep);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 1.68cqw); line-height: 1.25;
+  padding-bottom: 1.8cqw;
+}
+/* the print rules right across under the captions, so the rule is its own
+   grid item spanning all four columns rather than a border on each cell */
+.rp-lnd-rule { grid-row: 2; grid-column: 1 / -1; border-top: 1.122pt solid var(--sr-green-deep); }
+.rp-lnd dd {
+  grid-row: 3; margin: 0; padding-top: 1.8cqw; text-align: center;
+  color: var(--sr-green-deep);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(20px, 3.192cqw); line-height: 1.15;
+}
+
+/* ---- a photograph with the print's label across its foot ---------------- */
+.rp-shot { position: relative; margin: 2.4cqw 0 1.4cqw; }
+.rp-shot img { display: block; width: 100%; height: auto; }
+.rp-sec .rp-shot figcaption {
+  position: absolute; left: 0; bottom: 0;
+  padding: .85cqw 2.1cqw; background: var(--sr-green-deep); color: var(--sr-white);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 1.848cqw); line-height: 1.2;
+}
+
+/* ---- an intern's words on the lime panel, pages 111 and 112 ------------- */
+.rp-intern {
+  display: grid; grid-template-columns: 42.8cqw 1fr; gap: 2.4cqw;
+  align-items: stretch; margin: 3cqw 0;
+}
+.rp-intern > img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 1.6cqw; }
+.rp-intern blockquote {
+  margin: 0; padding: 2.4cqw 2.6cqw; border-radius: 1.6cqw;
+  background: #b1c04f; color: var(--sr-white);
+}
+.rp-sec .rp-intern blockquote p {
+  margin: 0; font-style: italic; text-align: justify;
+  font-size: max(13px, 1.68cqw); line-height: 1.3;
+}
+.rp-intern footer {
+  margin-top: 2.4cqw; text-align: right; color: var(--sr-green-deep);
+  font-size: max(13px, 1.68cqw); line-height: 1.3;
+}
+.rp-intern footer b { display: block; font-family: var(--sr-sans); font-weight: 700; }
+
+/* ---- a cream panel of copy beside a mosaic of photographs -------------
+   The print rules the top of the card in olive and sets the copy on cream
+   beside three pictures: one wide, two under it. */
+.rp-case {
+  display: grid; grid-template-columns: 29.36cqw 1fr; gap: 0;
+  border-top: 1.122pt solid var(--sr-olive); margin: 3cqw 0;
+}
+.rp-case--flip { grid-template-columns: 1fr 29.36cqw; }
+.rp-case--flip .rp-case-text { order: 2; }
+.rp-case-text { background: #f4f4e5; padding: 2.6cqw 2.4cqw 3cqw; }
+.rp-sec .rp-in .rp-case-text h3 { margin: 0 0 1.8cqw; font-size: max(15px, 2.688cqw); }
+.rp-sec .rp-case-text p { margin: 0; font-size: max(13px, 1.68cqw); line-height: 1.3; }
+.rp-case-art { display: grid; grid-template-columns: 1fr 1fr; gap: .25cqw; align-content: start; }
+.rp-case-art--two { grid-template-columns: 1fr 1fr; }
+.rp-case-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rp-case-wide { grid-column: 1 / -1; aspect-ratio: 348 / 156; }
+.rp-case-art > img:not(.rp-case-wide) { aspect-ratio: 174 / 108; }
+.rp-case-art--two > img { aspect-ratio: 254 / 161; height: auto; }
+
+/* ---- a speaker: a photograph beside a coloured panel with a tab --------
+   Photo 179.4pt, panel 343.9pt, tab 120.4 x 8.3pt flush with the copy. */
+.rp-speak { display: grid; grid-template-columns: 30.14cqw 1fr; margin: 2.4cqw 0; align-items: stretch; }
+.rp-speak--flip { grid-template-columns: 1fr 30.14cqw; }
+.rp-speak--flip > img { order: 2; }
+.rp-speak > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rp-speak > div { position: relative; padding: 5.9cqw 4.94cqw 3.4cqw; }
+.rp-speak > div::before {
+  content: ''; position: absolute; left: 4.94cqw; top: 0;
+  width: 20.23cqw; height: 1.394cqw;
+}
+.rp-sec .rp-speak p { margin: 0; text-align: justify; font-size: max(13px, 1.68cqw); line-height: 1.3; }
+.rp-speak--olive > div { background: var(--sr-olive); }
+.rp-speak--olive p { color: var(--sr-white); }
+.rp-speak--olive > div::before { background: var(--sr-green-deep); }
+.rp-speak--grey > div { background: #e6e7e8; }
+.rp-speak--grey > div::before { background: var(--sr-olive); }
+.rp-speak--green > div { background: var(--sr-green-deep); }
+.rp-speak--green p { color: var(--sr-white); }
+.rp-speak--green > div::before { background: var(--sr-olive); }
+
+/* ---- a cream panel carrying copy and a strip of photographs ------------- */
+.rp-cream { margin: 3cqw 0; padding: 2.9cqw 3.2cqw 3.2cqw; background: #f4f4e5; border-radius: 1.6cqw; }
+.rp-sec .rp-in .rp-cream h3 { margin: 0 0 1.8cqw; }
+.rp-sec .rp-cream p { font-size: max(14px, 1.68cqw); line-height: 1.35; }
+.rp-cream-top { display: grid; grid-template-columns: 1fr 26.8cqw; gap: 2.4cqw; align-items: start; }
+.rp-cream-top img { display: block; width: 100%; height: auto; border-radius: 1cqw; }
+.rp-cream-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4cqw; margin-top: 2.4cqw; }
+.rp-cream-strip--three { grid-template-columns: 20fr 40fr 20fr; }
+.rp-cream-strip img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 232 / 175; border-radius: .8cqw; }
+.rp-cream-strip--three img { aspect-ratio: 119 / 159; }
+.rp-cream-strip--three img:nth-child(2) { aspect-ratio: 238 / 159; }
+
+/* ---- three columns divided by the print's olive rules, page 121 --------- */
+.rp-cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.1cqw; margin: 3.4cqw 0 1cqw; }
+.rp-cols3 > section + section { padding-left: 3.1cqw; border-left: 1px solid var(--sr-olive); }
+.rp-sec .rp-in .rp-cols3 h3 { margin: 0 0 1.6cqw; }
+.rp-sec .rp-cols3 p { margin: 0; text-align: justify; hyphens: auto; }
+
+/* ---- six bordered photo tiles, printed page 122 ------------------------- */
+.rp-tiles6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.4cqw 3.42cqw; margin: 3cqw 0 1cqw; }
+.rp-tiles6 figure { margin: 0; padding: .4cqw; border: 1px solid var(--sr-olive); }
+.rp-tiles6 img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+/* ---- a heading with the print's round mark before it -------------------- */
+.rp-sec .rp-in h3.rp-iconhead { display: flex; align-items: center; gap: 1.5cqw; }
+.rp-iconhead img { display: block; width: 6.7cqw; min-width: 34px; height: auto; margin: 0; flex: none; }
+
+@media (max-width: 700px) {
+  .rp-grid3, .rp-grid5, .rp-tiles6 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rp-eco-chips { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .rp-eco-chips li { min-height: 54px; font-size: 13px; }
+  .rp-sec .rp-in p.rp-eco-banner { width: 100%; padding: 10px; }
+  .rp-eco-cols { grid-template-columns: 1fr; gap: 18px; }
+  .rp-eco-body img { width: 64px; }
+  .rp-lnd { padding: 18px 16px 20px; border-radius: 18px; }
+  .rp-lnd dl { grid-template-columns: 1fr 1fr; gap: 18px 12px; }
+  .rp-lnd dl > div:not(.rp-lnd-rule) { display: flex; flex-direction: column; }
+  .rp-lnd dt { padding-bottom: 6px; }
+  .rp-lnd-rule { display: none; }
+  .rp-lnd dd { padding-top: 0; }
+  .rp-intern, .rp-case, .rp-case--flip, .rp-speak, .rp-speak--flip,
+  .rp-cream-top, .rp-cols3 { grid-template-columns: 1fr; }
+  .rp-case--flip .rp-case-text, .rp-speak--flip > img { order: 0; }
+  .rp-intern { gap: 12px; }
+  .rp-intern blockquote { padding: 16px 18px; }
+  .rp-speak > div { padding: 22px 18px 20px; }
+  .rp-speak > div::before { left: 18px; width: 110px; height: 7px; }
+  .rp-cols3 > section + section { padding-left: 0; border-left: 0; padding-top: 18px; border-top: 1px solid var(--sr-olive); }
+  .rp-cream { padding: 18px 16px 20px; }
+  .rp-cream-strip { gap: 8px; }
+  .rp-sec .rp-shot figcaption { padding: 6px 12px; font-size: 12px; }
+  .rp-iconhead img { width: 34px; }
+}
+
+/* ============================================================================
+ * FROM CLARITY TO IMPACT and APPENDIX 1, printed pages 127 to 129
+ * ========================================================================== */
+
+/* ---- the olive standfirst under a page title, page 127 ----------------- */
+.rp-sec .rp-in h3.rp-standfirst { margin: -1.6cqw 0 2.6cqw; color: var(--sr-olive); }
+.rp-sec .rp-in h2.rp-standfirst--olive {
+  margin: -1.6cqw 0 2.6cqw; color: var(--sr-olive);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(15px, 2.184cqw);
+}
+
+/* ---- the emissions tables ---------------------------------------------
+   The printed appendix runs one spreadsheet across a spread; here the two
+   halves are one table. It is wider than a phone, so it scrolls inside its
+   own box and never pushes the page sideways. */
+.rp-tablewrap { overflow-x: auto; margin: 2.4cqw 0 3cqw; -webkit-overflow-scrolling: touch; }
+.rp-emissions, .rp-summary {
+  width: 100%; min-width: 40em; border-collapse: collapse;
+  font-size: max(13px, 1.68cqw); line-height: 1.3; color: var(--sr-ink);
+}
+.rp-summary { min-width: 26em; }
+.rp-sec .rp-in .rp-emissions caption,
+.rp-sec .rp-in .rp-summary caption {
+  padding: .95cqw 1.4cqw; text-align: left;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(13px, 1.848cqw); line-height: 1.3;
+}
+.rp-summary--olive caption { background: var(--sr-olive); text-transform: uppercase; }
+/* A caption carrying a unit at its far end — the print sets the label left and
+   the unit hard right on the same bar. */
+.rp-sec .rp-in .rp-summary caption:has(.rp-summary-unit) {
+  display: flex; justify-content: space-between; gap: 1em;
+}
+.rp-summary--olive caption, .rp-summary--green caption { text-transform: uppercase; }
+.rp-emissions thead th {
+  padding: .95cqw 1cqw; text-align: left; vertical-align: bottom;
+  background: var(--sr-green-deep); color: var(--sr-white);
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(12px, 1.848cqw); line-height: 1.25;
+}
+.rp-emissions tbody th, .rp-emissions tbody td { padding: .75cqw 1cqw; text-align: left; font-weight: 400; vertical-align: top; }
+.rp-emissions th:nth-child(1) { width: 16%; }
+.rp-emissions th:nth-child(2) { width: 24%; }
+.rp-emissions th:nth-child(3) { width: 13%; }
+.rp-emissions th:nth-child(4) { width: 7%; }
+.rp-emissions th:nth-child(5) { width: 15%; }
+.rp-emissions th:nth-child(6) { width: 6%; }
+.rp-emissions th:nth-child(7) { width: 11%; }
+.rp-emissions th:nth-child(8) { width: 8%; }
+.rp-emissions tbody td:nth-child(3) { background: #f4f4e5; }
+.rp-emissions .rp-num, .rp-emissions td.rp-num { text-align: right; font-variant-numeric: tabular-nums; }
+.rp-emissions tfoot th, .rp-emissions tfoot td {
+  padding: .95cqw 1cqw; text-align: left;
+  border-top: 1px solid var(--sr-olive);
+  font-family: var(--sr-sans); font-weight: 700; color: var(--sr-green-deep);
+}
+.rp-emissions tfoot td { text-align: right; font-variant-numeric: tabular-nums; }
+.rp-summary th, .rp-summary td { padding: .6cqw 1.4cqw; text-align: left; font-weight: 400; }
+.rp-summary td { text-align: right; font-variant-numeric: tabular-nums; }
+.rp-summary--green tbody tr + tr th, .rp-summary--green tbody tr + tr td { border-top: 1px solid #e6e7e8; }
+.rp-tick { color: var(--sr-olive); font-weight: 700; }
+
+/* ---- the donut, printed page 129 --------------------------------------
+   369.84 of 3,263.83 is Scope 1; the rest is Scope 2 location based. The
+   figures in the middle are text, not part of the drawing. */
+.rp-emissions-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 4cqw; align-items: start; margin: 3cqw 0 1cqw; }
+.rp-donut { margin: 0; }
+.rp-donut-ring {
+  position: relative;
+  width: 100%; max-width: 44cqw; aspect-ratio: 1; margin-inline: auto;
+}
+/* The ring is one conic gradient with its middle masked out. The mask is on a
+   layer of its own, because a mask applies to an element's children too and
+   would eat the figures standing in the hole. */
+.rp-donut-ring::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(var(--sr-green-deep) 0 var(--s1), var(--sr-olive) var(--s1) 100%);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 59%, #000 60%);
+          mask: radial-gradient(circle closest-side, transparent 0 59%, #000 60%);
+}
+.rp-donut-ring > div {
+  position: absolute; inset: 0; display: grid; place-content: center; text-align: center;
+  color: var(--sr-ink);
+}
+.rp-donut-ring b { display: block; font-family: var(--sr-sans); font-weight: 700; font-size: max(13px, 1.848cqw); }
+.rp-donut-ring span { display: block; font-size: max(12px, 1.848cqw); }
+.rp-donut-ring strong { display: block; margin-top: .3em; font-family: var(--sr-sans); font-weight: 700; font-size: max(24px, 4.704cqw); }
+.rp-sec .rp-donut figcaption { display: grid; gap: .5em; margin-top: 2.4cqw; }
+.rp-donut-key { position: relative; padding-left: 2.2em; font-family: var(--sr-sans); font-weight: 700; font-size: max(13px, 1.848cqw); color: var(--sr-ink); }
+.rp-donut-key::before { content: ''; position: absolute; left: 0; top: .15em; width: 1.4em; height: 1em; }
+.rp-donut-key--green::before { background: var(--sr-green-deep); }
+.rp-donut-key--olive::before { background: var(--sr-olive); }
+.rp-emissions-side { display: grid; gap: 3cqw; }
+
+/* ---- the notes and the decree footnote --------------------------------- */
+.rp-notes { margin: 3cqw 0 2cqw; }
+.rp-sec .rp-in .rp-notes h3 {
+  margin: 0 0 1.4cqw; padding: .7cqw 1.4cqw;
+  background: #dcdcc0; color: var(--sr-green-deep); text-transform: uppercase;
+  font-size: max(13px, 1.848cqw);
+}
+.rp-sec .rp-notes p.rp-notes-sub {
+  margin: 0 0 1cqw; text-transform: uppercase;
+  font-family: var(--sr-sans); font-weight: 700; font-size: max(12px, 1.512cqw);
+}
+.rp-notes-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1cqw 4cqw; }
+.rp-notes-cols ol { margin: 0; padding: 0; list-style: none; }
+/* index.css strips list markers site-wide. The print's "1-" is therefore set
+   in the markup rather than drawn by a counter, so it can be read out, found by
+   a search and copied with the line it numbers. */
+.rp-notes-cols li {
+  position: relative; padding-left: 2.1em; margin-bottom: .4em;
+  font-size: max(12px, 1.512cqw); line-height: 1.3;
+}
+.rp-notes-cols li span { position: absolute; left: 0; top: 0; }
+.rp-sec .rp-in p.rp-footnote { margin-top: 3cqw; font-size: max(11px, 1.344cqw); line-height: 1.35; }
+
+@media (max-width: 700px) {
+  .rp-emissions-foot { grid-template-columns: 1fr; gap: 26px; }
+  .rp-donut-ring { max-width: 260px; }
+  .rp-notes-cols { grid-template-columns: 1fr; gap: 0; }
+  .rp-emissions-side { gap: 22px; }
+}
+
+/* ============================================================================
+ * CORRECTIONS — measured against the print after the section audit
+ * ============================================================================
+ * Every rule below fixes a place where the site drifted from the printed page.
+ * They live together, at the end, so the reason for each one is recorded next
+ * to it rather than being lost in the section it belongs to.
+ * ========================================================================== */
+
+/* 1. `.rp-accent` is the print's olive half of a two-tone heading. As a bare
+   class (0,1,0) it loses to `.rp-sec .rp-in h3` (0,2,1) whenever it is put on
+   the heading itself rather than on a span inside it — pages 37, 58, 88. */
+.rp-sec .rp-in h1.rp-accent,
+.rp-sec .rp-in h2.rp-accent,
+.rp-sec .rp-in h3.rp-accent,
+.rp-sec .rp-in h4.rp-accent { color: var(--sr-olive); }
+
+/* 2. A panel title the print centres. `.rp-sec .rp-in p` (0,2,1) was setting
+   every one of them back to the left. */
+.rp-sec .rp-in p.rp-progress-title,
+.rp-sec .rp-in p.rp-glance-head,
+.rp-sec .rp-in p.rp-glance,
+.rp-sec .rp-in p.rp-band,
+.rp-sec .rp-in p.rp-eco-banner,
+.rp-sec .rp-in p.rp-ai-band { text-align: center; }
+
+/* 3. The Goals panel. The print fills it #F1F4F3, a near-white; the site had a
+   markedly darker grey-green. Sampled on pages 21, 32, 39, 49 and 84. */
+.rp-goals { background: #f1f4f3; }
+
+/* 4. THE PRINT ROUNDS ITS PANELS. Roughly 12pt on the sheet — 2cqw — and the
+   site was drawing every one of them square while a handful of newer
+   components kept their radius, which made the inconsistency conspicuous. */
+.rp-goals, .rp-progress, .rp-quote, .rp-quote--cream, .rp-note,
+.rp-privacy > h4, .rp-privacy-body, .rp-isnum, .rp-lnd,
+.rp-ai-areas section, .rp-glance, .rp-band { border-radius: 2cqw; }
+.rp-sec .rp-in p.rp-ai-band { border-radius: 2cqw; }
+.rp-sec .rp-in .rp-ai-cards p { border-radius: 2cqw; }
+.rp-mfigure div { border-radius: 0 2cqw 2cqw 0; }
+@media (max-width: 700px) {
+  .rp-goals, .rp-progress, .rp-quote, .rp-quote--cream, .rp-note,
+  .rp-privacy > h4, .rp-privacy-body, .rp-isnum, .rp-lnd,
+  .rp-ai-areas section, .rp-glance, .rp-band,
+  .rp-sec .rp-in p.rp-ai-band, .rp-sec .rp-in .rp-ai-cards p { border-radius: 12px; }
+  .rp-mfigure div { border-radius: 0 12px 12px 0; }
+}
+
+/* 5. A short lead is the print's grey body colour, not green. Pages 52, 53,
+   64, 65 all set these paragraphs #414042 like the running text. */
+.rp-sec .rp-lead--sm { color: var(--sr-ink); }
+
+/* 6. Two columns of running text need the print's band of air under them, or
+   the next heading starts on the line the columns end on — pages 69 and 73. */
+.rp-cols { margin-bottom: 1.3em; }
+
+/* 7. SMALL CAPS THE PRINT SETS AND THE SITE HAD LOST. Each of these is set in
+   full capitals on the sheet; the markup keeps them as words so a reader and a
+   search engine get the words, and the case is a matter for the stylesheet. */
+.rp-sec .rp-goals h3,
+.rp-sec .rp-in .rp-progress h3,
+.rp-sec .rp-in .rp-statcol h3,
+.rp-sec .rp-in h4.rp-kicker,
+.rp-quote-name, .rp-donut-key { text-transform: uppercase; }
+
+/* 8. An inline link in the running text is set ABCNormal-Bold in olive on the
+   sheet — pages 84, 93, 94 and 95 — not underlined body copy. */
+.rp-sec .rp-in p a, .rp-sec .rp-in li a {
+  color: #9f9e19; font-family: var(--sr-sans); font-weight: 700;
+  text-decoration: none; border-bottom: 1px solid currentColor;
+}
+.rp-sec .rp-in p a:hover, .rp-sec .rp-in li a:hover,
+.rp-sec .rp-in p a:focus-visible, .rp-sec .rp-in li a:focus-visible { color: var(--sr-green-deep); }
+/* the policy panel has its own link treatment; keep it off this one */
+.rp-policy-box a, .rp-policy-box a:hover { font-family: inherit; }
+
+/* 9. Information Security by Numbers, page 97: the print rules between the
+   four columns and between the two rows. Without them row two's captions sit
+   directly under row one's figures with nothing to separate them. */
+.rp-isnum dl { column-gap: 0; row-gap: 0; }
+.rp-isnum dl > div { padding: 1.6cqw 1.6cqw 2cqw; }
+.rp-isnum dl > div + div { border-left: 1px solid var(--sr-green-deep); }
+.rp-isnum dl > div:nth-child(5) { border-left: 0; }
+.rp-isnum dl > div:nth-child(n+5) { border-top: 1px solid var(--sr-green-deep); }
+@media (max-width: 700px) {
+  .rp-isnum dl > div:nth-child(odd) { border-left: 0; }
+  .rp-isnum dl > div:nth-child(n+3) { border-top: 1px solid var(--sr-green-deep); }
+}
+
+/* 10. The appendix. The print gives the two summary tables, the uncertainty
+   block and the sheet review olive caption bars; only the two scope tables are
+   dark green. `.rp-sec .rp-in .rp-summary caption` (0,3,1) was overruling the
+   modifier. And the appendix title is a 20pt section head like AWARENESS
+   RAISING, not a 35pt page title. */
+.rp-sec .rp-in .rp-summary--olive caption { background: var(--sr-olive); }
+.rp-sec .rp-in .rp-appendix-title {
+  font-size: max(20px, 3.36cqw); line-height: 1.2; color: #015937;
+  text-transform: uppercase; margin-bottom: 1.4cqw;
+}
+.rp-sec .rp-in .rp-notes h3 { color: var(--sr-ink); font-size: max(12px, 1.512cqw); }
+
+/* 11. A footnote-sized unit inside a figure must not fall below 11px on a
+   phone; the print's ratio alone took it to 7px. */
+.rp-sec .rp-in small { font-size: max(11px, .58em); }
+
+/* 12. Page 27 sets "financing package" at the same display size as
+   "FINANCING FACILITY" on 28, under the figure it belongs to. */
+.rp-sec .rp-in .rp-stat--display { font-size: max(18px, 4.032cqw); line-height: 1.1; }
+
+/* 13. A mark the print sets in the outer margin of a verso page. */
+.rp-logo--left { float: left; margin: .3cqw 2.4cqw 1.4cqw 0; }
+
+/* 14. Printed page 113 sets the Coventry block as one full-width cream panel:
+   the copy across the measure, the two photographs full width beneath it. */
+.rp-case--wide { grid-template-columns: 1fr; }
+.rp-case--wide .rp-case-art { grid-template-columns: 1fr 1fr; gap: .25cqw; }
+.rp-case--wide .rp-case-art > img { aspect-ratio: 254 / 161; height: auto; }
+
+/* 15. A quote's role line is set at the same 10pt as the name it sits under. */
+.rp-sec .rp-quote-role { font-size: max(13px, 1.68cqw); }
+
+/* 16. Printed page 11 sets the strapline in capitals; the markup keeps the
+   words as they read. */
+.rp-strapline { text-transform: uppercase; }
+
+/* 17. Printed page 12 sets "2025 PERFORMANCE / HIGHLIGHTS" at 40pt, not the
+   35pt of a page title. */
+.rp-sec .rp-in .rp-panel h1 { font-size: max(30px, 6.72cqw); }
+
+/* 18. The print closes the awards table with a rule under the last row, and
+   the citation is a phrase set under the company, not a run of lines. */
+.rp-table tbody tr:last-child td { border-bottom: 1px solid var(--sr-green-deep); }
+.rp-table td span { display: block; }
+
+/* 19. Printed page 101 sets a mark at the head of each key-area card. */
+.rp-ai-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.2cqw; }
+.rp-sec .rp-in .rp-ai-head h4 { margin: 0 0 1.6cqw; }
+.rp-ai-head img { flex: none; width: 6.2cqw; min-width: 32px; height: auto; margin: 0; }
+
+/* 20. Printed page 85 sets "(Selected examples)" a size down inside the kicker. */
+.rp-kicker-aside { font-size: .8em; }
+
+/* 21. The print underlines a policy name on every line it runs to. A table box
+   stops the rule at the block, so a wrapped name loses its first line's rule;
+   `box-decoration-break` puts it back on each line of an inline box. */
+.rp-policy-box a {
+  display: inline; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+
+/* 22. NOTHING ON A PHONE FALLS BELOW 11px. The print's ratios are right for a
+   sheet of paper; on a 390px screen the smallest of them land at 10px or less,
+   which is under what a reader can comfortably take in. These are the four
+   places that happened, each raised to the same floor the rest of the site
+   already uses. */
+.rp-sec .rp-fitem-note { font-size: max(11px, 1.008cqw); }
+.rp-sec .rp-eco-body p.rp-eco-impact { font-size: max(11px, 1.176cqw); }
+.rp-eco-body li { font-size: max(11px, 1.344cqw); }
+.rp-notes-cols li, .rp-sec .rp-notes p.rp-notes-sub { font-size: max(11px, 1.512cqw); }
+.rp-bar-head, .rp-bar { font-size: max(11px, 1.176cqw); }
+.rp-sec .rp-stat p { font-size: max(11px, 1.176cqw); }
+.rp-statcol dd { font-size: max(11px, 1.562cqw); }
+
+/* ============================================================================
+ * THE THREE REBUILT CHARTS — printed pages 24, 33 and 36
+ * ========================================================================== */
+.rp-chart { margin: 2.6cqw 0 1cqw; }
+.rp-pie {
+  width: 100%; max-width: 42cqw; aspect-ratio: 1; margin-inline: auto;
+  border-radius: 50%; background: conic-gradient(var(--stops));
+}
+.rp-ring {
+  position: relative; width: 100%; max-width: 40cqw; aspect-ratio: 1; margin-inline: auto;
+}
+.rp-ring::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(var(--stops));
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 71%, #000 72%);
+          mask: radial-gradient(circle closest-side, transparent 0 71%, #000 72%);
+}
+.rp-ring > div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.rp-ring span { display: block; font-size: max(13px, 2.352cqw); color: var(--sr-green-deep); }
+.rp-ring b {
+  display: block; font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(16px, 3.024cqw); color: var(--sr-green-deep);
+}
+
+/* the key under a pie: a swatch, the share, then what it names */
+.rp-key { margin: 2.4cqw 0 0; padding: 0; list-style: none; display: grid; gap: .5em; }
+.rp-key li {
+  position: relative; padding-left: 2.2em;
+  font-size: max(13px, 1.848cqw); line-height: 1.3; color: var(--sr-green-deep);
+}
+.rp-key li::before {
+  content: ''; position: absolute; left: 0; top: .18em;
+  width: 1.2em; height: 1.2em; border-radius: 50%; background: var(--k);
+}
+.rp-key b { font-family: var(--sr-sans); font-weight: 700; }
+
+/* the scope totals the print sets in three blocks under the donut */
+.rp-scopetable { width: 100%; margin-top: 2.6cqw; border-collapse: separate; border-spacing: 0 .5cqw; }
+.rp-scopetable th, .rp-scopetable td {
+  padding: .7cqw 1.2cqw; font-size: max(13px, 1.848cqw); line-height: 1.3;
+  font-family: var(--sr-sans); font-weight: 700; text-align: left;
+}
+.rp-scopetable th { background: var(--k); color: var(--ink); width: 55%; }
+.rp-scopetable td { border: 1px solid var(--k); color: var(--rp-figure-ink, var(--sr-ink)); text-align: right; }
+
+/* printed page 36, as a table */
+.rp-financed { width: 100%; min-width: 46em; border-collapse: collapse; font-size: max(13px, 1.68cqw); line-height: 1.3; }
+.rp-financed thead th {
+  padding: .8cqw 1cqw; vertical-align: bottom; text-align: left;
+  background: #e6e7e8; color: var(--sr-green-deep);
+  font-family: var(--sr-sans); font-weight: 700; font-size: max(12px, 1.512cqw);
+  text-transform: uppercase; line-height: 1.2;
+}
+.rp-financed thead th.rp-num { text-align: right; }
+.rp-financed thead th small { font-weight: 400; text-transform: none; }
+.rp-financed tbody th { padding: .8cqw 1cqw; text-align: left; font-weight: 400; color: var(--sr-green-deep); }
+.rp-financed tbody td { padding: .8cqw 1cqw; text-align: right; font-variant-numeric: tabular-nums; }
+.rp-financed tbody tr + tr th, .rp-financed tbody tr + tr td { border-top: 1px solid #e6e7e8; }
+.rp-financed tbody tr:nth-last-child(-n+2) th { font-family: var(--sr-sans); font-weight: 700; text-transform: uppercase; }
+.rp-financed tbody tr:nth-last-child(2) th, .rp-financed tbody tr:nth-last-child(2) td { border-top: 1px solid var(--sr-green-deep); }
+.rp-callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4cqw; margin: 2cqw 0 1cqw; }
+.rp-sec .rp-in .rp-callouts p {
+  margin: 0; padding: 1.4cqw 1.6cqw; background: #fbe6d4; border-radius: 2cqw;
+  color: var(--sr-green-deep); font-size: max(12px, 1.512cqw); line-height: 1.3;
+}
+.rp-callouts b { display: block; font-family: var(--sr-sans); font-weight: 700; font-size: 1.15em; margin-bottom: .3em; }
+
+@media (max-width: 700px) {
+  .rp-pie { max-width: 240px; }
+  .rp-ring { max-width: 230px; --rp-arc-r: 99px; }
+  .rp-callouts { grid-template-columns: 1fr; gap: 12px; }
+  .rp-sec .rp-in .rp-callouts p { border-radius: 12px; }
+}
+/* Each arc's percentage, standing on the arc as the print sets it: rotated out
+   to the middle of the ring, then counter-rotated so it reads level. */
+.rp-arc {
+  position: absolute; left: 50%; top: 50%;
+  /* centre it, swing it out to the middle of the ring, then turn it back level */
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--a))
+    translateY(calc(-1 * var(--rp-arc-r, 17.2cqw)))
+    rotate(calc(-1 * var(--a)));
+  font-family: var(--sr-sans); font-weight: 700;
+  font-size: max(11px, 1.512cqw); color: var(--sr-white); white-space: nowrap;
+}
+.rp-ring .rp-arc { color: var(--sr-white); }
+.rp-ring .rp-arc--dark { color: var(--sr-green-deep); }
+
+/* 23. A two-column block whose picture is a mark rather than a photograph. The
+   print gives the mark about a sixth of the sheet and keeps the copy on a full
+   measure beside it; an even split made the mark a quarter of the page and the
+   paragraph half as wide as anything around it. */
+.rp-two--aside { grid-template-columns: 20cqw 1fr; align-items: start; }
+.rp-two--aside .rp-media--small { width: 100%; max-width: 20cqw; }
+@media (max-width: 700px) {
+  .rp-two--aside { grid-template-columns: 1fr; }
+  .rp-two--aside .rp-media--small { max-width: 150px; }
+}
+.rp-two--aside-r { grid-template-columns: 1fr 20cqw; align-items: start; }
+.rp-two--aside-r .rp-media--small { width: 100%; max-width: 20cqw; }
+@media (max-width: 700px) {
+  .rp-two--aside-r { grid-template-columns: 1fr; }
+  .rp-two--aside-r .rp-media--small { max-width: 150px; }
+}
+
+/* 24. A pie whose slices carry their own percentages, printed page 57. The
+   radius the labels swing out to is 60% of the pie's own radius. */
+.rp-pie { position: relative; }
+.rp-pie .rp-arc { color: var(--sr-white); --rp-arc-r: 12cqw; }
+.rp-pie .rp-arc--dark { color: var(--sr-green-deep); }
+.rp-key--row { display: flex; flex-wrap: wrap; gap: .4em 1.6em; margin: 0 0 2cqw; justify-content: center; }
+.rp-key--row li { font-family: var(--sr-sans); font-weight: 700; }
+@media (max-width: 700px) { .rp-pie .rp-arc { --rp-arc-r: 68px; } }
+
+/* 25. Printed page 36 centres PERCENTAGE over the two columns it spans. */
+.rp-financed thead th[colspan] { text-align: center; }
+
+/* 26. The donut's key on printed page 129 is set in title case. */
+.rp-donut-key { text-transform: none; }

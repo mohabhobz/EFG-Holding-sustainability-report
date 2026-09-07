@@ -31,9 +31,27 @@
    tenth of the screen width, and the buttons are below the 44px the platforms
    ask for a touch target. Under 640px the inset comes in to 16px and the
    buttons go to 44 × 44 — the same object, sized for a thumb. */
-@media (max-width: 639px) {
-  .pn { right: 16px !important; gap: 6px; }
-  .pn-btn { width: 44px; height: 44px; padding: 10px; }
+/* ON A PHONE THE CONTROL COMES OUT OF THE READING COLUMN. Fixed bottom-right
+   works while the page has margins to spare; at this width the measure runs the
+   full screen, so a floating control sits on top of the words at every scroll
+   position. Here it stops floating and takes its place at the foot of the page,
+   which is where a reader looks for "next section" anyway. The inline `bottom`
+   and `right` the component sets for the floating case have to be overridden. */
+@media (max-width: 700px) {
+  .pn {
+    position: static !important;
+    inset: auto !important;
+    justify-content: center;
+    margin: 0 auto clamp(24px, 6vw, 40px);
+    gap: 6px;
+    filter: none;
+  }
+  .pn-btn {
+    width: 44px; height: 44px; padding: 10px;
+    border: 1px solid rgba(0, 69, 23, .22);
+  }
+  .pn-back { border-right: 0; }
+  .pn-next { border-left: 0; }
 }
 
 @media print { .pn { display: none; } }
