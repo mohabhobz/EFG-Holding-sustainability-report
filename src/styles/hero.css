@@ -46,9 +46,7 @@
   --cap: .161em;          /* box top → cap top, ABC Normal at line-height 1 */
 }
 .cv-in > *, .cv-in > * > * { margin: 0; }
-.cv-lockup, .cv-plaque, .cv-pri, .cv-sig, .cv-btn { position: absolute; }
-
-.cv-lockup { left: 4.787cqw; top: 4.116cqw; width: 37.462cqw; height: auto; }
+.cv-plaque, .cv-pri, .cv-sig, .cv-btn { position: absolute; }
 
 /* EVERY LINE IS PLACED ON ITS OWN PRINTED CAP POSITION. The print sets the two
    title lines 53.8pt apart at a 56.7pt size, and the two year lines 22.3pt

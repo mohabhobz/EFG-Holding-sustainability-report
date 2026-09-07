@@ -15,7 +15,8 @@ crop is deliberately a slice of a larger field.
 """
 A = [
   # ---- the printed cover, sheet 0 ---------------------------------------
-  ('cover/efg-lockup',        0, (28.5,24.5,251.5,60.5),     'mark', 900, 900),
+  # the print's EFG lockup is not cut: the site's header carries it, and two
+  # of them on one screen reads as a mistake. See ReportCover.jsx.
   ('cover/plaque',            0, (131.5,294.5,463.0,615.8),  'flat', 400, 900),
   ('cover/pri-signatory',     0, (459.3,792.2,570.5,814.3),  'flat', 900, 700),
   # ---- Section 1, INTRODUCTION -------------------------------------------

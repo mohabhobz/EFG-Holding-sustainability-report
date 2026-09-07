@@ -80,10 +80,13 @@ words inside it stay text and can be read out, searched and copied:
    to change if EFG want them filled or dropped.
 5. Four typographic slips corrected: "myconfidence", "adminstrative",
    "Operational Sustainabilit", "InternationalAgencies".
-6. **The cover** is the printed cover, measured off the sheet: the lockup, the
-   plaque and the PRI mark are images, every word is text at the printed size on
-   the printed cap line. The one thing the print does not have is the **Download
-   PDF** button, set in the 45pt of clear paper under REPORT 2025.
+6. **The cover** is the printed cover, measured off the sheet: the plaque and
+   the PRI mark are images, every word is text at the printed size on the
+   printed cap line. Two departures. The print's **EFG lockup is not drawn** —
+   a printed sheet has no header, this page does, and the same lockup sits in
+   it a few millimetres higher, so the cover leaves it to the header. And the
+   **Download PDF** button, which the print does not have, is set in the 45pt of
+   clear paper under REPORT 2025.
 7. **The cover and the contents spread are two separate pages**, `/` and
    `/contents`, each one screenful. Both are sized from the window's HEIGHT —
    the sheet takes its width from the height available under the header, at the
