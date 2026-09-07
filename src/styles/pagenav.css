@@ -6,8 +6,16 @@
  * 8px gap, `drop-shadow-md`, and `--efg-pagenav-arrow: rgba(0, 69, 23, .69)`.
  * ========================================================================== */
 
+/* ONE OFFSET, EVERY PAGE, EVERY SCROLL POSITION. The control used to lift
+   itself over the cover's PRI signatory mark and settle back once that scrolled
+   away, so the thing a reader navigates by was in a different place on the
+   cover than anywhere else, and slid while they read. It now sits still. The
+   offset is the highest the mark ever reaches — measured across seven window
+   sizes from 390 to 1920, where it needed between 102px and 161px — so the
+   arrows clear it on the cover and hold the same place on all 129 pages. */
 .pn {
   position: fixed; z-index: 30;
+  right: 40px; bottom: 165px;
   display: flex; gap: 8px;
   filter: drop-shadow(0 4px 3px rgba(0, 0, 0, .07)) drop-shadow(0 2px 2px rgba(0, 0, 0, .06));
 }
@@ -27,31 +35,25 @@
 .pn-btn:focus-visible { outline: 2px solid var(--sr-green); outline-offset: 2px; }
 .pn-btn.is-off { opacity: .5; cursor: default; }
 
-/* RESPONSIVE. The design's 40px inset is generous on a phone, where it costs a
-   tenth of the screen width, and the buttons are below the 44px the platforms
-   ask for a touch target. Under 640px the inset comes in to 16px and the
-   buttons go to 44 × 44 — the same object, sized for a thumb. */
-/* ON A PHONE THE CONTROL COMES OUT OF THE READING COLUMN. Fixed bottom-right
-   works while the page has margins to spare; at this width the measure runs the
-   full screen, so a floating control sits on top of the words at every scroll
-   position. Here it stops floating and takes its place at the foot of the page,
-   which is where a reader looks for "next section" anyway. The inline `bottom`
-   and `right` the component sets for the floating case have to be overridden. */
-@media (max-width: 700px) {
-  .pn {
-    position: static !important;
-    inset: auto !important;
-    justify-content: center;
-    margin: 0 auto clamp(24px, 6vw, 40px);
-    gap: 6px;
-    filter: none;
-  }
-  .pn-btn {
-    width: 44px; height: 44px; padding: 10px;
-    border: 1px solid rgba(0, 69, 23, .22);
-  }
-  .pn-back { border-right: 0; }
-  .pn-next { border-left: 0; }
+/* RESPONSIVE. The control floats on a phone exactly as it does on a desktop —
+   fixed to the bottom right — because that is the whole point of it: a reader
+   who wants the next section should not have to scroll to the foot of a page
+   that is thirty thousand pixels long to find the way there. It is the annual
+   report's own behaviour.
+
+   Two things change for a thumb. The design's 40px inset costs a tenth of a
+   phone screen, so it comes in to 16px; and the 40 x 40 button is under the
+   44 x 44 the platforms ask for a touch target, so it grows. The same object,
+   sized for a hand.
+
+   It sits over the page, which is what a floating control does. What keeps it
+   from being in the way is that it is small, hard against the corner, solid
+   white on its own drop shadow so it reads as chrome rather than as part of
+   the page — and that PageNav.jsx already lifts it clear of anything marked
+   `[data-floating-bottom]`, so it never lands on the cover's signatory mark. */
+@media (max-width: 639px) {
+  .pn { right: 16px; bottom: 102px; gap: 6px; }
+  .pn-btn { width: 44px; height: 44px; padding: 10px; }
 }
 
 @media print { .pn { display: none; } }

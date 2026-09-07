@@ -19,24 +19,17 @@
  * control is fixed to the viewport and stays with them. The Contents overlay is
  * z-50 and covers it.
  *
- * IT STEPS OVER WHATEVER CLAIMS THE BOTTOM OF THE SCREEN. The AR lifts it above
- * its footer; this build has no footer, but the report cover carries the PRI
- * signatory mark bottom-right and the arrows would land on top of it. Anything
- * marked `[data-floating-bottom]` — or a `footer`, if one is ever added — is
- * cleared by the same mechanism, and once it scrolls away the lift returns to
- * zero on its own.
- *
- * WHY THE POSITION IS NOT REACT STATE. The AR's note applies here unchanged: a
- * ResizeObserver callback runs after layout but before paint, so writing the
- * offset straight to the node lands in the same frame as the change that caused
- * it — the arrows are simply in the right place, with no intermediate frame to
- * animate away from. Scrolling goes through rAF, which is the one case that
- * reads layout often enough to want the throttle. Nothing here re-renders.
+ * IT DOES NOT MOVE. It used to lift itself over whatever claimed the bottom of
+ * the screen — the cover's PRI signatory mark is the only claimant in this
+ * build — and drop back once that scrolled away. That made the one control a
+ * reader navigates by sit in a different place on the cover than on every other
+ * page, and slide as they scrolled. It now sits at one offset, set in
+ * pagenav.css, high enough to clear the PRI mark at every window size, on every
+ * page and at every scroll position. No listener, no measurement, no movement.
  *
  * FIRST AND LAST. The contents page has nothing before it and the appendix
  * nothing after, so those arrows are disabled.
  */
-import { useLayoutEffect, useRef } from 'react';
 import { readingOrder } from '../data/contents';
 
 /* The design's own arrows, inlined. @node 503:2266 (back), 503:2270 (next) */
@@ -45,8 +38,7 @@ const BACK =
 const NEXT =
   'M8.04 0l8.04 8.04-8.04 8.04-1.38-1.44 5.58-5.64H0V7.08h12.24L6.66 1.44 8.04 0Z';
 
-/** 40px in from the right and up from the bottom, as the design insets it. */
-const INSET = 40;
+
 
 const ORDER = readingOrder.map((n) => n.href);
 
@@ -73,65 +65,15 @@ function Arrow({ target, label, side }) {
 }
 
 export default function PageNav({ path }) {
-  const navRef = useRef(null);
-
-  useLayoutEffect(() => {
-    const el = navRef.current;
-    if (!el) return undefined;
-
-    let frame = 0;
-    const place = () => {
-      frame = 0;
-      let lift = 0;
-      for (const node of document.querySelectorAll('footer, [data-floating-bottom]')) {
-        const r = node.getBoundingClientRect();
-        /* One correction to the AR's formula. Its only claimant is the footer,
-           which is the last thing on the page and so never leaves the bottom of
-           the screen — `innerHeight - top` is always the right lift for it. The
-           PRI mark does leave: it is inside the cover, and once the reader
-           scrolls past it its `top` goes negative and that same expression grows
-           without bound, which parked the arrows in the middle of the screen.
-           So a claimant is only honoured while it is still in the lower half of
-           the viewport, which is the only place it can be in the way of a
-           control pinned to the bottom right. */
-        if (r.bottom < window.innerHeight / 2) continue;
-        lift = Math.max(lift, window.innerHeight - r.top);
-      }
-      el.style.bottom = `${INSET + Math.max(0, lift)}px`;
-    };
-    const throttled = () => {
-      if (!frame) frame = window.requestAnimationFrame(place);
-    };
-
-    place();
-    window.addEventListener('scroll', throttled, { passive: true });
-    window.addEventListener('resize', place);
-    /* Synchronous, not throttled: this is the pre-paint hook. */
-    const observer = new ResizeObserver(place);
-    observer.observe(document.body);
-    /* A fixed element appearing or vanishing changes no layout the observer
-       measures, so watch the tree as well. */
-    const mutations = new MutationObserver(throttled);
-    mutations.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', throttled);
-      window.removeEventListener('resize', place);
-      observer.disconnect();
-      mutations.disconnect();
-    };
-  }, [path]);
-
   const i = ORDER.indexOf(path);
   if (i === -1) return null;
 
   const prev = i > 0 ? readingOrder[i - 1] : null;
   const next = i < readingOrder.length - 1 ? readingOrder[i + 1] : null;
 
+  /* The offset lives in pagenav.css — there is nothing to measure here. */
   return (
-    <nav ref={navRef} className="pn no-print" aria-label="Report sections"
-         style={{ bottom: `${INSET}px`, right: `${INSET}px` }}>
+    <nav className="pn no-print" aria-label="Report sections">
       <Arrow side="back" target={prev?.href} label={prev?.label} />
       <Arrow side="next" target={next?.href} label={next?.label} />
     </nav>
