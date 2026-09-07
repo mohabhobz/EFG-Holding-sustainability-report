@@ -35,7 +35,7 @@ const routes = {
    * a reader of the PDF sees first too. It is not lazy: it is small, and it is
    * the most likely first paint. */
   '/': Home,
-  '/abbreviations': lazy(() => import('./pages/Abbreviations')),
+  '/contents': lazy(() => import('./pages/Contents')),
   '/chairpersons-foreword': lazy(() => import('./pages/ChairpersonsForeword')),
   '/ceo-note': lazy(() => import('./pages/CeoNote')),
   '/introduction': lazy(() => import('./pages/Introduction')),
@@ -47,6 +47,15 @@ const routes = {
   '/appendix-carbon': lazy(() => import('./pages/AppendixCarbon')),
 };
 
+/* Addresses this build has moved. Abbreviations is printed page 3, the right
+ * leaf of the spread the contents sits on, so it is an anchor on that spread
+ * rather than a stop in its own right; and the spread itself has left the front
+ * door for a page of its own, because the cover is a page of its own. Links
+ * already sent out still have to work. */
+const redirects = {
+  '/abbreviations': '/contents#abbreviations',
+};
+
 /* Vite's base — '/' on Vercel, '/<repo>/' when published to a GitHub Pages
  * project page. Paths are stored WITHOUT it so the route table stays readable,
  * and it is put back on every history entry. */
@@ -56,6 +65,16 @@ const withBase = (p) => `${BASE}${p}`;
 
 export default function App() {
   const [path, setPath] = useState(() => strip(window.location.pathname));
+
+  /* A retired address is swapped for its new one before anything renders, and
+     with `replaceState` so Back does not walk into it again. */
+  useEffect(() => {
+    const moved = redirects[path];
+    if (!moved) return;
+    const [pathname, hash] = moved.split('#');
+    window.history.replaceState(null, '', withBase(pathname) + (hash ? `#${hash}` : ''));
+    setPath(pathname);
+  }, [path]);
 
   useEffect(() => {
     const onPop = () => setPath(strip(window.location.pathname));

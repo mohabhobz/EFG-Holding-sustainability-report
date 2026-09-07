@@ -1,89 +1,71 @@
 /**
- * REPORT COVER — the annual report's cover page, with this report's content.
+ * THE PRINTED COVER — sheet 0 of the PDF, rebuilt.
  *
- * This is `src/pages/Cover.jsx` from
- * `EFG Holding AR 2026/Web portal/efg-annual-report` (Figma frame 404:2631),
- * rewritten from Tailwind to plain CSS. Its geometry is kept to the number:
+ * The file's cover is a single flat image: its type is baked into the picture,
+ * so none of it survives as text. Here the three pictures on it — the EFG
+ * Holding lockup, the green plaque, the PRI signatory mark — are images, and
+ * every word is real text at the print's own size, colour and position.
  *
- *   artwork   full bleed, 100svh, min 520px
- *   title     left 8.194%, width 35.556%, hero size, tracking +0.0274em
- *   row       left 8.403%, top 57.252%, 24px gap — the year, the label, the button
- *     year    clamp(30px, 3.611vw, 52px), tracking -0.0385em
- *     label   clamp(15px, 1.667vw, 24px), two lines, 8px from the year
- *     button  201 x 50, radius 45, #8f8e00, 16px/500, tracking 0.9px
+ * Every measurement is taken off sheet 0 at 300dpi and written in cqw,
+ * hundredths of the page's width, against a box holding the printed A4
+ * proportion. So this is the printed cover at any window size. The type sizes
+ * are recovered the way the section dividers' are: the cap height measured off
+ * the artwork, divided by ABC Normal's 0.679em.
  *
- * WHAT IS THIS REPORT'S RATHER THAN THE AR'S:
+ *   lockup        x 28.5  y 24.5   221 x 36pt
+ *   THE POWER     cap 38.4pt → 56.6pt setting, centred, baseline band y 134.6
+ *   OF CLARITY    cap 38.6pt → 56.8pt, bold
+ *   strapline     cap 12.2pt → 18pt
+ *   plaque        x 131.5 y 294.5  331.5 x 321pt, centred
+ *   SUSTAINABILITY / REPORT 2025   cap 16.3pt → 24pt
+ *   Signatory of: cap 8.4pt → 12.4pt, black
+ *   PRI mark      x 459.3 y 792.2  111 x 22pt
  *
- * - The title keeps the printed cover's two weights — THE POWER in Book, OF
- *   CLARITY in Bold — because that lockup is the report's identity and the
- *   print sets it that way. The AR's title is one weight because its is.
- * - The theme line under it is on the printed cover and is kept. It is the one
- *   thing the AR cover has no slot for, so the title block is lifted from the
- *   AR's 36.259% to 33.71% to clear the row beneath — which is the AR's own
- *   move: its Financial Statements hero lifts its two-line title from y=315 to
- *   y=290 for exactly this reason.
- * - The PRI signatory mark is on the printed cover and is kept, bottom right.
- *   It is black and blue on white, so it sits on a white chip rather than
- *   straight on the artwork, where it would be unreadable.
+ * All of the green is #124734.
  *
- * NO SCRIM, deliberately — the AR's rule. Its cover artwork carries its own
- * falloff and a CSS scrim on top would double it. Supply artwork with the
- * gradient in it.
+ * THE ONE THING THE PRINT DOES NOT HAVE is the download button. A reader of a
+ * web page expects to be able to take the report away with them, and the print
+ * has 45pt of clear paper under REPORT 2025 to put it in.
  */
-import { reportPdf, cover } from '../data/report';
+import { reportPdf } from '../data/report';
 
-const files = import.meta.glob('../assets/heroes/*.{png,jpg,jpeg,webp}', {
-  eager: true,
-  import: 'default',
-});
-const art = Object.fromEntries(
-  Object.entries(files).map(([p, url]) => [p.split('/').pop().replace(/\.[^.]+$/, ''), url]),
-);
-import pri from '../assets/covers/pri-signatory.webp';
-
-function Meta() {
-  return (
-    <>
-      <div className="cv-year">
-        <span className="y">{cover.year}</span>
-        <span className="l">{cover.label}</span>
-      </div>
-      <a className="cv-btn" href={reportPdf} target="_blank" rel="noopener noreferrer"
-         aria-label="Download the 2025 Sustainability Report (PDF, opens in a new tab)">
-        Download PDF
-      </a>
-    </>
-  );
-}
+import lockup from '../assets/report/cover/efg-lockup.webp';
+import plaque from '../assets/report/cover/plaque.webp';
+import pri from '../assets/report/cover/pri-signatory.webp';
 
 export default function ReportCover() {
-  const image = art.cover;
-
   return (
-    <section className="hero cv" aria-label={`${cover.line1} ${cover.line2}`}>
-      {image
-        ? <img className="hero-art" src={image} alt="" aria-hidden="true" />
-        : <div className="hero-art hero-ph" aria-hidden="true">
-            <span>cover image pending · src/assets/heroes/cover.webp</span>
-          </div>}
+    <section className="cv" aria-labelledby="cover-title">
+      <div className="cv-in">
+        <img className="cv-lockup" src={lockup} width="900" height="146" alt="EFG Holding" />
 
-      {/* below 1024px */}
-      <div className="hero-flow">
-        <h1><span className="t1">{cover.line1}</span><span className="t2">{cover.line2}</span></h1>
-        <p className="cv-theme">{cover.theme}</p>
-        <div className="cv-row"><Meta /></div>
+        {/* Each line is placed on its own printed cap position rather than
+            stacked with a leading, because the print's two title lines are set
+            53.8pt apart at a 56.7pt size — tighter than any leading a stack
+            would give them. */}
+        <h1 id="cover-title" className="cv-title">
+          <span className="cv-t1">The Power</span>
+          <span className="cv-t2">Of Clarity</span>
+        </h1>
+        <p className="cv-theme">Transparent goals, tangible progress</p>
+
+        <img className="cv-plaque" src={plaque} width="900" height="872"
+             alt="" aria-hidden="true" />
+
+        <p className="cv-year">
+          <span className="cv-y1">Sustainability</span>
+          <span className="cv-y2">Report 2025</span>
+        </p>
+
+        <a className="cv-btn" href={reportPdf} target="_blank" rel="noopener noreferrer"
+           aria-label="Download the 2025 Sustainability Report (PDF, opens in a new tab)">
+          Download PDF
+        </a>
+
+        <p className="cv-sig">Signatory of:</p>
+        <img className="cv-pri" src={pri} width="700" height="139"
+             alt="Principles for Responsible Investment" />
       </div>
-
-      {/* 1024px and up — the design's own coordinates */}
-      <div className="hero-abs">
-        <div className="cv-title">
-          <h1><span className="t1">{cover.line1}</span><span className="t2">{cover.line2}</span></h1>
-          <p className="cv-theme">{cover.theme}</p>
-        </div>
-        <div className="cv-row"><Meta /></div>
-      </div>
-
-      <img className="cv-pri" data-floating-bottom="" src={pri} alt="Signatory of the Principles for Responsible Investment" />
     </section>
   );
 }

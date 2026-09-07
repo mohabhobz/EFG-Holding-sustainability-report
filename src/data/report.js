@@ -1,13 +1,7 @@
 /**
- * The report's own cover copy, as printed on page 0, and where the PDF lives.
+ * Where the PDF lives. The cover's own words are set in ReportCover.jsx, next
+ * to the measurements they are positioned by.
  */
-export const cover = {
-  line1: 'THE POWER',
-  line2: 'OF CLARITY',
-  theme: 'TRANSPARENT GOALS, TANGIBLE PROGRESS',
-  year: '2025',
-  label: 'SUSTAINABILITY\nREPORT',
-};
 
 /* The file is served from /public. Swap this for the hosted URL on
  * efgholding.com when the report is published there — the annual report's

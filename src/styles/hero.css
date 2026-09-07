@@ -1,145 +1,101 @@
 /* ============================================================================
- * THE COVER PANEL — the annual report's, in plain CSS
+ * THE PRINTED COVER — sheet 0
  * ============================================================================
- * A one-for-one translation of the AR's Tailwind classes: its `--size-hero`,
- * `--lh-hero`, `--weight-medium`, `--size-body`, `--lh-body`,
- * `--color-text-on-media` and `--space-24`, and its `lg:` breakpoint of 1024px.
+ * The printed A4 page, rebuilt. `.cv` is the container and `.cv-in` holds the
+ * proportion and every cqw measurement, for the reason set out in report.css:
+ * a cqw resolves against the nearest ANCESTOR container, so a box cannot size
+ * itself against itself. Positions are absolute because the print's are — this
+ * is one composed page, not a flow.
  *
- * THE PER-SECTION HERO IS GONE. Every route used to open on the AR's hero panel
- * — a full screen of artwork with the section title on it — before the printed
- * pages began. It is removed: the site is the header and the printed pages, and
- * the printed page already carries its own title. The panel below is now the
- * report cover's alone, on the home route; `.hero` stays its class name because
- * the geometry is the AR's hero geometry.
+ * Each measurement below is a printed point divided by 5.95275. The `--cap`
+ * nudge on each line of type is what turns a font size into the printed CAP
+ * position: with line-height 1 the cap top sits a fraction of an em below the
+ * box top, and that fraction is the same for every size, so it is written once.
  * ========================================================================== */
-
-.hero {
-  position: relative;
+/* THE SHEET IS SIZED FROM THE WINDOW'S HEIGHT, NOT ITS WIDTH. The cover is one
+   page and is meant to be taken in whole, so the sheet is as tall as the window
+   allows under the header and takes its width from that height at the printed
+   proportion — the way a page sits in a PDF reader. It never grows past the
+   column, so on a phone the width still governs and the cover still fits.
+   Because the sheet's width is now set from outside it, `.cv-in` is the
+   container: every cqw inside measures against the sheet itself. */
+.cv {
+  --cv-pad: clamp(10px, 1.8svh, 24px);
+  --cv-fit: calc((100svh - var(--sr-header-h) - 2 * var(--cv-pad)) * 0.70707);
+  box-sizing: border-box;
   width: 100%;
-  overflow: hidden;
-  /* The AR's panel is 100svh because its nav is `absolute top-0` and overlays
-     the artwork. Ours is a sticky, opaque header that takes flow space, so the
-     panel takes the screen MINUS the header — which is the same thing the AR's
-     does: fill the view. Everything inside stays a percentage of the panel, so
-     the design's proportions are untouched. */
-  height: calc(100svh - var(--sr-header-h));
-  min-height: 520px;
-  background: var(--sr-green-deep);
+  min-height: calc(100svh - var(--sr-header-h));
+  /* a narrower side margin than the rest of the site: on a phone the width is
+     what governs, and every pixel given to a margin comes off the cover */
+  padding: var(--cv-pad) clamp(12px, 2.5vw, 40px);
+  display: grid;
+  /* a definite column, so the sheet's `min(100%, …)` has a width to measure
+     against — an auto column would be sized by the sheet and collapse it */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  background: var(--sr-white);
 }
-
-.hero-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-/* Until the artwork arrives the panel is the report's deep green, so the white
-   title still reads and the slot is obviously waiting for something. */
- /* The pending-artwork note sits at the TOP of the panel: the foot is where the
-    title, the row and the floating prev/next arrows all are. */
-.hero-ph { display: grid; place-items: start center; padding-top: 18px; }
-.hero-ph span {
-  max-width: 88%; text-align: center; overflow-wrap: anywhere;
-  font-size: var(--sr-size-micro); letter-spacing: .08em; text-transform: uppercase;
-  color: rgba(255, 255, 255, .38);
+.cv-in {
+  container-type: inline-size;
+  width: min(100%, var(--cv-fit));
+  position: relative;
+  aspect-ratio: 595.276 / 841.89;
+  font-family: var(--sr-sans);
+  color: var(--sr-green-deep);
+  --cap: .161em;          /* box top → cap top, ABC Normal at line-height 1 */
 }
+.cv-in > *, .cv-in > * > * { margin: 0; }
+.cv-lockup, .cv-plaque, .cv-pri, .cv-sig, .cv-btn { position: absolute; }
 
-.hero h1 {
-  white-space: pre-line;
-  font-weight: 500;                              /* AR --weight-medium */
-  font-size: clamp(38px, 5.069vw, 73px);         /* AR --size-hero */
-  line-height: 1;                                /* AR --lh-hero */
-  color: var(--sr-white);                        /* AR --color-text-on-media */
+.cv-lockup { left: 4.787cqw; top: 4.116cqw; width: 37.462cqw; height: auto; }
+
+/* EVERY LINE IS PLACED ON ITS OWN PRINTED CAP POSITION. The print sets the two
+   title lines 53.8pt apart at a 56.7pt size, and the two year lines 22.3pt
+   apart at 24pt — both tighter than a line-height of 1 — so no stack of lines
+   lands on both. Each line is therefore its own box at its own measured top,
+   and `--cap` turns that box top into the cap top. */
+/* the two wrappers exist only to group; the lines place themselves */
+.cv-title, .cv-year { display: contents; }
+.cv-t1, .cv-t2, .cv-theme, .cv-y1, .cv-y2 {
+  position: absolute; left: 0; right: 0; text-align: center;
+  line-height: 1; text-transform: uppercase;
 }
-.hero p {
-  font-size: clamp(16px, 1.25vw, 18px);          /* AR --size-body */
-  line-height: 1.778;                            /* AR --lh-body */
-  color: var(--sr-white);
+.cv-t1, .cv-t2 { font-size: 9.525cqw; }
+.cv-t1 { font-weight: 400; top: calc(22.611cqw - var(--cap)); }
+.cv-t2 { font-weight: 700; top: calc(31.649cqw - var(--cap)); }
+.cv-theme { font-size: 3.024cqw; font-weight: 400; top: calc(39.998cqw - var(--cap)); }
+.cv-plaque { left: 22.090cqw; top: 49.472cqw; width: 55.690cqw; height: auto; }
+.cv-y1, .cv-y2 { font-size: 4.032cqw; }
+.cv-y1 { font-weight: 400; top: calc(116.315cqw - var(--cap)); }
+.cv-y2 { font-weight: 700; top: calc(120.061cqw - var(--cap)); }
+
+.cv-sig {
+  left: 77.208cqw; top: calc(130.344cqw - var(--cap));
+  font-size: 2.083cqw; line-height: 1; font-style: italic; color: var(--sr-black);
 }
+.cv-pri { left: 77.158cqw; top: 133.083cqw; width: 18.681cqw; height: auto; }
 
-/* Below 1024px: flow, anchored to the foot of the panel. */
-.hero-flow {
-  position: relative; display: flex; height: 100%; flex-direction: column;
-  justify-content: flex-end; padding-inline: 6vw; padding-bottom: 14vh;
-}
-
-/* THE ONE SCRIM IN THE BUILD, AND ONLY ON A PHONE.
- * The artwork carries its own gradient — the AR's rule, and a second one over
- * it crushes the picture — but that gradient is baked for the frame the design
- * was drawn at, 1.83:1, where the title sits on the dark left wall. A phone
- * panel is TALLER than it is wide, so `object-fit: cover` throws the left wall
- * away and keeps the lit middle of the hall, and the flow layout puts the title
- * on it. This restores what the crop removed: a foot wash in the report's own
- * deep green, under the text only, at widths where that layout is used. The
- * desktop composition is untouched. */
-@media (max-width: 1023px) {
-  .hero-flow::before {
-    content: ''; position: absolute; inset: auto 0 0; height: 68%;
-    background: linear-gradient(to top,
-      rgba(18, 71, 52, .86) 0%, rgba(18, 71, 52, .50) 44%, rgba(18, 71, 52, 0) 100%);
-    pointer-events: none;
-  }
-  .hero-flow > * { position: relative; }
-}
-
-/* 1024px and up: the design's absolute placement. */
-.hero-abs { display: none; position: relative; height: 100%; }
-
-@media (min-width: 1024px) {
-  .hero-flow { display: none; }
-  .hero-abs { display: block; }
-}
-
-@media print { .hero { display: none; } }
-
-/* ============================================================================
- * THE COVER — the AR's cover page, with this report's content
- * ============================================================================
- * Everything below is the AR's Cover geometry.
- * ========================================================================== */
-
-.cv .hero-abs .cv-title {
-  position: absolute; left: 8.194%; width: 35.556%;
-  /* the AR's 36.259%, lifted to clear the row — see ReportCover.jsx */
-  top: 33.71%;
-}
-.cv h1 { display: grid; letter-spacing: .0274em; }         /* AR tracking */
-.cv h1 .t1 { font-family: var(--sr-book); font-weight: 400; }
-.cv h1 .t2 { font-weight: 700; }
-
-.cv-theme {
-  margin-top: .18em;
-  font-size: clamp(13px, 1.18vw, 17px); line-height: 1.25; letter-spacing: .02em;
-  color: var(--sr-white);
-}
-
-.cv .hero-abs .cv-row {
-  position: absolute; left: 8.403%; top: 57.252%;
-  display: flex; align-items: center; gap: 24px;           /* AR --space-24 */
-}
-.cv .hero-flow .cv-row { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
-
-.cv-year { display: flex; align-items: center; gap: 8px; } /* AR --space-8 */
-.cv-year .y {
-  font-size: clamp(30px, 3.611vw, 52px); line-height: 1;
-  letter-spacing: -.0385em; color: var(--sr-white);
-}
-.cv-year .l {
-  white-space: pre-line;
-  font-size: clamp(15px, 1.667vw, 24px); line-height: 1; color: var(--sr-white);
-}
-
+/* THE ONE ADDITION: the print's 45pt of clear paper under REPORT 2025, used
+   for the download the page owes a reader. */
 .cv-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 50px; padding-inline: 24px; border-radius: 45px;
-  background: #8f8e00;                                     /* AR --efg-cta */
-  font-size: 16px; font-weight: 500; line-height: 18px; letter-spacing: .9px;
-  color: var(--sr-white); text-decoration: none;
-  transition: opacity .2s;
+  left: 50%; top: 125.5cqw; transform: translateX(-50%);
+  display: inline-flex; align-items: center;
+  padding: 1.1cqw 2.6cqw; border-radius: 999px;
+  background: var(--sr-olive); color: var(--sr-white);
+  font-weight: 700; font-size: 2.2cqw; line-height: 1;
+  text-decoration: none; white-space: nowrap;
+  transition: background-color .15s;
 }
-.cv-btn:hover { opacity: .9; }
-@media (min-width: 1024px) { .cv-btn { width: 201px; padding-inline: 0; } }
+.cv-btn:hover { background: var(--sr-green-deep); }
+.cv-btn:focus-visible { outline: 2px solid var(--sr-green-deep); outline-offset: 3px; }
 
-/* The signatory mark is black and blue on white, so it keeps a white ground
-   rather than sitting straight on the artwork. */
-.cv-pri {
-  position: absolute; right: clamp(20px, 5vw, 64px); bottom: clamp(20px, 4vh, 44px);
-  width: clamp(120px, 13vw, 190px); height: auto;
-  background: var(--sr-white); padding: 10px 14px; border-radius: 4px;
+/* On a phone the page is 390px wide, so a cqw is 3.9px and the smallest type
+   on it — the strapline at 3.024cqw — lands at 11.8px. Nothing needs a floor,
+   and the printed composition survives intact. Below 360px the button's label
+   is the first thing to crowd, so it steps down. */
+@media (max-width: 359px) {
+  .cv-btn { font-size: 2.6cqw; padding: 1.3cqw 2.4cqw; }
 }
+
+@media print { .cv-btn { display: none; } }

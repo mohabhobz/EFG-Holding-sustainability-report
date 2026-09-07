@@ -9,8 +9,8 @@ and certification marks are images.
 
 | Route | Printed pages |
 |---|---|
-| `/` | cover and contents |
-| `/abbreviations` | 3 |
+| `/` | the cover, sheet 0 |
+| `/contents` | 2–3, as one spread |
 | `/chairpersons-foreword` | 4–5 |
 | `/ceo-note` | 6–7 |
 | `/introduction` | 8–17 |
@@ -80,8 +80,16 @@ words inside it stay text and can be read out, searched and copied:
    to change if EFG want them filled or dropped.
 5. Four typographic slips corrected: "myconfidence", "adminstrative",
    "Operational Sustainabilit", "InternationalAgencies".
-6. **The cover** is a photographic hero rather than the printed plaque, and the
-   lockup reads "2025 Sustainability Report". A decision on record, not a slip.
+6. **The cover** is the printed cover, measured off the sheet: the lockup, the
+   plaque and the PRI mark are images, every word is text at the printed size on
+   the printed cap line. The one thing the print does not have is the **Download
+   PDF** button, set in the 45pt of clear paper under REPORT 2025.
+7. **The cover and the contents spread are two separate pages**, `/` and
+   `/contents`, each one screenful. Both are sized from the window's HEIGHT —
+   the sheet takes its width from the height available under the header, at the
+   printed proportion — so neither scrolls. Under 900px the spread stacks and
+   the width governs again. The old `/abbreviations` address still resolves: it
+   is redirected to `/contents#abbreviations` in `App.jsx`.
 
 ## Before this goes public
 

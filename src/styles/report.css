@@ -163,6 +163,111 @@
 .rp-bleed { background: var(--sr-green-deep); }
 .rp-dark .rp-in { padding: 12cqw 11.485cqw 10cqw 5.922cqw; color: var(--sr-cream); }
 
+/* ---- the two leaves -------------------------------------------------------
+ * The print sets Contents and Abbreviations facing each other, so they are one
+ * spread here too: two leaves side by side on the green, sharing a centre line
+ * the way the printed sheet does.
+ *
+ * Each leaf is its own container — that is what `.rp` is — so every cqw inside
+ * it still measures against one printed page's width, not against the pair.
+ * The ground bleeds to the window's edge, because that is what the printed
+ * sheet does; the pair of leaves does not. It takes the HEADER'S COLUMN — the
+ * same `.wrap` measure and gutter — so the spread begins under the EFG lockup
+ * and ends under the menu control instead of running past both.
+ *
+ * Below 900px a leaf would be under 450px — narrower than a phone holds a
+ * printed page — so the spread becomes a stack: page 2, then page 3. That is
+ * the only thing a narrow screen can do with facing pages.
+ * -------------------------------------------------------------------------- */
+.rp-spread {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--sr-measure);
+  margin-inline: auto;
+  padding-inline: var(--sr-gutter);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+.rp-spread > .rp:first-child { justify-self: end; }
+.rp-spread > .rp:last-child { justify-self: start; }
+
+/* THE SPREAD IS ONE SCREEN. Like the cover, each leaf is sized from the
+   window's height rather than its width and holds the printed page's
+   proportion, so the whole spread is taken in at a glance instead of scrolled
+   through. Type then scales with the leaf, which is why the px floors that
+   protect a phone come off here: they exist for a 390px sheet, and a floor
+   inside a leaf sized from height is what would burst it. */
+@media (min-width: 900px) {
+  .rp-spread {
+    --sp-pad: clamp(10px, 1.8svh, 24px);
+    --sp-fit: calc((100svh - var(--sr-header-h) - 2 * var(--sp-pad)) * 0.70707);
+    align-content: center;
+    min-height: calc(100svh - var(--sr-header-h));
+    padding-block: var(--sp-pad);
+  }
+  /* `100%` is half the header's column, so whenever the window is tall enough
+     the two leaves fill it exactly and the spread lines up with the header at
+     both ends. On a short window the height wins instead and the spread comes
+     in a little from the header — narrower, never taller than the screen. */
+  .rp-spread > .rp {
+    width: min(100%, var(--sp-fit));
+    max-width: none;
+    aspect-ratio: 595.276 / 841.89;
+  }
+  /* THE TWO LISTS ARE SET LARGER THAN THE PRINT SETS THEM. Everything else on
+     the spread keeps the printed measure, but a leaf sized from a laptop's
+     height is about 560px — two-thirds of an A4 sheet — and the printed 13pt
+     and 11pt land there at 12px and 10px, which is not a size anyone reads a
+     contents page at. The print leaves the room: the illustration governs the
+     left leaf's height and the glossary fills three-quarters of the right.
+
+     Bigger type needs a wider column, so on the fitted spread — and only there
+     — four of the printed measures give way to it: the side margins come in to
+     4.5cqw, the illustration from 240.5pt to 190.5pt, the foot of the sheet
+     (clear paper on both printed leaves) from 10cqw to 6, and the glossary's
+     term column widens enough for UN PRI to stand clear of its expansion. The
+     folio still sits at the far margin, but right-aligned rather than pinned to
+     a printed x, so the longest entry — "Appendix 1 - 2025 Carbon Emissions" —
+     takes the width it needs instead of wrapping. The sizes below are the
+     largest that keep every label on one line and both leaves inside the sheet;
+     the measuring is in the audit toolkit, not guesswork, so if any of these
+     numbers is changed, check the leaves still fit. */
+  .rp-spread .rp-in h1.rp-title { font-size: 7.56cqw; }
+  .rp-spread .rp-in.rp-contents,
+  .rp-spread .rp-in.rp-abbr {
+    padding-inline: 4.5cqw;
+    padding-bottom: 6cqw;
+  }
+  /* THE OUTER MARGIN IS NOT DRAWN. The green bleeds, so a leaf has no visible
+     edge for a printed margin to sit inside — what the eye lines up on is the
+     type. The two outer margins therefore go to nothing and the words themselves
+     begin under the EFG lockup and end under the menu control, while the two
+     inner margins stay and make the gutter between the leaves. */
+  .rp-spread .rp-in.rp-contents { padding-left: 0; }
+  .rp-spread .rp-in.rp-abbr { padding-right: 0; }
+
+  .rp-spread .rp-contents { grid-template-columns: 32cqw 1fr; column-gap: 2.5cqw; }
+  .rp-spread .rp-toc { font-size: 3.2cqw; margin-right: 0; }
+  .rp-spread .rp-toc a { grid-template-columns: 1fr auto; column-gap: 1.6cqw; }
+  .rp-spread .rp-toc-folio { text-align: right; }
+
+  .rp-spread .rp-abbr dl { font-size: 2.9cqw; grid-template-columns: 14cqw 1fr; }
+}
+
+/* Under 900px a leaf would be narrower than a phone holds a printed page, so
+   the spread becomes a stack: page 2, then page 3, each the full column. */
+@media (max-width: 899px) {
+  /* Stacked, each leaf is the whole sheet again: the gutter comes off, because
+     the printed page's own margin is what holds the type in on a phone. */
+  .rp-spread {
+    max-width: none;
+    padding-inline: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rp-spread > .rp { justify-self: center; }
+}
+
 .rp-in h1.rp-title {
   margin: 0 0 8.51cqw;
   font-family: var(--sr-sans);
@@ -219,7 +324,18 @@
 }
 .rp-toc-folio { font-variant-numeric: tabular-nums; }
 
-/* ---- the abbreviations --------------------------------------------------- */
+/* ---- the abbreviations ---------------------------------------------------
+ * On the printed spread ABBREVIATIONS sits on the SECOND line of CONTENT PAGE,
+ * not the first: both titles share the baseline y141.1. So the right leaf's
+ * title drops one display line — 50.99pt, 8.568 cqw — and gives that line back
+ * to the gap under it, since the printed glossary starts 6.7pt higher than the
+ * contents list does. Stacked, there is no facing page to align to, so the
+ * offset goes away below 900px.
+ * -------------------------------------------------------------------------- */
+@media (min-width: 900px) {
+  .rp-in.rp-abbr h1.rp-title { margin-top: 8.568cqw; margin-bottom: 7.384cqw; }
+}
+
 .rp-abbr dl {
   display: grid;
   grid-template-columns: 9.744cqw 1fr;
