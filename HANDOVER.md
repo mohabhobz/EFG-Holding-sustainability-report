@@ -88,11 +88,78 @@ words inside it stay text and can be read out, searched and copied:
    **Download PDF** button, which the print does not have, is set in the 45pt of
    clear paper under REPORT 2025.
 7. **The cover and the contents spread are two separate pages**, `/` and
-   `/contents`, each one screenful. Both are sized from the window's HEIGHT —
-   the sheet takes its width from the height available under the header, at the
-   printed proportion — so neither scrolls. Under 900px the spread stacks and
-   the width governs again. The old `/abbreviations` address still resolves: it
-   is redirected to `/contents#abbreviations` in `App.jsx`.
+   `/contents`. The spread takes the header's column and is sized so it fits one
+   screen; the cover takes the same column and is taller than the window, which
+   is what EFG asked for. Under 900px the spread stacks. The old
+   `/abbreviations` address still resolves: it is redirected to
+   `/contents#abbreviations` in `App.jsx`.
+8. **The head and foot margins of a section page are half the print's** — the
+   side margins are the print's, because they set the measure, but two pages'
+   vertical margins were adding up to 250px of nothing in a document that, on a
+   screen, is continuous.
+9. **"Voltä" is set as "Volta"** — see the note under EFG's comments.
+
+## EFG's microsite comments — September 2026
+
+Twenty-three comments came back on a deck. What each one turned out to be, and
+what was done:
+
+| # | Comment | Done |
+|---|---|---|
+| 1 | Enlarge the cover visual | The cover now takes the header's column and is taller than the window; you scroll a little to the PRI mark. An A4 sheet cannot fill a 16:9 screen and also fit it. |
+| 2 | Contents too small against the report | Both lists set larger, the spread aligned to the header at both ends |
+| 3 | Pie: shares not on the circle, pie too big, bold Q | Pie cut from 42cqw to the printed 32.9; each share stands on its own slice at its measured angle and radius; the Q was a hole in the Book face — see the note below |
+| 4 | No space between a picture and the copy | `.rp-figure` had no bottom margin at all |
+| 5 | USD 3MM / 40% layout | The caption under a figure is the print's regular weight, not bold, and keeps its own case; the 40% label stands on the numeral's baseline |
+| 6 | Duplicated textile paragraph | The illustration's crop took in the paragraph above it — recut |
+| 7 | Illustrations cropped | Six icons recut; a seventh, the hand on page 24, carries its printed caption masked out |
+| 8 | USD 4MM should be pushed right | Each sector on pages 28–29 is now copy left, figures right, as the print sets it |
+| 9 | EGP 25/100MM layout and boldness | Same component as 5 |
+| 10 | The rules in the Vortex / EO panels | One rule per row, full width, none above the first or below the last; the two bands are square, as printed |
+| 11, 16, 17 | Excessive white space | The head and foot margins of a section page are halved: two pages' margins were adding up to 250px of nothing |
+| 12 | Scope table not as designed, pixelated | Scope 1's three groups stand in one row as the print sets them, the panel's vertical rule is drawn, and the fifteen icons are recut at 360px |
+| 13 | 400,563 layout | The sentence and the figure share one line |
+| 14 | Financed emissions table design | **Open — see below** |
+| 15 | Paragraph separated by the tables | Moved to finish the column it continues |
+| 18 | Valu logo cropped | Recut |
+| 19 | White behind the Pharco and Almoosa logos | The ground is keyed out; `crop.py` grew an `unwhite` step for logos the file paints on a white rectangle |
+| 20 | Minya University text cropped | The photograph's crop took in the card's heading — recut |
+| 21 | Text font and alignment | The section face was wrong — see the note below |
+| 22 | CAPACITY BUILDING to title case | Done, that heading only |
+| 23 | Duplicated Tanmeyah paragraph | As 6: the photograph's crop took in the paragraph above it |
+
+### Two things the comments uncovered
+
+**The sections were set in the wrong face.** The report uses two: Book carries
+the two letters at the front, Regular carries everything else — 62,000
+characters against Book's 4,800, counted off the PDF. The site set both in
+Book. That made every section a shade light, and it kept hitting a hole:
+**ABC Normal Book has no capital Q**, so every "Q4 2025" fell back to Regular
+for that one letter and stood out. `.rp-sec` now takes Regular and the letters
+keep Book. Four more glyphs were falling back the same way and are now drawn
+rather than typed: the bullet in INTEGRATED • SCALABLE, the superscript two in
+mtco²e, the triangles in the dematerialisation diagram and the green-financing
+rows. The audit script for this is worth keeping.
+
+**"Voltä" is "Volta".** Page 26 shows a broken glyph that reads as ä; page 31 of
+the same report writes Volta, and so does the company. Set as Volta.
+
+### Open
+
+**Printed page 36's financed-emissions table.** The print sets it as an
+infographic — coloured sector tags, horizontal bars, a dashed rule before the
+totals. It is rebuilt here as a plain table so the figures are real text and
+searchable. EFG say the design is wrong; reproducing the artwork faithfully in
+HTML is a redesign of that panel, not an adjustment, so it wants a decision
+before the work starts.
+
+**A full page-by-page audit was run afterwards** and found further differences
+from the print that EFG have not raised — missing olive divider rules on about
+a dozen pages, four photographs on pages 110, 111 and 125 cropped by a shared
+aspect-ratio rule, the page 13 centre rule, several headings in the wrong case,
+and three display headings the print sets in Bebas Neue, which is not loaded.
+None of them is a defect the eye catches without the PDF beside it. They are
+listed in the session notes and are the natural next pass.
 
 ## Before this goes public
 

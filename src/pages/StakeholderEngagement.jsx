@@ -302,7 +302,9 @@ export default function StakeholderEngagement() {
       {/* ---- printed pages 108 and 109 ---- */}
       <article className="rp rp-sec">
         <div className="rp-in">
-          <h2>Capacity Building</h2>
+          {/* Title case, not the print's capitals: EFG asked for this one
+              heading to read as a name rather than a shout. */}
+          <h2 className="rp-title-case">Capacity Building</h2>
           <p>
             Building knowledge and skills is central to sustaining long-term impact.
             Our capacity-building efforts take place both internally, through

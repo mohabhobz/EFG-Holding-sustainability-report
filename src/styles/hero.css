@@ -12,33 +12,32 @@
  * position: with line-height 1 the cap top sits a fraction of an em below the
  * box top, and that fraction is the same for every size, so it is written once.
  * ========================================================================== */
-/* THE SHEET IS SIZED FROM THE WINDOW'S HEIGHT, NOT ITS WIDTH. The cover is one
-   page and is meant to be taken in whole, so the sheet is as tall as the window
-   allows under the header and takes its width from that height at the printed
-   proportion — the way a page sits in a PDF reader. It never grows past the
-   column, so on a phone the width still governs and the cover still fits.
-   Because the sheet's width is now set from outside it, `.cv-in` is the
-   container: every cqw inside measures against the sheet itself. */
+/* THE SHEET TAKES THE HEADER'S COLUMN. A cover is the one page a reader is
+   meant to be struck by, and an A4 sheet shrunk to fit a 16:9 window is a
+   thumbnail with white all round it. So the sheet is as wide as every other
+   page of the site — the `.wrap` measure and gutter, beginning under the EFG
+   lockup and ending under the menu control — and takes its height from that
+   width at the printed proportion. On a laptop that is taller than the window,
+   and the reader scrolls a little to reach the PRI mark: the client asked for
+   the cover of the report, and a page of the report is taller than a screen.
+   Because the sheet's width is set from outside it, `.cv-in` is the container:
+   every cqw inside measures against the sheet itself. */
 .cv {
-  --cv-pad: clamp(10px, 1.8svh, 24px);
-  --cv-fit: calc((100svh - var(--sr-header-h) - 2 * var(--cv-pad)) * 0.70707);
   box-sizing: border-box;
   width: 100%;
-  min-height: calc(100svh - var(--sr-header-h));
-  /* a narrower side margin than the rest of the site: on a phone the width is
-     what governs, and every pixel given to a margin comes off the cover */
-  padding: var(--cv-pad) clamp(12px, 2.5vw, 40px);
+  padding-block: clamp(10px, 1.8svh, 24px);
+  padding-inline: var(--sr-gutter);
+  max-width: var(--sr-measure);
+  margin-inline: auto;
   display: grid;
-  /* a definite column, so the sheet's `min(100%, …)` has a width to measure
+  /* a definite column, so the sheet's `width: 100%` has something to measure
      against — an auto column would be sized by the sheet and collapse it */
   grid-template-columns: minmax(0, 1fr);
-  align-content: center;
-  justify-items: center;
   background: var(--sr-white);
 }
 .cv-in {
   container-type: inline-size;
-  width: min(100%, var(--cv-fit));
+  width: 100%;
   position: relative;
   aspect-ratio: 595.276 / 841.89;
   font-family: var(--sr-sans);

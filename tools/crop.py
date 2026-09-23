@@ -73,13 +73,69 @@ def fit(doc, sheet, rect, alpha=True, dpi=220, cap=0.75, step=8.0, pad=0.8, tol=
     return tuple(rect), 'did not settle'
 
 
+def unwhite(im):
+    """
+    Turn a picture printed on white paper into one with a transparent ground.
+
+    Some logos are placed in the file on a white rectangle of their own, so the
+    page has no unpainted area behind them and rendering with an alpha channel
+    gives a fully opaque image — a white box that shows against any paper but
+    white. The ground is taken out here instead: every pixel's distance from
+    white becomes its alpha, and its colour is unmixed from the white it was
+    printed over, which keeps the edges smooth rather than jagged.
+    """
+    import numpy as np
+    a = np.asarray(im.convert('RGB')).astype(float)
+    alpha = 255.0 - a.min(axis=2)
+    # A logo scanned into the file carries a faint cast around it — a few levels
+    # off white, invisible on white paper and a grey smear on anything else. The
+    # floor clears it; it is low enough to keep real antialiasing.
+    alpha[alpha < 26] = 0.0
+    out = np.zeros(a.shape[:2] + (4,), float)
+    m = alpha > 0
+    for c in range(3):
+        ch = out[:, :, c]
+        ch[m] = np.clip((a[:, :, c][m] - (255.0 - alpha[m])) / alpha[m] * 255.0, 0, 255)
+    out[:, :, 3] = alpha
+    return Image.fromarray(out.astype('uint8'), 'RGBA')
+
+
+def erase(im, box, rects, dpi, alpha):
+    """
+    Paint out sub-rectangles of a rendered crop, in page points.
+
+    A few marks in the report are set as a lockup with their own caption — the
+    hand on page 24 has "EGP 1,161 BN" printed across it — and no rectangle can
+    take the drawing without the words. The site sets those words as text, so
+    the picture must not carry them too. `rects` says which parts of the page
+    are the caption; they are cleared to nothing, so nothing of the printed
+    lettering survives into the file.
+    """
+    s = dpi / 72.0
+    px = im.load()
+    for rx0, ry0, rx1, ry1 in rects:
+        x0 = max(0, int((rx0 - box[0]) * s))
+        y0 = max(0, int((ry0 - box[1]) * s))
+        x1 = min(im.width, int(round((rx1 - box[0]) * s)))
+        y1 = min(im.height, int(round((ry1 - box[1]) * s)))
+        blank = (0, 0, 0, 0) if im.mode == 'RGBA' else (255, 255, 255)
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                px[x, y] = blank
+    return im
+
+
 def cut(doc, sheet, rect, out, dpi=600, alpha=True, maxpx=900, quality=92, do_fit=True,
-        grow=True):
+        grow=True, mask=(), key=False):
     note = ''
     box = tuple(map(float, rect))
     if do_fit:
         box, note = fit(doc, sheet, rect, alpha=alpha, grow=grow)
     im = render(doc, sheet, box, dpi, alpha)
+    if key:
+        im = unwhite(im)
+    if mask:
+        im = erase(im, box, mask, dpi, im.mode == 'RGBA')
     im.thumbnail((maxpx, maxpx), Image.LANCZOS)
     im.save(out, 'WEBP', quality=quality, method=6)
     return im.size, box, note

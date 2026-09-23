@@ -249,7 +249,13 @@ export default function Introduction() {
 
           <img className="rp-wordmark" src={wordmark} width="1200" height="202" alt="EFG Holding" />
 
-          <p className="rp-strapline">Integrated • Scalable • Future-Ready</p>
+          {/* The bullets are set in Regular: the line is Bold, and ABC Normal's
+              Bold subset has no bullet, so a plain one fell back to another face
+              and sat heavier than the words either side of it. */}
+          <p className="rp-strapline">
+            Integrated <span className="rp-dot">•</span> Scalable{' '}
+            <span className="rp-dot">•</span> Future-Ready
+          </p>
 
           <div className="rp-arms">
             {arms.map((a) => (

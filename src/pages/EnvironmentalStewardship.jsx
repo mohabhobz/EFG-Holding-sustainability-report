@@ -141,6 +141,20 @@ const LENDING = [
   ['Other', 1, '#0b2018'],
 ];
 
+/* Each share where the print sets it, measured off page 24 at 300dpi: the angle
+   clockwise from twelve, and the distance from the pie's centre as a percentage
+   of the pie's own width — so the labels hold their places at any size the pie
+   is drawn. The print does not put them all on one ring: the three that sit
+   inside their slice each find their own room, and the two slivers stand
+   outside the circle in black. [share, angle°, radius, outside] */
+const LENDING_LABELS = [
+  [58, 103, 33.9, false],
+  [33, 265, 26.9, false],
+  [6, 339, 40.1, false],
+  [2, 352, 55.3, true],
+  [1, 5, 63.8, true],
+];
+
 /* the arcs in printed order, clockwise from twelve */
 const SHARE = [
   ['Scope 1', 7, '#b5ffd1'],
@@ -184,6 +198,14 @@ function pieStops(slices) {
   return { '--stops': stops.join(', ') };
 }
 
+
+/* THE SUPERSCRIPT TWO IS DRAWN FROM A REAL DIGIT. The unit the print sets is
+   "mtco²e", and the report's Bold subset carries no ² — a literal one falls
+   back to another face for that single character and stands out against its own
+   line. Every face does carry the digit 2, so the character is split out here
+   and the browser raises it. */
+const sup2 = (s) =>
+  String(s).split('²').flatMap((part, i) => (i ? [<sup key={i}>2</sup>, part] : [part]));
 
 const metrics = [
   ['EFG Holdings Total Emissions', '8,027', 'mtco²e', metric1],
@@ -658,13 +680,18 @@ export default function EnvironmentalStewardship() {
             contributing to environmental improvements.
           </p>
 
-          <figure className="rp-figure-fig rp-chart">
-            <div className="rp-pie" style={pieStops(LENDING)} />
+          <figure className="rp-figure-fig rp-chart rp-chart--lending">
+            <div className="rp-pie" style={pieStops(LENDING)}>
+              {LENDING_LABELS.map(([share, angle, radius, dark]) => (
+                <span key={share} className={`rp-arc${dark ? ' rp-arc--dark' : ''}`}
+                      style={{ '--a': `${angle}deg`, '--rp-arc-r': `${radius}cqw` }}>
+                  {share}<i>%</i>
+                </span>
+              ))}
+            </div>
             <ul className="rp-key">
-              {LENDING.map(([label, share, colour]) => (
-                <li key={label} style={{ '--k': colour }}>
-                  <b>{share}%</b> {label}
-                </li>
+              {LENDING.map(([label, , colour]) => (
+                <li key={label} style={{ '--k': colour }}>{label}</li>
               ))}
             </ul>
             <figcaption className="rp-caption rp-caption--large">
@@ -752,18 +779,18 @@ export default function EnvironmentalStewardship() {
       <article className="rp rp-sec">
         <div className="rp-in">
           <img className="rp-logo" src={volta} width="900" height="377"
-               style={{ '--w': '17.4cqw', '--wm': '120px' }} alt="Voltä" />
+               style={{ '--w': '17.4cqw', '--wm': '120px' }} alt="Volta" />
 
           <img className="rp-figure" src={voltaCar} width="1400" height="586"
-               alt="A Voltä neighbourhood electric vehicle on the road" />
+               alt="A Volta neighbourhood electric vehicle on the road" />
 
           <div className="rp-cols">
             <p>
               Building on this momentum, Valu recently announced a strategic
-              collaboration with Voltä, an Egyptian-engineered producer of
+              collaboration with Volta, an Egyptian-engineered producer of
               neighbourhood electric vehicles (NEVs). Under this partnership, Valu
               provides tailored financing solutions—including zero-interest
-              12-month plans and extended tenors—to make Voltä’s locally
+              12-month plans and extended tenors—to make Volta’s locally
               manufactured electric vehicles more accessible to residents of
               modern communities. By enabling broader access to affordable,
               high-quality EVs designed for everyday use, this collaboration
@@ -858,7 +885,9 @@ export default function EnvironmentalStewardship() {
             </p>
             <div>
               <Stat figure="USD 3M" unit="M" big="financing package" />
-              <div className="rp-stat rp-stat--inline">
+              {/* The print stands the label on the numeral's baseline, beside
+                  the per-cent sign, rather than halfway up the figure. */}
+              <div className="rp-stat rp-stat--inline rp-stat--foot">
                 <div className="rp-stat-fig">
                   <span className="rp-stat-n">40</span>
                   <span className="rp-stat-u">%</span>
@@ -879,111 +908,127 @@ export default function EnvironmentalStewardship() {
             <section>
               <img className="rp-icon" src={iconPackaging} width="600" height="525" alt="" />
               <h3>Packaging</h3>
-              <p>
-                The Egyptian government, in partnership with the Ministry of
-                Environment, has introduced a series of initiatives to advance the
-                sustainable environmental practices embedded within the National
-                Sustainable Development Strategy ‘Egypt 2030’. Aligned with the
-                country’s broader sustainability agenda, authorities have rolled
-                out regulatory and financial measures to accelerate the shift
-                toward recycled paper–based packaging, including requirements that
-                incentivize the use of eco-friendly materials and reduce reliance
-                on plastics. These efforts are complemented by targeted incentives
-                such as tax benefits and subsidies that encourage businesses to
-                adopt sustainable packaging solutions. In support of this national
-                transition and in line with its ESG mandate, EFG Corp-Solutions in
-                2025 financed one of Egypt’s leading printing and packaging group
-                with a USD 4MM facility to promote the expansion of environmentally
-                responsible packaging production.
-              </p>
-              <Stat pre="USD" figure="4M" unit="M" big="Financing Facility" />
-              <div className="rp-stat rp-stat--inline">
-                <img className="rp-icon" src={iconGrowth} width="800" height="744"
-                     style={{ '--w': '21.32cqw' }} alt="" />
-                <p>Expansion in environmentally responsible packaging production</p>
-              </div>
-            </section>
-
-            <section>
-              <img className="rp-icon" src={iconLogistics} width="600" height="378" alt="" />
-              <h3>Transportation &amp; Logistics</h3>
-              <p>
-                EFG Corp-Solutions has extended a credit facility with total
-                amount of EGP 75MM to a shipment company to support the expansion
-                of its geographical warehouses across different regions. As a
-                result, operations have become more centralized, with one or two
-                main regional warehouses supplying smaller satellite warehouses
-                that handle sovereign orders. This centralized structure
-                significantly reduces transportation costs and carbon emissions,
-                as larger consolidated shipments move to smaller warehouses before
-                last-mile delivery takes place. Additionally, due to the company’s
-                rapidly growing volume, it now has the capacity to combine over
-                ten orders heading to the same location into a single delivery
-                trip. Instead of dispatching individual orders by motorcycles,
-                these consolidated batches are delivered using a single vehicle,
-                which greatly lowers both operational costs and overall carbon
-                emissions.
-              </p>
-              <Stat figure="75" unit={"EGP\nMM"} stack>Financing Package</Stat>
-              <div className="rp-stat rp-stat--inline">
-                <img className="rp-icon" src={iconCo2} width="900" height="520"
-                     style={{ '--w': '22.68cqw' }} alt="" />
-                <p>Reduction in CO2 emissions Through increased efficiency</p>
+              <div className="rp-sector-body">
+                  <p>
+                    The Egyptian government, in partnership with the Ministry of
+                    Environment, has introduced a series of initiatives to advance the
+                    sustainable environmental practices embedded within the National
+                    Sustainable Development Strategy ‘Egypt 2030’. Aligned with the
+                    country’s broader sustainability agenda, authorities have rolled
+                    out regulatory and financial measures to accelerate the shift
+                    toward recycled paper–based packaging, including requirements that
+                    incentivize the use of eco-friendly materials and reduce reliance
+                    on plastics. These efforts are complemented by targeted incentives
+                    such as tax benefits and subsidies that encourage businesses to
+                    adopt sustainable packaging solutions. In support of this national
+                    transition and in line with its ESG mandate, EFG Corp-Solutions in
+                    2025 financed one of Egypt’s leading printing and packaging group
+                    with a USD 4MM facility to promote the expansion of environmentally
+                    responsible packaging production.
+                  </p>
+                <div>
+                <Stat pre="USD" figure="4M" unit="M" big="FINANCING FACILITY" />
+                <div className="rp-stat rp-stat--inline">
+                  <img className="rp-icon" src={iconGrowth} width="800" height="744"
+                       style={{ '--w': '21.32cqw' }} alt="" />
+                  <p>Expansion in environmentally responsible packaging production</p>
+                </div>
+                </div>
               </div>
             </section>
 
             <section>
               <img className="rp-icon" src={iconAgriculture} width="600" height="504" alt="" />
               <h3>Agriculture</h3>
-              <p>
-                Egypt has introduced the Sustainable Agricultural Development
-                Strategy as part of its broader commitment to promoting
-                environmentally responsible farming practices. In alignment with
-                these goals, EFG Corp-Solutions played a pivotal role in advancing
-                sustainable agribusiness by extending a financing facility of EGP
-                100MM to a company operating with a clear mandate to expand its
-                green footprint, acquiring land for reclamation and cultivation
-                and adopting eco-conscious production methods. EFG Corp-Solutions
-                also extended a revolving credit facility of EGP 25MM to an
-                agri-business dedicated to strengthening the agricultural
-                ecosystem through the adoption of green energy solutions. Through
-                those partnerships, both entities contribute to enhancing
-                environmental stewardship within Egypt’s agribusiness sector while
-                reinforcing long-term sustainability objectives.
-              </p>
-              <Stat pre="EGP" figure="25" unit="MM">
-                revolving credit facility for green energy solutions in agriculture
-              </Stat>
-              <Stat pre="EGP" figure="100" unit="MM">
-                financing facility for land reclamation &amp; agri-tech
-              </Stat>
+              <div className="rp-sector-body">
+                  <p>
+                    Egypt has introduced the Sustainable Agricultural Development
+                    Strategy as part of its broader commitment to promoting
+                    environmentally responsible farming practices. In alignment with
+                    these goals, EFG Corp-Solutions played a pivotal role in advancing
+                    sustainable agribusiness by extending a financing facility of EGP
+                    100MM to a company operating with a clear mandate to expand its
+                    green footprint, acquiring land for reclamation and cultivation
+                    and adopting eco-conscious production methods. EFG Corp-Solutions
+                    also extended a revolving credit facility of EGP 25MM to an
+                    agri-business dedicated to strengthening the agricultural
+                    ecosystem through the adoption of green energy solutions. Through
+                    those partnerships, both entities contribute to enhancing
+                    environmental stewardship within Egypt’s agribusiness sector while
+                    reinforcing long-term sustainability objectives.
+                  </p>
+                <div>
+                <Stat pre="EGP" figure="25" unit="MM">
+                  revolving credit facility for green energy solutions in agriculture
+                </Stat>
+                <Stat pre="EGP" figure="100" unit="MM">
+                  financing facility for land reclamation &amp; agri-tech
+                </Stat>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <img className="rp-icon" src={iconLogistics} width="600" height="378" alt="" />
+              <h3>Transportation &amp; Logistics</h3>
+              <div className="rp-sector-body">
+                  <p>
+                    EFG Corp-Solutions has extended a credit facility with total
+                    amount of EGP 75MM to a shipment company to support the expansion
+                    of its geographical warehouses across different regions. As a
+                    result, operations have become more centralized, with one or two
+                    main regional warehouses supplying smaller satellite warehouses
+                    that handle sovereign orders. This centralized structure
+                    significantly reduces transportation costs and carbon emissions,
+                    as larger consolidated shipments move to smaller warehouses before
+                    last-mile delivery takes place. Additionally, due to the company’s
+                    rapidly growing volume, it now has the capacity to combine over
+                    ten orders heading to the same location into a single delivery
+                    trip. Instead of dispatching individual orders by motorcycles,
+                    these consolidated batches are delivered using a single vehicle,
+                    which greatly lowers both operational costs and overall carbon
+                    emissions.
+                  </p>
+                <div>
+                <Stat figure="75" unit={"EGP\nMM"} stack>Financing Package</Stat>
+                <div className="rp-stat rp-stat--inline">
+                  <img className="rp-icon" src={iconCo2} width="900" height="520"
+                       style={{ '--w': '22.68cqw' }} alt="" />
+                  <p>Reduction in CO2 emissions Through increased efficiency</p>
+                </div>
+                </div>
+              </div>
             </section>
 
             <section>
               <img className="rp-icon" src={iconTourism} width="597" height="495" alt="" />
               <h3>Tourism</h3>
-              <p>
-                Egypt’s national agenda places strong emphasis on embedding
-                sustainable environmental practices within the tourism sector,
-                recognizing the industry’s critical role in conserving
-                biodiversity and restoring ecosystem balance. A flagship example
-                of this commitment is the “Green Star Hotel” programme, an advanced
-                eco-certification scheme that sets stringent standards for energy
-                efficiency, water conservation, waste reduction, and overall
-                environmental stewardship across the hospitality industry. In
-                2025, EFG Corp-Solutions has capitalized on its YoY contribution
-                towards sustainable tourism by further allocating USD 20MM during
-                2025 to finance clients actively engaged in eco-tourism
-                transformation. This financing has empowered hotel operators to
-                upgrade their facilities, adopt green technologies, and
-                successfully obtain certification under the Green Star Hotel
-                Programme.
-              </p>
-              <Stat figure="20" unit={"USD\nMM"} stack>Financing for Eco-tourism</Stat>
-              <div className="rp-stat rp-stat--inline">
-                <img className="rp-icon" src={iconCertification} width="600" height="569"
-                     style={{ '--w': '9.58cqw' }} alt="" />
-                <p>Certification under the Green Star Hotel Program</p>
+              <div className="rp-sector-body">
+                  <p>
+                    Egypt’s national agenda places strong emphasis on embedding
+                    sustainable environmental practices within the tourism sector,
+                    recognizing the industry’s critical role in conserving
+                    biodiversity and restoring ecosystem balance. A flagship example
+                    of this commitment is the “Green Star Hotel” programme, an advanced
+                    eco-certification scheme that sets stringent standards for energy
+                    efficiency, water conservation, waste reduction, and overall
+                    environmental stewardship across the hospitality industry. In
+                    2025, EFG Corp-Solutions has capitalized on its YoY contribution
+                    towards sustainable tourism by further allocating USD 20MM during
+                    2025 to finance clients actively engaged in eco-tourism
+                    transformation. This financing has empowered hotel operators to
+                    upgrade their facilities, adopt green technologies, and
+                    successfully obtain certification under the Green Star Hotel
+                    Programme.
+                  </p>
+                <div>
+                <Stat figure="20" unit={"USD\nMM"} stack>Financing for Eco-tourism</Stat>
+                <div className="rp-stat rp-stat--inline">
+                  <img className="rp-icon" src={iconCertification} width="600" height="569"
+                       style={{ '--w': '9.58cqw' }} alt="" />
+                  <p>Certification under the Green Star Hotel Program</p>
+                </div>
+                </div>
               </div>
             </section>
           </div>
@@ -1161,7 +1206,7 @@ export default function EnvironmentalStewardship() {
                 <div className="rp-metric" key={label}>
                   <div>
                     <p className="rp-metric-label">{label}</p>
-                    <p className="rp-metric-value">{value} <small>{unit}</small></p>
+                    <p className="rp-metric-value">{value} <small>{sup2(unit)}</small></p>
                   </div>
                   <img src={icon} width="300" height="300" alt="" />
                 </div>
@@ -1197,7 +1242,13 @@ export default function EnvironmentalStewardship() {
                   <p className="rp-scope-name">Scope {scope.n}</p>
                   <p className="rp-scope-kind">{scope.kind}</p>
                 </div>
-                <div>
+                {/* Where every group in a scope holds a single figure, the print
+                    stands them side by side across the panel — Scope 1's three
+                    combustion headings make one row, not three. Where a group
+                    holds several figures, as Scope 3's do, the groups stack and
+                    the figures make the row instead. */}
+                <div className={scope.groups.every((g) => g.items.length === 1)
+                                  ? 'rp-fgroups rp-fgroups--row' : 'rp-fgroups'}>
                   {scope.groups.map((g) => (
                     <div className="rp-fgroup" key={g.title}>
                       <p className="rp-fgroup-title">{g.title}</p>
@@ -1205,7 +1256,7 @@ export default function EnvironmentalStewardship() {
                         {g.items.map(([value, unit, note, icon]) => (
                           <div className="rp-fitem" key={note + value}>
                             <div>
-                              <p className="rp-fitem-value">{value}{unit && <small> {unit}</small>}</p>
+                              <p className="rp-fitem-value">{value}{unit && <small> {sup2(unit)}</small>}</p>
                               <p className="rp-fitem-note">{note}</p>
                             </div>
                             <img src={icon} width="220" height="220" alt="" />
@@ -1296,7 +1347,10 @@ export default function EnvironmentalStewardship() {
             sectors, Commercial and Residential Real Estate, Oil &amp; Gas and
             Transport.
           </p>
-          <div className="rp-head-logo">
+          {/* The print sets the sentence and the figure on one line, the figure
+              beginning at the middle of the measure and sitting on the sentence's
+              last baseline — not stacked one above the other. */}
+          <div className="rp-totalrow">
             <p className="rp-olive">
               EFG Corp-Solutions total financed emissions for the year 2024 =
             </p>
@@ -1468,30 +1522,9 @@ export default function EnvironmentalStewardship() {
               efficiency. Moreover, a facial recognition system has been introduced
               at the entrance.
             </p>
-          </div>
-
-          <div className="rp-demat">
-            {dematerialisation.map(([icon, lines], i) => (
-              <Fragment key={i}>
-                {i > 0 && <span className="rp-demat-arrow" aria-hidden="true">▶</span>}
-                <div className="rp-demat-box">
-                  <img src={icon} alt="" />
-                  <p>{lines.map((l, k) => <Fragment key={k}>{k > 0 && <br />}{l}</Fragment>)}</p>
-                </div>
-              </Fragment>
-            ))}
-            <p className="rp-demat-caption">
-              Embedding digital solutions across the Group to enhance efficiency,
-              reduce resource use, and support sustainable growth.
-            </p>
-          </div>
-        </div>
-      </article>
-
-      {/* ---- printed page 39 ---- */}
-      <article className="rp rp-sec">
-        <div className="rp-in">
-          <div className="rp-cols">
+            {/* EFG asked for this paragraph, which the print opens page 39
+                with, to finish the column it continues rather than stand
+                alone on the other side of the dematerialisation panel. */}
             <p>
               There are many similar initiatives throughout the Group. The EFG
               Foundation has introduced an Enterprise Resource Planning (ERP)
@@ -1512,6 +1545,27 @@ export default function EnvironmentalStewardship() {
             </p>
           </div>
 
+          <div className="rp-demat">
+            {dematerialisation.map(([icon, lines], i) => (
+              <Fragment key={i}>
+                {i > 0 && <span className="rp-demat-arrow" aria-hidden="true" />}
+                <div className="rp-demat-box">
+                  <img src={icon} alt="" />
+                  <p>{lines.map((l, k) => <Fragment key={k}>{k > 0 && <br />}{l}</Fragment>)}</p>
+                </div>
+              </Fragment>
+            ))}
+            <p className="rp-demat-caption">
+              Embedding digital solutions across the Group to enhance efficiency,
+              reduce resource use, and support sustainable growth.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      {/* ---- printed page 39 ---- */}
+      <article className="rp rp-sec">
+        <div className="rp-in">
           <div className="rp-progress">
             <p className="rp-progress-title">
               <b>Emissions &amp; Waste Management</b>2025 Progress at a Glance

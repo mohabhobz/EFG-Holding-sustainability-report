@@ -161,7 +161,14 @@
    green is the whole width of the screen while the measures inside it are
    still fractions of a printed page. */
 .rp-bleed { background: var(--sr-green-deep); }
-.rp-dark .rp-in { padding: 12cqw 11.485cqw 10cqw 5.922cqw; color: var(--sr-cream); }
+/* Regular, not Book: the printed spread is set in Regular throughout, and Book
+   has no ampersand — "Governance & Ethics" was losing that one character to a
+   fallback face. */
+.rp-dark .rp-in {
+  padding: 12cqw 11.485cqw 10cqw 5.922cqw;
+  color: var(--sr-cream);
+  font-family: var(--sr-sans);
+}
 
 /* ---- the two leaves -------------------------------------------------------
  * The print sets Contents and Abbreviations facing each other, so they are one
@@ -389,9 +396,26 @@
  *   body                      10pt →  1.680 cqw, leading 13pt → 1.3     #414042
  *   paragraph space           13pt →  1.3 em
  * ========================================================================== */
+/* THE SECTIONS ARE SET IN REGULAR, NOT BOOK. The report uses two text faces and
+   they are not interchangeable: Book carries the two letters at the front (pp
+   4–7) and Regular carries everything else — 62,000 characters of section body
+   against Book's 4,800, counted off the PDF. Book was the site's default for
+   both, which set every section a shade too light and, worse, kept hitting a
+   hole in the face: ABC Normal Book has no capital Q, so every "Q4 2025" and
+   "Q3 2025" fell back to Regular for that one letter and stood out bolder than
+   its own line. The letters keep Book, because that is what the print sets
+   them in; `.rp-sec` — every section page — takes Regular. */
+/* THE MARGINS AT THE HEAD AND FOOT OF A PAGE ARE HALVED. The side margins stay
+   the print's, because they set the measure and the measure is what the type
+   was fitted to. The top and bottom do not: on paper they are the space a thumb
+   holds and the gap a reader turns a page across, and here they simply add up —
+   one page's foot against the next page's head left 250px of nothing in the
+   middle of a continuous document, which EFG marked three separate times. At
+   6cqw and 3.5cqw the join reads as a break between pages, not as a hole. */
 .rp-sec .rp-in {
-  padding: 9.5cqw 5.543cqw 7cqw 6.048cqw;
+  padding: 6cqw 5.543cqw 3.5cqw 6.048cqw;
   color: var(--sr-ink);
+  font-family: var(--sr-sans);
   font-size: max(16px, 1.68cqw);
   line-height: 1.3;
   --rp-para: 1.3em;
@@ -416,7 +440,10 @@
 .rp-cols--pair p { break-inside: avoid; }
 
 /* A picture that runs the full width of the sheet, bleeding past the margins. */
-.rp-figure { display: block; width: 100%; height: auto; margin-top: 4cqw; }
+/* A photograph in the flow. It had space above it and none below, so wherever
+   copy followed a picture the first line sat on the picture's edge; the print
+   leaves about 8pt of clear paper between the two. */
+.rp-figure { display: block; width: 100%; height: auto; margin: 4cqw 0 1.2cqw; }
 .rp-bleed-img { margin-inline: -6.048cqw -5.543cqw; width: calc(100% + 11.591cqw); max-width: none; }
 
 @media (max-width: 700px) {
@@ -551,6 +578,10 @@
   line-height: 1.2;
   color: var(--sr-olive);
 }
+/* A heading EFG want set as a name rather than in the print's capitals. */
+.rp-sec .rp-in h2.rp-title-case,
+.rp-in .rp-title-case { text-transform: none; }
+.rp-dot { font-weight: 400; }
 .rp-arms { margin: 0 0 3.5cqw; }
 .rp-arm {
   display: grid;
@@ -777,6 +808,9 @@
 }
 .rp-stat--inline { display: flex; align-items: center; gap: 1.4cqw; }
 .rp-stat--inline p { margin: 0 !important; }
+/* the label stands on the figure's baseline rather than halfway up it */
+.rp-stat--foot { align-items: flex-end; }
+.rp-stat--foot p { padding-bottom: .15em; }
 
 /* ---- the dark note ------------------------------------------------------- */
 .rp-note {
@@ -806,13 +840,22 @@
   margin: 0 0 1cqw; text-align: center; text-transform: uppercase;
   color: var(--sr-green-deep); font-size: max(20px, 4.452cqw);
 }
-.rp-statcol dl { display: grid; grid-template-columns: 1fr auto; margin: 0; align-items: center; }
+/* THE RULES RUN THE WHOLE WIDTH OF THE PANEL. They are one line under each row,
+   none above the first and none under the last — printed page 30. They used to
+   be drawn on the figure and its label separately, and because the two cells
+   were centred in the row rather than filling it, a tall label put its own
+   segment of the line a few pixels above the figure's: one rule read as two
+   broken ones. Both cells now fill the row's height, so the two halves of the
+   line meet, and the content is centred inside them as the print centres it. */
+.rp-statcol dl { display: grid; grid-template-columns: 1.3fr 1fr; margin: 0; }
 .rp-statcol dt, .rp-statcol dd {
-  padding: .55em 0; border-top: 1px solid rgba(255, 255, 255, .45);
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: .55em .4em; border-bottom: 1px solid rgba(255, 255, 255, .45);
   font-family: var(--sr-sans); font-weight: 700;
 }
+.rp-statcol dt:last-of-type, .rp-statcol dd:last-of-type { border-bottom: 0; }
 .rp-statcol dt { font-size: max(15px, 3.242cqw); }
-.rp-statcol dd { margin: 0; font-size: max(10px, 1.562cqw); text-align: right; line-height: 1.2; padding-left: 1em; }
+.rp-statcol dd { margin: 0; font-size: max(10px, 1.562cqw); line-height: 1.2; }
 
 /* ---- a banded list ------------------------------------------------------- */
 .rp-band {
@@ -827,7 +870,12 @@
   background: #e0decc; color: var(--sr-green-deep);
   font-size: max(15px, 2.184cqw); line-height: 1.35;
 }
-.rp-rows li::before { content: '▶'; position: absolute; left: 3.1cqw; top: 1.6cqw; font-size: .72em; }
+.rp-rows li::before {
+  content: ''; position: absolute; left: 3.1cqw; top: 2.1cqw;
+  width: 0; height: 0;
+  border-block: .62cqw solid transparent;
+  border-inline-start: .95cqw solid currentColor;
+}
 
 /* ---- an icon above a heading, as the sector blocks set it ---------------- */
 /* Every sector mark gets the SAME slot, and sits centred inside it.
@@ -876,7 +924,10 @@
   .rp-statcol { padding: 16px; }
   .rp-band { padding: 8px 12px; }
   .rp-rows li { padding: 14px 16px 14px 44px; margin-bottom: 10px; }
-  .rp-rows li::before { left: 20px; top: 15px; }
+  .rp-rows li::before {
+    left: 20px; top: 17px;
+    border-block-width: 5px; border-inline-start-width: 8px;
+  }
   .rp-icon { width: 56px; height: 46px; min-width: 0; min-height: 0; margin-bottom: 12px; }
   .rp-stat--inline .rp-icon { width: 54px; height: auto; }
   .rp-logo { width: var(--wm, 150px) !important; }
@@ -898,15 +949,35 @@
 .rp-sec .rp-caption--large { font-size: max(15px, 2.352cqw); color: var(--sr-green-deep); }
 .rp-sec .rp-lead--sm { font-size: max(17px, 2.016cqw) !important; line-height: 1.35; color: var(--sr-green-deep); }
 .rp-stat-u--stack { white-space: pre-line; line-height: 1.05; }
-.rp-sec .rp-stat p.rp-stat-big { font-family: var(--sr-sans); font-weight: 700; font-size: max(18px, 3.796cqw); text-transform: uppercase; line-height: 1.05; margin-top: .1em; }
-.rp-sectors { display: grid; grid-template-columns: 1fr 1fr; gap: 5cqw 4cqw; }
+/* The line under a figure is set in the REGULAR weight in the print, not bold,
+   and it is not always capitals — page 28 sets FINANCING FACILITY, page 27 sets
+   "financing package" in lower case. So the case comes from the copy and the
+   rule leaves it alone. */
+.rp-sec .rp-stat p.rp-stat-big {
+  font-family: var(--sr-sans); font-weight: 400;
+  font-size: max(18px, 4.2cqw); line-height: 1.05; margin-top: .1em;
+}
+/* THE FOUR SECTORS, PRINTED PAGES 28 AND 29. The print gives each sector the
+   whole measure and splits it: the mark and its heading at the top left, the
+   copy under them in the left column, and the money — the figure, its caption
+   and the illustration that goes with it — in the right column, level with the
+   first line of the copy. They were set two sectors to a row with the figures
+   stacked under the copy, which put every lockup hard against the left margin
+   where the print has it on the other side of the page. */
+.rp-sectors { display: grid; grid-template-columns: 1fr; gap: 6cqw; }
 .rp-sectors > section { min-width: 0; }
+.rp-sector-body {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4cqw; align-items: start;
+}
+.rp-sector-body > * { min-width: 0; }
+.rp-sec .rp-sector-body > p { margin-bottom: 0; }
 
 @media (max-width: 700px) {
   .rp-two { grid-template-columns: 1fr; gap: 18px; margin: 18px 0 22px; }
   .rp-flags { width: 60%; min-width: 0; margin-bottom: 14px; }
   .rp-head-logo { gap: 14px; }
-  .rp-sectors { grid-template-columns: 1fr; gap: 34px; }
+  .rp-sectors { gap: 34px; }
+  .rp-sector-body { grid-template-columns: 1fr; gap: 18px; }
 }
 
 /* ============================================================================
@@ -959,6 +1030,22 @@
   color: var(--sr-green-deep);
 }
 .rp-fgroup + .rp-fgroup { margin-top: 2.4cqw; }
+/* the rule the print runs down the panel, between the scope's name and its
+   figures, the full height of the block */
+/* printed page 36: the sentence and the total share one line */
+.rp-totalrow {
+  display: grid; grid-template-columns: 46cqw 1fr;
+  gap: 2cqw; align-items: end; margin: 2.4cqw 0 2cqw;
+}
+.rp-sec .rp-totalrow p { margin: 0; }
+@media (max-width: 700px) {
+  .rp-totalrow { grid-template-columns: 1fr; gap: 8px; }
+}
+
+.rp-fgroups { border-left: 1px solid var(--sr-green-deep); padding-left: 2.2cqw; }
+.rp-fgroups--row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; }
+.rp-fgroups--row .rp-fgroup + .rp-fgroup { margin-top: 0; }
+.rp-fgroups--row .rp-fitems { grid-template-columns: 1fr; }
 .rp-fitems { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6cqw 2cqw; }
 .rp-fitem { display: grid; grid-template-columns: 1fr auto; gap: 1cqw; align-items: center; }
 .rp-sec .rp-fitem-value {
@@ -1096,7 +1183,14 @@
   margin: 0; padding-top: 1.2cqw; border-top: 1px solid var(--sr-olive);
   text-align: center; font-size: max(13px, 1.68cqw); line-height: 1.25;
 }
-.rp-demat-arrow { align-self: center; color: var(--sr-white); font-size: 3.4cqw; }
+/* The arrow between the steps is drawn, not typed: no face in the report's
+   subsets carries a triangle, so a character would fall back to a system font. */
+.rp-demat-arrow {
+  align-self: center; justify-self: center;
+  width: 0; height: 0;
+  border-block: 1.05cqw solid transparent;
+  border-inline-start: 1.7cqw solid var(--sr-white);
+}
 .rp-sec p.rp-demat-caption {
   grid-column: 1 / -1; margin: 1.8cqw 0 0; text-align: center;
   color: var(--sr-white); font-size: max(13px, 1.68cqw); line-height: 1.3;
@@ -1106,7 +1200,10 @@
   .rp-demat { grid-template-columns: 1fr; gap: 12px; padding: 18px; margin: 22px 0; }
   .rp-demat-box { border-radius: 16px; padding: 18px; }
   .rp-demat-box img { max-width: 110px; margin-bottom: 12px; }
-  .rp-demat-arrow { transform: rotate(90deg); font-size: 20px; }
+  .rp-demat-arrow {
+    transform: rotate(90deg);
+    border-block-width: 7px; border-inline-start-width: 11px;
+  }
   .rp-sec p.rp-demat-caption { margin-top: 14px; }
 }
 
@@ -1992,14 +2089,16 @@
    components kept their radius, which made the inconsistency conspicuous. */
 .rp-goals, .rp-progress, .rp-quote, .rp-quote--cream, .rp-note,
 .rp-privacy > h4, .rp-privacy-body, .rp-isnum, .rp-lnd,
-.rp-ai-areas section, .rp-glance, .rp-band { border-radius: 2cqw; }
+.rp-ai-areas section { border-radius: 2cqw; }
+/* The two bands on printed pages 30 and 31 are square, and so are the panels
+   under them: the rounding above belongs to the panels the print rounds. */
 .rp-sec .rp-in p.rp-ai-band { border-radius: 2cqw; }
 .rp-sec .rp-in .rp-ai-cards p { border-radius: 2cqw; }
 .rp-mfigure div { border-radius: 0 2cqw 2cqw 0; }
 @media (max-width: 700px) {
   .rp-goals, .rp-progress, .rp-quote, .rp-quote--cream, .rp-note,
   .rp-privacy > h4, .rp-privacy-body, .rp-isnum, .rp-lnd,
-  .rp-ai-areas section, .rp-glance, .rp-band,
+  .rp-ai-areas section,
   .rp-sec .rp-in p.rp-ai-band, .rp-sec .rp-in .rp-ai-cards p { border-radius: 12px; }
   .rp-mfigure div { border-radius: 0 12px 12px 0; }
 }
@@ -2115,7 +2214,10 @@
 .rp-eco-body li { font-size: max(11px, 1.344cqw); }
 .rp-notes-cols li, .rp-sec .rp-notes p.rp-notes-sub { font-size: max(11px, 1.512cqw); }
 .rp-bar-head, .rp-bar { font-size: max(11px, 1.176cqw); }
-.rp-sec .rp-stat p { font-size: max(11px, 1.176cqw); }
+/* The caption under a figure, and the note beside an illustration, are set at
+   13pt in the print — a size the eye reads, not a footnote. They were at 7pt,
+   which is what made "Financing Package" almost disappear under its own number. */
+.rp-sec .rp-stat p { font-size: max(13px, 2.184cqw); }
 .rp-statcol dd { font-size: max(11px, 1.562cqw); }
 
 /* ============================================================================
@@ -2232,6 +2334,55 @@
 .rp-key--row { display: flex; flex-wrap: wrap; gap: .4em 1.6em; margin: 0 0 2cqw; justify-content: center; }
 .rp-key--row li { font-family: var(--sr-sans); font-weight: 700; }
 @media (max-width: 700px) { .rp-pie .rp-arc { --rp-arc-r: 68px; } }
+
+/* 27. THE LENDING PIE, PRINTED PAGE 24. Three things were wrong against the
+   sheet. The pie was 42cqw where the print draws it 195.6pt — 32.9cqw, a third
+   of the page rather than nearly half. The shares were listed in the key
+   instead of standing on the slices, which is where the print puts them, so the
+   chart read as five colours and a list. And the key sits beside the pie, level
+   with its foot, not underneath it. Each share's angle and distance from the
+   centre is measured off the sheet and carried on the element itself, because
+   the print does not set them on one ring: see LENDING_LABELS. */
+.rp-chart--lending {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: end;
+  column-gap: 1.7cqw;
+  /* the two outside shares stand about 4.6cqw clear of the circle, so the gap
+     the print leaves above the pie is measured from them, not from the box */
+  margin-top: 7.5cqw;
+}
+.rp-sec .rp-chart--lending .rp-caption { margin-top: 2.6cqw; }
+/* The pie is its own container, so the labels' distances and size are
+   percentages of the PIE rather than of the page: the circle then carries its
+   own geometry to a phone, where it is drawn at a fixed 240px, without a second
+   set of numbers. */
+.rp-chart--lending .rp-pie {
+  container-type: inline-size;
+  width: 32.93cqw; max-width: none; margin: 0;
+}
+.rp-chart--lending .rp-arc { font-size: max(11px, 7.67cqw); }
+.rp-chart--lending .rp-arc--dark { color: var(--sr-black); }
+/* the print sets the per-cent sign at 6.1pt against the numeral's 15 */
+.rp-chart--lending .rp-arc i { font-style: normal; font-size: .41em; }
+.rp-chart--lending .rp-key {
+  margin: 0 0 1.9cqw;
+  gap: .3em;
+  font-size: max(11px, 1.176cqw);
+}
+.rp-chart--lending .rp-key li { padding-left: 1.9em; line-height: 1.3; }
+.rp-chart--lending .rp-key li::before { width: .8em; height: .8em; top: .28em; }
+.rp-chart--lending figcaption { grid-column: 1 / -1; }
+
+@media (max-width: 700px) {
+  .rp-chart--lending { grid-template-columns: 1fr; justify-items: center; }
+  .rp-chart--lending .rp-pie { width: 240px; }
+  .rp-chart--lending .rp-key { margin: 16px 0 0; }
+  /* the print's per-cent sign is two-fifths of its numeral; on a 240px pie that
+     is 7px, so on a phone it takes the same floor as everything else */
+  .rp-chart--lending .rp-arc i { font-size: 11px; }
+}
 
 /* 25. Printed page 36 centres PERCENTAGE over the two columns it spans. */
 .rp-financed thead th[colspan] { text-align: center; }

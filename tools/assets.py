@@ -12,6 +12,8 @@ crop is deliberately a slice of a larger field.
   kind    'art'  a photograph or illustration on white — trimmed, opaque
           'mark' a logo or icon — trimmed, transparent, rendered fine
           'flat' used exactly as boxed
+  mask    optional: rectangles of the page, in points, to clear after the
+          crop — for a mark the print sets with its caption written across it
 """
 A = [
   # ---- the printed cover, sheet 0 ---------------------------------------
@@ -44,7 +46,11 @@ A = [
   ('env/p23-vortex-ignis',     11, (985,92,1158,158),           'mark', 700, 1100),
   ('env/p23-eo-charger',       11, (630.9,359.6,887.5,493.1),   'art',  400, 900),
   ('env/p24-banknxt',          12, (391.6,130.1,561.1,153.0),   'mark', 900, 900),
-  ('env/p24-icon-hand',        12, (473,318,546,382),           'flat', 800, 700),
+  # the print sets this mark as a lockup with EGP 1,161 BN across it, and the
+  # words overlap the drawing — no rectangle takes one without the other. The
+  # site sets the figure as text, so the lettering is masked out of the file.
+  ('env/p24-icon-hand',        12, (474,318,544,387),           'flat', 800, 700,
+   [(474, 318, 499, 359), (495, 334, 505, 361)]),
   ('env/p25-tomorrow',         12, (1034.4,119.1,1151.9,160.9), 'mark', 900, 900),
   ('env/p25-team',             12, (630.7,214.9,1154.6,375.1),  'art',  300, 1400),
   ('env/p25-infinity',         12, (626.0,562.7,770.6,602.7),   'mark', 900, 900),
@@ -52,14 +58,16 @@ A = [
   ('env/p26-volta',            13, (35.4,100.7,138.9,145.0),    'mark', 900, 900),
   ('env/p26-volta-car',        13, (34.4,156.0,560.3,375.1),    'art',  300, 1400),
   ('env/p27-icon-textiles',    13, (628,278,668,322),           'flat', 900, 600),
-  ('env/p27-city',             13, (595.3,564.1,1191.8,810),    'art',  260, 1500),
-  ('env/p28-icon-packaging',   14, (36,124,100,180),            'flat', 900, 600),
+  # the PDF's own image box starts above the illustration and takes in the tail
+  # of the paragraph with it; the artwork itself begins at y591
+  ('env/p27-city',             13, (595.3,591.0,1191.8,812.0), 'flat', 260, 1500),
+  ('env/p28-icon-packaging',   14, (37,117.5,84.6,163.7),       'flat', 900, 600),
   ('env/p28-icon-growth',      14, (296,316,436,444),           'mark', 700, 800),
   ('env/p28-icon-agriculture', 14, (38,485,100,528),            'mark', 900, 600),
   ('env/p29-icon-logistics',   14, (631,124,692,166),           'mark', 900, 600),
-  ('env/p29-icon-co2',         14, (893,290,1028,368),          'flat', 700, 900),
+  ('env/p29-icon-co2',         14, (900.5,295,1020.3,387.3),    'flat', 700, 900),
   ('env/p29-icon-tourism',     14, (628,485,690,528),           'mark', 900, 600),
-  ('env/p29-icon-certification',14,(898,643,955,697),           'flat', 900, 600),
+  ('env/p29-icon-certification',14,(899,645.4,954.3,714.4),     'flat', 900, 600),
   ('env/p31-green-financing',  15, (604.1,456.7,1162.5,810),    'art',  280, 1400),
   ('env/p33-badges',           16, (1098,118,1160,280),         'mark', 700, 500),
   ('env/p33-metric-1',         16, (1084,355,1118,390),         'mark', 900, 300),
@@ -69,8 +77,8 @@ A = [
   ('env/p37-mou',              18, (630.8,320.9,1154.1,494.1),  'art',  330, 1400),
   ('env/p37-partners',         18, (615.6,730.0,1169.2,798.0),  'flat', 600, 1400),
   ('env/p38-icon-paper',       19, (113,625,161,676),           'flat', 900, 400),
-  ('env/p38-icon-cloud',       19, (250,630,360,678),           'flat', 800, 700),
-  ('env/p38-icon-impact',      19, (423,610,497,681),           'flat', 800, 600),
+  ('env/p38-icon-cloud',       19, (249,624,363,681),           'flat', 800, 700),
+  ('env/p38-icon-impact',      19, (423,612.4,495.9,687.7),     'flat', 800, 600),
   ('env/p41-photo-1',          20, (999.7,165.2,1154.6,252.7),  'flat', 400, 700),
   ('env/p41-photo-2',          20, (1001.4,270.0,1154.6,356.8), 'flat', 400, 700),
   ('env/p41-photo-3',          20, (1000.9,374.0,1154.6,460.5), 'flat', 400, 700),
@@ -80,21 +88,21 @@ A = [
 
   # the fifteen tiles in the findings panel, printed page 34 — each is a filled
   # rounded square with clear ground round it, so the fit finds its true edge
-  ('env/p34-fuel-diesel',           17, (259,215,286,241),              'mark', 900, 220),
-  ('env/p34-owned-vehicles',        17, (389,215,416,241),              'mark', 900, 220),
-  ('env/p34-refrigerant',           17, (518,215,545,241),              'mark', 900, 220),
-  ('env/p34-electricity',           17, (259,299,286,326),              'mark', 900, 220),
-  ('env/p34-chilled-water',         17, (389,299,416,326),              'mark', 900, 220),
-  ('env/p34-air-travel',            17, (259,391,286,418),              'mark', 900, 220),
-  ('env/p34-hotel',                 17, (389,391,416,418),              'mark', 900, 220),
-  ('env/p34-land-travel',           17, (518,391,545,418),              'mark', 900, 220),
-  ('env/p34-water-1',               17, (259,461,286,487),              'mark', 900, 220),
-  ('env/p34-water-2',               17, (389,461,416,487),              'mark', 900, 220),
-  ('env/p34-well-to-tank',          17, (259,524,286,550),              'mark', 900, 220),
-  ('env/p34-transmission',          17, (389,524,416,550),              'mark', 900, 220),
-  ('env/p34-solid-waste',           17, (259,586,286,613),              'mark', 900, 220),
-  ('env/p34-wastewater',            17, (389,586,416,613),              'mark', 900, 220),
-  ('env/p34-capital-goods',         17, (259,649,286,675),              'mark', 900, 220),
+  ('env/p34-fuel-diesel',           17, (259,215,286,241),              'mark', 900, 360),
+  ('env/p34-owned-vehicles',        17, (389,215,416,241),              'mark', 900, 360),
+  ('env/p34-refrigerant',           17, (518,215,545,241),              'mark', 900, 360),
+  ('env/p34-electricity',           17, (259,299,286,326),              'mark', 900, 360),
+  ('env/p34-chilled-water',         17, (389,299,416,326),              'mark', 900, 360),
+  ('env/p34-air-travel',            17, (259,391,286,418),              'mark', 900, 360),
+  ('env/p34-hotel',                 17, (389,391,416,418),              'mark', 900, 360),
+  ('env/p34-land-travel',           17, (518,391,545,418),              'mark', 900, 360),
+  ('env/p34-water-1',               17, (259,461,286,487),              'mark', 900, 360),
+  ('env/p34-water-2',               17, (389,461,416,487),              'mark', 900, 360),
+  ('env/p34-well-to-tank',          17, (259,524,286,550),              'mark', 900, 360),
+  ('env/p34-transmission',          17, (389,524,416,550),              'mark', 900, 360),
+  ('env/p34-solid-waste',           17, (259,586,286,613),              'mark', 900, 360),
+  ('env/p34-wastewater',            17, (389,586,416,613),              'mark', 900, 360),
+  ('env/p34-capital-goods',         17, (259,649,286,675),              'mark', 900, 360),
   # the five outlined boxes of the decarbonisation plan, printed page 35
   ('env/p35-box-1',                 17, (631.2,257.0,716.3,339.0), 'mark', 700, 400),
   ('env/p35-box-2',                 17, (631.2,344.7,716.3,426.7), 'mark', 700, 400),
@@ -126,7 +134,7 @@ A = [
   ('soc/p51-vlens',         25, (631.4,585.4,723.6,617.8),  'mark', 900, 600),
   ('soc/p51-misr',          25, (1065.3,659.0,1155.1,711.5),'mark', 700, 600),
   ('soc/p54-kaf',           27, (493,154,557,235),          'flat', 900, 600),
-  ('soc/p54-valu',          27, (460,424,561,445),          'flat', 900, 700),
+  ('soc/p54-valu',          27, (461,428,560,451),          'flat', 900, 700),
   ('soc/p55-signing',       27, (630.2,309.0,1155.6,687.0), 'art',  330, 1400),
   ('soc/p55-efg-finance-smes',27,(971.3,108.9,1155.2,149.9),'mark', 900, 900),
   ('soc/p56-hermes-one',    28, (493,299,559,366),          'flat', 900, 600),
@@ -142,8 +150,8 @@ A = [
   ('soc/p62-healthcare',    31, (79.2,543.0,516.0,808),     'art',  330, 1300),
   ('soc/p63-smc',           31, (1044.0,203.5,1144.0,238.0),'flat', 900, 700),
   ('soc/p63-alameda',       31, (1044.0,367.3,1144.0,415.4),'flat', 900, 700),
-  ('soc/p63-pharco',        31, (1044.0,535.3,1144.0,585.4),'flat', 900, 700),
-  ('soc/p63-almoosa',       31, (1045.3,699.7,1142.6,731.8),'flat', 900, 700),
+  ('soc/p63-pharco',        31, (1044.0,535.3,1144.0,585.4),'keyed',900, 700),
+  ('soc/p63-almoosa',       31, (1045.3,699.7,1142.6,731.8),'keyed',900, 700),
   ('soc/p65-eep',           32, (1045.4,612.0,1156.5,656.0),'flat', 900, 800),
   ('soc/p66-brands',        33, (35,425,560,565),           'flat', 500, 1300),
   ('soc/p66-ceremony',      33, (34.9,567.9,560.4,791.1),   'flat', 330, 1400),
@@ -162,7 +170,8 @@ A = [
   ('soc/p74-photo-1',       37, (387.0,162.1,561.3,309.6),  'flat', 400, 700),
   ('soc/p74-photo-2',       37, (35.0,311.0,207.2,425.8),   'flat', 400, 700),
   ('soc/p74-photo-3',       37, (389.8,432.3,559.8,549.3),  'flat', 400, 700),
-  ('soc/p74-photo-4',       37, (32.4,556.7,207.2,704.3),   'flat', 400, 700),
+  # the photograph only — the box used to reach down into the card's heading
+  ('soc/p74-photo-4',       37, (38.1,558.4,201.0,667.4),   'flat', 400, 700),
   ('soc/p74-photo-5',       37, (390.4,677.6,558.3,789.6),  'flat', 400, 700),
   ('soc/p75-academy',       37, (631.7,361.5,700.5,417.9),  'flat', 900, 600),
   ('soc/p76-montessori',    38, (34.6,379.1,350.3,764.0), 'flat', 400, 900),
@@ -187,7 +196,7 @@ A = [
   ('gov/p100-aml-30000',     50, (34.8,180.2,157.4,276.9),   'flat', 700, 700),
   ('gov/p100-pci-dss',       50, (220.5,179.0,343.8,276.9),  'flat', 700, 700),
   ('gov/p100-iso-27001',     50, (399.2,179.0,519.2,299.1),  'flat', 700, 700),
-  ('gov/p101-icon-innovation', 50, (762.0,616.0,798.0,660.0), 'mark', 900, 400),
+  ('gov/p101-icon-innovation', 50, (767.5,620.0,797.5,659.0), 'flat', 900, 400),
   ('gov/p101-icon-digital',    50, (938.0,614.0,976.0,660.0), 'mark', 900, 400),
   ('gov/p101-icon-operations', 50, (1108.0,618.0,1150.0,660.0),'mark', 900, 400),
   # ---- Section 5, STAKEHOLDER ENGAGEMENT, pages 102 to 126 ---------------
@@ -211,10 +220,12 @@ A = [
   ('ste/p107-one-1',         53, (631.3,536.0,797.0,737.5),  'flat', 450, 700),
   ('ste/p107-one-2',         53, (810.0,534.8,975.8,738.8),  'flat', 450, 700),
   ('ste/p107-one-3',         53, (988.8,534.9,1154.6,738.6), 'flat', 450, 700),
-  ('ste/p110-workshop',      55, (34.9,206.5,559.1,441.0),   'flat', 330, 1300),
+  # cropped at the top of the printed green band: the band is drawn in CSS, so
+  # leaving it in the picture put the label on the page twice
+  ('ste/p110-workshop',      55, (36.0,206.5,559.0,409.8),   'flat', 330, 1300),
   ('ste/p110-photo-1',       55, (36.2,527.3,285.6,667.0),   'flat', 450, 800),
   ('ste/p110-photo-2',       55, (295.8,527.3,559.6,667.1),  'flat', 450, 800),
-  ('ste/p111-cyber',         55, (630.1,205.9,1155.1,407.1), 'flat', 330, 1300),
+  ('ste/p111-cyber',         55, (631.2,207.0,1154.4,376.1), 'flat', 330, 1300),
   ('ste/p111-photo-1',       55, (630.2,417.5,887.0,551.2),  'flat', 450, 800),
   ('ste/p111-photo-2',       55, (899.0,417.4,1155.1,551.2), 'flat', 450, 800),
   ('ste/p111-omar',          55, (631.8,637.0,886.4,795.0),  'flat', 450, 800),
@@ -262,8 +273,9 @@ A = [
   ('ste/p125-iftar-2',       62, (994.1,157.0,1154.6,314.0), 'flat', 500, 700),
   ('ste/p125-eid-1',         62, (632.1,445.4,873.9,597.0),  'flat', 450, 800),
   ('ste/p125-eid-2',         62, (913.1,445.4,1154.6,595.8), 'flat', 450, 800),
-  ('ste/p126-photo',         63, (36.4,244.9,559.3,639.9),   'flat', 330, 1300),
-  ('ste/icon-athletics',     61, (826.0,470.0,876.0,528.0),  'mark', 900, 400),
+  # as p27-city: the file's image box overlaps the paragraph above the picture
+  ('ste/p126-photo',         63, (36.2,348.0,559.2,620.9),   'flat', 330, 1300),
+  ('ste/icon-athletics',     61, (828.4,472.6,868.7,512.9),  'mark', 900, 400),
   ('ste/icon-medical',       62, (34.0,104.0,79.0,150.0),    'mark', 900, 400),
   ('ste/icon-community',     62, (629.0,104.0,675.0,150.0),  'mark', 900, 400),
 ]
