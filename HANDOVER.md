@@ -107,17 +107,17 @@ what was done:
 | # | Comment | Done |
 |---|---|---|
 | 1 | Enlarge the cover visual | The cover now takes the header's column and is taller than the window; you scroll a little to the PRI mark. An A4 sheet cannot fill a 16:9 screen and also fit it. |
-| 2 | Contents too small against the report | Both lists set larger, the spread aligned to the header at both ends |
+| 2 | Contents too small against the report | Both lists set larger, the spread aligned to the header at both ends; the illustration back to the printed 40.4% of the leaf |
 | 3 | Pie: shares not on the circle, pie too big, bold Q | Pie cut from 42cqw to the printed 32.9; each share stands on its own slice at its measured angle and radius; the Q was a hole in the Book face — see the note below |
-| 4 | No space between a picture and the copy | `.rp-figure` had no bottom margin at all |
-| 5 | USD 3MM / 40% layout | The caption under a figure is the print's regular weight, not bold, and keeps its own case; the 40% label stands on the numeral's baseline |
+| 4 | No space between a picture and the copy | `.rp-figure` bottom margin is the print's 15.8pt (2.58cqw) |
+| 5 | USD 3MM / 40% layout | The caption under a figure is the print's regular weight and keeps its own case. The 40 is the printed 104pt; the % is pulled into a notch cut out of the 0, as printed, and the label stands on the numeral's last baseline |
 | 6 | Duplicated textile paragraph | The illustration's crop took in the paragraph above it — recut |
 | 7 | Illustrations cropped | Six icons recut; a seventh, the hand on page 24, carries its printed caption masked out |
 | 8 | USD 4MM should be pushed right | Each sector on pages 28–29 is now copy left, figures right, as the print sets it |
-| 9 | EGP 25/100MM layout and boldness | Same component as 5 |
-| 10 | The rules in the Vortex / EO panels | One rule per row, full width, none above the first or below the last; the two bands are square, as printed |
-| 11, 16, 17 | Excessive white space | The head and foot margins of a section page are halved: two pages' margins were adding up to 250px of nothing |
-| 12 | Scope table not as designed, pixelated | Scope 1's three groups stand in one row as the print sets them, the panel's vertical rule is drawn, and the fifteen icons are recut at 360px |
+| 9 | EGP 25/100MM layout and boldness | Same component as 5; a stacked unit now shares the numeral's baseline; page 28's figures are its own 52.7pt; the Green Star badge and caption at the printed size and measure |
+| 10 | The rules in the Vortex / EO panels | One rule per row, full width, none under the last; equal panel heights on the print's 41.28pt row pitch; the headings wholly in Bebas Neue; the bands square |
+| 11, 16, 17 | Excessive white space | The head and foot margins of a section page are cut to 3.5cqw and 2.5cqw, so every seam between two pages is the print's 36pt block gap |
+| 12 | Scope table not as designed, pixelated | Scope 1's three groups stand in one row as the print sets them, the panel's vertical rule is drawn full height (`.rp-findings::before`), and the fifteen icons are recut at 360px |
 | 13 | 400,563 layout | The sentence and the figure share one line |
 | 14 | Financed emissions table design | **Open — see below** |
 | 15 | Paragraph separated by the tables | Moved to finish the column it continues |
@@ -127,6 +127,15 @@ what was done:
 | 21 | Text font and alignment | The section face was wrong — see the note below |
 | 22 | CAPACITY BUILDING to title case | Done, that heading only |
 | 23 | Duplicated Tanmeyah paragraph | As 6: the photograph's crop took in the paragraph above it |
+
+### How the second round was run
+
+A senior product designer reviewed each comment against the PDF, a front-end
+developer implemented the ten that were not yet right, and three QC testers
+audited all 23 against measurements off the sheet. QC passed 19, left 14 open,
+and returned 5, 9 and 10 as partial; those three were fixed and re-measured.
+Bebas Neue (SIL Open Font Licence) was added for the three display headings the
+print sets in it.
 
 ### Two things the comments uncovered
 

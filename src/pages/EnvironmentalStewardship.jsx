@@ -324,13 +324,27 @@ const greenFinancingRows = [
    unit again — "EGP 25 MM", "75 EGP/MM" — so the three parts are three spans
    rather than one string. `stack` is the unit set on two lines, as page 29
    sets it beside the numeral. */
-function Stat({ pre, figure, unit, stack, big, children }) {
+/* A doubled capital in the unit is not two letters of one size. Printed pages
+   28 and 29 both set "MM" as a 22.55pt M followed by a 13pt M standing on the
+   same baseline, so a repeated letter is split off and the tail takes the
+   smaller size. Anything else — "EGP", "USD", a lone "M" — comes through whole. */
+function unitLine(line, key) {
+  const m = /^(.)(\1+)$/.exec(line);
+  if (!m) return <span key={key}>{line}</span>;
+  return <span key={key}>{m[1]}<span className="rp-stat-u2">{m[2]}</span></span>;
+}
+
+function Stat({ pre, figure, unit, stack, big, children, className }) {
   return (
-    <div className="rp-stat">
+    <div className={`rp-stat${className ? ` ${className}` : ''}`}>
       <div className="rp-stat-fig">
         {pre && <span className="rp-stat-u">{pre}</span>}
         <span className="rp-stat-n">{figure}</span>
-        {unit && <span className={`rp-stat-u${stack ? ' rp-stat-u--stack' : ''}`}>{unit}</span>}
+        {unit && (
+          <span className={`rp-stat-u${stack ? ' rp-stat-u--stack' : ''}`}>
+            {unit.split('\n').map(unitLine)}
+          </span>
+        )}
       </div>
       {big && <p className="rp-stat-big">{big}</p>}
       {children && <p>{children}</p>}
@@ -884,7 +898,7 @@ export default function EnvironmentalStewardship() {
               segments of the textile value chain.
             </p>
             <div>
-              <Stat figure="USD 3M" unit="M" big="financing package" />
+              <Stat className="rp-stat--hero" figure="USD 3M" unit="M" big="financing package" />
               {/* The print stands the label on the numeral's baseline, beside
                   the per-cent sign, rather than halfway up the figure. */}
               <div className="rp-stat rp-stat--inline rp-stat--foot">
@@ -958,10 +972,10 @@ export default function EnvironmentalStewardship() {
                     reinforcing long-term sustainability objectives.
                   </p>
                 <div>
-                <Stat pre="EGP" figure="25" unit="MM">
+                <Stat className="rp-stat--p28" pre="EGP" figure="25" unit="MM">
                   revolving credit facility for green energy solutions in agriculture
                 </Stat>
-                <Stat pre="EGP" figure="100" unit="MM">
+                <Stat className="rp-stat--p28" pre="EGP" figure="100" unit="MM">
                   financing facility for land reclamation &amp; agri-tech
                 </Stat>
                 </div>
@@ -1025,8 +1039,8 @@ export default function EnvironmentalStewardship() {
                 <Stat figure="20" unit={"USD\nMM"} stack>Financing for Eco-tourism</Stat>
                 <div className="rp-stat rp-stat--inline">
                   <img className="rp-icon" src={iconCertification} width="600" height="569"
-                       style={{ '--w': '9.58cqw' }} alt="" />
-                  <p>Certification under the Green Star Hotel Program</p>
+                       style={{ '--w': '9.33cqw' }} alt="" />
+                  <p style={{ maxWidth: '13.9cqw' }}>Certification under the Green Star Hotel Program</p>
                 </div>
                 </div>
               </div>
@@ -1227,7 +1241,9 @@ export default function EnvironmentalStewardship() {
       {/* ---- printed page 34 ---- */}
       <article className="rp rp-sec">
         <div className="rp-in">
-          <div className="rp-head-logo">
+          {/* Printed page 34 sets "FINDINGS" and its lead side by side on the
+              sheet's first line, not one under the other. */}
+          <div className="rp-findings-head">
             <h2>Findings</h2>
             <p className="rp-lead rp-lead--sm">
               The findings of our carbon footprint assessment provide a clear view

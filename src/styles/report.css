@@ -231,7 +231,7 @@
 
      Bigger type needs a wider column, so on the fitted spread — and only there
      — four of the printed measures give way to it: the side margins come in to
-     4.5cqw, the illustration from 240.5pt to 190.5pt, the foot of the sheet
+     4.5cqw, the foot of the sheet
      (clear paper on both printed leaves) from 10cqw to 6, and the glossary's
      term column widens enough for UN PRI to stand clear of its expansion. The
      folio still sits at the far margin, but right-aligned rather than pinned to
@@ -254,8 +254,16 @@
   .rp-spread .rp-in.rp-contents { padding-left: 0; }
   .rp-spread .rp-in.rp-abbr { padding-right: 0; }
 
-  .rp-spread .rp-contents { grid-template-columns: 32cqw 1fr; column-gap: 2.5cqw; }
-  .rp-spread .rp-toc { font-size: 3.2cqw; margin-right: 0; }
+  /* THE ILLUSTRATION KEEPS THE PRINT'S SHARE OF THE SHEET. Buying room for the
+     larger list by squeezing the picture to 32cqw made it the one thing on the
+     spread SMALLER than the report — 80% of the printed width — which is the
+     comparison EFG drew. The print gives it 240.5 of 595.276pt, so the base
+     40.4cqw stands here too and the entries take the narrower column the print
+     leaves them. The list comes down to 2.72cqw to suit that column: still a
+     quarter over the printed 13pt, and the largest size that keeps the longest
+     label, "Appendix 1 - 2025 Carbon Emissions", on one line. */
+  .rp-spread .rp-contents { grid-template-columns: 40.4cqw 1fr; column-gap: 3.22cqw; }
+  .rp-spread .rp-toc { font-size: 2.72cqw; margin-right: 0; }
   .rp-spread .rp-toc a { grid-template-columns: 1fr auto; column-gap: 1.6cqw; }
   .rp-spread .rp-toc-folio { text-align: right; }
 
@@ -410,16 +418,29 @@
    was fitted to. The top and bottom do not: on paper they are the space a thumb
    holds and the gap a reader turns a page across, and here they simply add up —
    one page's foot against the next page's head left 250px of nothing in the
-   middle of a continuous document, which EFG marked three separate times. At
-   6cqw and 3.5cqw the join reads as a break between pages, not as a hole. */
+   middle of a continuous document, which EFG marked three separate times.
+   Halving them to 6cqw and 3.5cqw was not enough — EFG marked the same three
+   places again — because 9.5cqw is still 56pt, and the largest gap the print
+   ever leaves between one bounded block and the next on a sheet is about 35pt
+   (page 32: the GOALS panel ends at y 310.6 and the next heading's cap top is
+   at 344.7). 3.5cqw and 2.5cqw make that 36pt, the print's own block rhythm.
+   The two rules under this one stop a block's own margin being counted a second
+   time on top of the join: it was a trailing 3.4cqw on .rp-goals and .rp-scopes,
+   and a leading margin on whatever opened the next page, that took the same
+   seam anywhere from 106px to 183px depending on which blocks met across it. */
 .rp-sec .rp-in {
-  padding: 6cqw 5.543cqw 3.5cqw 6.048cqw;
+  padding: 3.5cqw 5.543cqw 2.5cqw 6.048cqw;
   color: var(--sr-ink);
   font-family: var(--sr-sans);
   font-size: max(16px, 1.68cqw);
   line-height: 1.3;
   --rp-para: 1.3em;
 }
+.rp-sec .rp-in > :first-child { margin-top: 0; }
+.rp-sec .rp-in > :last-child { margin-bottom: 0; }
+/* A lead sets its own margin with !important, so a lead that closes a page has
+   to be told twice or the seam is 101px where every other one is 67px. */
+.rp-sec .rp-in > .rp-lead:last-child { margin-bottom: 0 !important; }
 .rp-sec .rp-in h1 {
   margin: 0 0 3.5cqw;
   font-size: max(30px, 5.879cqw);
@@ -441,9 +462,14 @@
 
 /* A picture that runs the full width of the sheet, bleeding past the margins. */
 /* A photograph in the flow. It had space above it and none below, so wherever
-   copy followed a picture the first line sat on the picture's edge; the print
-   leaves about 8pt of clear paper between the two. */
-.rp-figure { display: block; width: 100%; height: auto; margin: 4cqw 0 1.2cqw; }
+   copy followed a picture the first line sat on the picture's edge. A first
+   pass gave it 1.2cqw, which is under half of what the book leaves, and the
+   copy still crowded the picture. The print's rule is 15.8pt of clear paper
+   from the picture's edge to the top of the first line — the same on printed
+   25, 26 and 27 — so the margin is 2.58cqw and the paragraph's own half-leading
+   makes up the rest. The margin above stays larger than the print's 9-12pt:
+   EFG asked for space around the pictures, not for the printed rhythm. */
+.rp-figure { display: block; width: 100%; height: auto; margin: 4cqw 0 2.58cqw; }
 .rp-bleed-img { margin-inline: -6.048cqw -5.543cqw; width: calc(100% + 11.591cqw); max-width: none; }
 
 @media (max-width: 700px) {
@@ -796,21 +822,104 @@
 
 /* ---- a big number lockup ------------------------------------------------- */
 .rp-stat { margin: 2cqw 0 2.6cqw; color: var(--sr-green-deep); }
+/* THE PIECES OF A LOCKUP STAND APART. The print leaves a word space between the
+   currency, the numeral and the unit — 7.2pt from EGP to the 25 and 9.5pt from
+   the 25 to the M on printed page 28. The gap here was .12em, which resolves
+   against the INHERITED body size and not the figure's, so it computed to about
+   two pixels and the three parts ran together as "EGP25MM". 1.58cqw is the
+   printed 9.4pt and does not move when the figure's size does. */
 .rp-stat-fig {
-  display: flex; align-items: baseline; gap: .12em; flex-wrap: nowrap; white-space: nowrap;
+  display: flex; align-items: baseline; gap: 1.58cqw; flex-wrap: nowrap; white-space: nowrap;
   font-family: var(--sr-sans); font-weight: 700; line-height: .95;
 }
 .rp-stat-n { font-size: max(38px, 9.575cqw); }
 .rp-stat-u { font-size: max(16px, 3.796cqw); }
+/* THE UNIT'S SECOND CAPITAL IS THE SMALLER ONE. "MM" is not two M's of one
+   size: printed page 29 sets the first at 22.55pt and the second at 13pt on the
+   same baseline, and page 28 does the same. Both were coming out at the unit's
+   own size, which is why the site read "MM" where the report reads "Mм". */
+.rp-stat-u2 { font-size: max(11px, 2.184cqw); }
+/* The unit set on two lines beside the numeral, as printed page 29 sets it. It
+   is the LAST line that stands on the numeral's baseline — the stack rises
+   above the figure, it never hangs below it — so the stack asks for the last
+   baseline rather than letting its first line align and drop "MM" under the 20. */
+.rp-stat-u--stack { line-height: .87; }
+.rp-stat-u--stack > span { display: block; }
+/* A figure with a stacked unit aligns on LAST baselines, the whole row of it:
+   a lone "align-self: last baseline" on the stack put it in flexbox's
+   last-baseline group, which is packed to the cross-end, so it sat on the
+   foot of the numeral's box — 6pt below the baseline. With every item in
+   the same group the stack's second line and the numeral share one baseline,
+   and the stack is then lifted the 1.8pt the print lifts it (comment 9). */
+.rp-stat-fig:has(.rp-stat-u--stack) { align-items: last baseline; }
+.rp-stat-u--stack { transform: translateY(-.3cqw); }
+/* Printed page 28 draws its figures at 52.7pt, a step under page 29's 57pt. */
+.rp-stat--p28 .rp-stat-n { font-size: max(36px, 8.853cqw); }
 .rp-sec .rp-stat p {
   margin: .35em 0 0; color: var(--sr-green-deep);
   font-size: max(14px, 1.68cqw); line-height: 1.25;
 }
-.rp-stat--inline { display: flex; align-items: center; gap: 1.4cqw; }
+/* A MARK WITH ITS CAPTION BESIDE IT. The print sets the caption small and tight
+   — 9.7pt on a 9.6pt pitch, three short lines beside the Green Star badge on
+   printed page 29 — and stands the text 5pt off the mark, not the 8pt this had.
+   At the caption size it inherited the same three lines ran to two long ones. */
+.rp-stat--inline { display: flex; align-items: center; gap: .84cqw; }
 .rp-stat--inline p { margin: 0 !important; }
-/* the label stands on the figure's baseline rather than halfway up it */
+.rp-sec .rp-stat.rp-stat--inline p { font-size: max(11px, 1.63cqw); line-height: 1; }
+/* THE LABEL STANDS ON THE FIGURE'S BASELINE rather than halfway up it — on
+   printed page 27 the second line of "target reduction / emissions in CO2" is
+   level with the foot of the 40. Aligning the boxes only gets the boxes level,
+   and the figure carries far more descent under its baseline than the label
+   does, so the difference is padded out: 0.168 of the figure's em is the drop
+   from its baseline to the foot of its box, 0.318 of the label's em is the
+   label's own, and the padding is what is left. Both are written from the
+   figure's size, not the label's, so the two stay level if the figure moves. */
 .rp-stat--foot { align-items: flex-end; }
-.rp-stat--foot p { padding-bottom: .15em; }
+.rp-stat--foot p { padding-bottom: 2.196cqw; }
+/* PRINTED PAGE 27 IS THE ONE SHEET WHERE THE FIGURE IS THE LOUDEST THING ON IT.
+   The 40 is drawn at 104pt against the 58pt of "USD 3M" above it — nearly twice
+   the height — and its per-cent sign is a quarter of the numeral, tucked hard
+   against the 0 on the same baseline. The lockup was reusing the shared 57pt
+   figure, so the 40 and the USD 3M measured the same cap and the sheet's
+   hierarchy was inverted against the report. These sizes are the print's, and
+   .rp-stat--foot is used on that one lockup so they cannot leak. The word space
+   the other lockups take goes altogether here and the sign carries a negative
+   margin instead, so its ink stands against the 0's ink. The print goes further
+   still — it knocks a white notch out of the 0 and sets the sign inside it —
+   and that is the one thing on this page real text cannot do, so the lockup
+   runs a little wider than the sheet's and the label, at 12.5pt against the
+   printed 15pt, is what gives that width back. It still breaks on the print's
+   two lines with its last baseline on the numeral's. */
+/* Comment 5, second pass. The notch IS reproducible with real text: the sign
+   is pulled .82em (the printed 20.6pt) into the 0 and carries a block of
+   white behind its own ink and over the 0's, so the 0 reads as cut round
+   the sign exactly as printed. That gives back the
+   width the label had been paying for, and the label goes to 14.6pt on a
+   17.6pt pitch — the print's 15pt less the 0.4pt that ABC Normal's web
+   metrics run wider than the sheet's outlines, so the line still fits the
+   column. Figure and label align on LAST baselines, so the
+   label's second line stands on the numeral's without padding arithmetic. */
+.rp-stat--foot { gap: .5cqw; align-items: last baseline; }
+.rp-stat--foot p { padding-bottom: 0; }
+.rp-stat--foot .rp-stat-fig { gap: 0; }
+.rp-stat--foot .rp-stat-n { font-size: max(64px, 17.49cqw); margin-left: -.02em; } /* the 4's side bearing: the print's ink starts on the column edge */
+.rp-stat--foot .rp-stat-u { position: relative; z-index: 1; font-size: max(16px, 4.2cqw); margin-left: -.82em; }
+/* the notch: a block of paper behind the sign and over the 0, measured off
+   the sheet — it clears the sign by .27em above and .12em to its left */
+.rp-stat--foot .rp-stat-u::before {
+  content: ''; position: absolute; z-index: -1; inset: .02em -.04em -.02em -.12em;
+  top: -.27em; background: var(--sr-white);
+}
+.rp-sec .rp-stat.rp-stat--foot p { font-size: max(12px, 2.46cqw); line-height: 1.2; }
+/* The <br> is the print's break; nothing else may break it. */
+.rp-stat--foot p { white-space: nowrap; }
+/* The same sheet's "USD 3M" lockup: its superscript M is 34pt, half again the
+   22.55pt the unit takes everywhere else, and "financing package" under it is
+   30.4pt rather than the 25pt of a caption. */
+/* and its superscript sits right against the M, not a word space away */
+.rp-stat--hero .rp-stat-fig { gap: .1cqw; }
+.rp-stat--hero .rp-stat-u { font-size: max(16px, 5.713cqw); }
+.rp-sec .rp-stat.rp-stat--hero p.rp-stat-big { font-size: max(18px, 5.02cqw); }
 
 /* ---- the dark note ------------------------------------------------------- */
 .rp-note {
@@ -832,12 +941,21 @@
   font-family: var(--sr-sans); font-size: max(17px, 3.326cqw); line-height: 1.35;
 }
 .rp-glance b { font-weight: 700; }
-.rp-statcols { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; align-items: start; }
-.rp-statcol { padding: 1.8cqw 1.8cqw 2.2cqw; color: var(--sr-white); }
+/* THE TWO PANELS ARE THE SAME HEIGHT. Printed page 30 runs both from y 387.7 to
+   y 672.6; the teal one simply carries empty ground under its four rows where
+   the olive has six. Letting each panel take its own content's height left them
+   ragged, 644px against 469px, which is the first thing EFG's arrow points at. */
+.rp-statcols { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; align-items: stretch; }
+.rp-statcol { padding: 1.8cqw 1.33cqw 2.2cqw; color: var(--sr-white); }
 .rp-statcol--olive { background: var(--sr-olive); }
 .rp-statcol--teal { background: #2b9c7a; }
+/* The headings are the one place in the book set in Bebas Neue, and the print
+   sets them mixed case — "Vortex Energy", not VORTEX ENERGY. Capitalised and in
+   the wrong face they measured 406px against the print's 240px and all but
+   filled their panel. */
 .rp-sec .rp-statcol h3 {
-  margin: 0 0 1cqw; text-align: center; text-transform: uppercase;
+  margin: 0 0 1cqw; text-align: center;
+  font-family: var(--sr-display); font-weight: 700;
   color: var(--sr-green-deep); font-size: max(20px, 4.452cqw);
 }
 /* THE RULES RUN THE WHOLE WIDTH OF THE PANEL. They are one line under each row,
@@ -846,22 +964,41 @@
    were centred in the row rather than filling it, a tall label put its own
    segment of the line a few pixels above the figure's: one rule read as two
    broken ones. Both cells now fill the row's height, so the two halves of the
-   line meet, and the content is centred inside them as the print centres it. */
-.rp-statcol dl { display: grid; grid-template-columns: 1.3fr 1fr; margin: 0; }
+   line meet, and the content is centred inside them as the print centres it.
+   THE LABEL COLUMN IS A FIXED WIDTH. Each rule is drawn as two segments that
+   abut at the column boundary, and in BOTH panels the right-hand segment is
+   81.7pt — it is the figure column that gives way, 162.0pt in the olive panel
+   and 141.7pt in the teal. A proportional split put 189px there instead of the
+   print's 153px equivalent, which is why "Exited & Current AUMs" broke after
+   "Current" where the report breaks after "&", and why "Fleet charge points
+   under management" set on two lines where the report sets three.
+   The rule itself is an opaque white hairline in the print, not a tint. */
+/* The rows stand on the print's 41.28pt pitch (6.935cqw); padded rows came out
+   at 46.8pt and made each panel a fifth deeper than the sheet. */
+.rp-statcol dl { display: grid; grid-template-columns: 1fr 13.72cqw; grid-auto-rows: minmax(6.935cqw, auto); margin: 0; }
 .rp-statcol dt, .rp-statcol dd {
   display: flex; align-items: center; justify-content: center; text-align: center;
-  padding: .55em .4em; border-bottom: 1px solid rgba(255, 255, 255, .45);
+  padding: .2em .4em; border-bottom: 1px solid #fff;
   font-family: var(--sr-sans); font-weight: 700;
 }
 .rp-statcol dt:last-of-type, .rp-statcol dd:last-of-type { border-bottom: 0; }
 .rp-statcol dt { font-size: max(15px, 3.242cqw); }
-.rp-statcol dd { margin: 0; font-size: max(10px, 1.562cqw); line-height: 1.2; }
+/* The labels are ABC Normal SEMIBOLD in the print, one step down from the
+   figures' bold — printed page 30 sets them at 9.3pt Semibold. */
+.rp-statcol dd { margin: 0; font-weight: 600; font-size: max(10px, 1.562cqw); line-height: 1.2; }
 
 /* ---- a banded list ------------------------------------------------------- */
+/* The band opens printed page 31 with the whole of that sheet's top margin
+   above it. In a scroll there is no page turn to supply that, and with no
+   margin of its own the band's top edge sat exactly on the bottom edge of the
+   olive panel above — the two blocks touching, which is EFG's second arrow on
+   this slide. 6cqw is the 35.7pt the print leaves between blocks. It is set in
+   Bebas Neue and mixed case, like the panel headings it belongs with. */
+.rp-sec .rp-in p.rp-band { margin-top: 6cqw; }
 .rp-band {
   padding: .7cqw 1cqw; background: #2b9c7a; color: var(--sr-green-deep);
-  text-align: center; text-transform: uppercase;
-  font-family: var(--sr-sans); font-weight: 700; font-size: max(20px, 4.452cqw);
+  text-align: center;
+  font-family: var(--sr-display); font-weight: 700; font-size: max(20px, 4.452cqw);
 }
 .rp-rows { margin: 1.1cqw 0 0; padding: 0; list-style: none; }
 .rp-rows li {
@@ -898,7 +1035,7 @@
 /* A mark standing beside a figure is sized by width instead, because there it
    is the width that has to balance the number next to it. */
 .rp-stat--inline .rp-icon {
-  width: var(--w, 9cqw); height: auto;
+  flex: none; width: var(--w, 9cqw); height: auto;
   min-width: 0; min-height: 0; object-fit: fill;
 }
 .rp-media { display: block; width: 100%; height: auto; margin: 0 0 2cqw; }
@@ -942,13 +1079,20 @@
 .rp-sec .rp-two > p:last-child,
 .rp-sec .rp-two > * > p:last-child { margin-bottom: 0; }
 .rp-flags { display: block; width: 24.5cqw; min-width: 150px; height: auto; margin: 0 0 2cqw; }
+/* THE HEADING AND ITS LEAD SHARE THE FIRST LINE OF PRINTED PAGE 34. "FINDINGS"
+   is 16pt bold at the left margin and the lead is 12pt justified, starting at
+   x 137.9 — 101.9pt in — with its first line level with the heading. As a
+   flex head-and-logo row the heading was set at 20pt and took the full measure,
+   so the lead dropped to the line below and set ragged. */
+.rp-findings-head { display: grid; grid-template-columns: 17.12cqw 1fr; align-items: start; }
+.rp-sec .rp-in .rp-findings-head h2 { margin: 0; font-size: max(18px, 2.688cqw); }
+.rp-sec .rp-findings-head p.rp-lead { margin: 0 !important; text-align: justify; }
 .rp-head-logo { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; flex-wrap: wrap; }
 .rp-head-logo h2 { flex: 1 1 20ch; }
 .rp-head-logo .rp-logo, .rp-head-logo .rp-stat { margin-bottom: 0; flex: none; }
 .rp-head-logo h3 { flex: 1 1 18ch; margin-top: 0; }
 .rp-sec .rp-caption--large { font-size: max(15px, 2.352cqw); color: var(--sr-green-deep); }
 .rp-sec .rp-lead--sm { font-size: max(17px, 2.016cqw) !important; line-height: 1.35; color: var(--sr-green-deep); }
-.rp-stat-u--stack { white-space: pre-line; line-height: 1.05; }
 /* The line under a figure is set in the REGULAR weight in the print, not bold,
    and it is not always capitals — page 28 sets FINANCING FACILITY, page 27 sets
    "financing package" in lower case. So the case comes from the copy and the
@@ -1013,9 +1157,28 @@
 .rp-metric-value small { font-size: .5em; }
 .rp-metric img { width: 5.7cqw; min-width: 36px; height: auto; }
 
-.rp-findings { border: 1px solid var(--sr-green-deep); border-radius: 1cqw; padding: 3cqw 2.4cqw; margin: 3cqw 0; }
+/* THE PANEL'S VERTICAL RULE IS ONE LINE. Printed page 34 runs it unbroken from
+   y 192.9 to y 688.6, straight through both horizontal rules — one stroke down
+   the whole panel. Drawn as a border on the figures column it became three
+   segments, one per scope block, with a 59px hole wherever a horizontal rule
+   crossed. It belongs to the panel, so the panel draws it, and the scope blocks
+   only have to put their columns either side of it. */
+.rp-findings {
+  position: relative;
+  border: 1px solid var(--sr-green-deep); border-radius: 1cqw;
+  padding: 3cqw 4.16cqw; margin: 3cqw 0;
+}
+.rp-findings::before {
+  content: ''; position: absolute;
+  left: 21.49cqw; top: 4.28cqw; bottom: 2.97cqw;
+  width: 1px; background: var(--sr-green-deep);
+}
 .rp-scope-block + .rp-scope-block { border-top: 1px solid var(--sr-green-deep); margin-top: 2.6cqw; padding-top: 2.6cqw; }
-.rp-scope-block { display: grid; grid-template-columns: 22cqw 1fr; gap: 2cqw; }
+/* The scope-name column runs from the panel's side padding to that rule at
+   127.9pt, and the first group of figures starts 18.8pt past it at x 182.1.
+   At 22cqw the name column was a quarter too wide, which pushed the rule out
+   and let "OTHER INDIRECT EMISSIONS" sit on one line where the print sets two. */
+.rp-scope-block { display: grid; grid-template-columns: 17.33cqw 1fr; gap: 3.16cqw; }
 .rp-sec .rp-scope-name {
   margin: 0; font-family: var(--sr-sans); font-weight: 700;
   font-size: max(16px, 2.486cqw); line-height: 1.1; text-transform: uppercase;
@@ -1042,7 +1205,8 @@
   .rp-totalrow { grid-template-columns: 1fr; gap: 8px; }
 }
 
-.rp-fgroups { border-left: 1px solid var(--sr-green-deep); padding-left: 2.2cqw; }
+/* No rule here — the panel draws it, see .rp-findings::before. */
+.rp-fgroups { min-width: 0; }
 .rp-fgroups--row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; }
 .rp-fgroups--row .rp-fgroup + .rp-fgroup { margin-top: 0; }
 .rp-fgroups--row .rp-fitems { grid-template-columns: 1fr; }
@@ -1057,7 +1221,8 @@
   margin: .25em 0 0; font-family: var(--sr-sans); font-weight: 700;
   font-size: max(10px, 1.008cqw); line-height: 1.2; color: #000;
 }
-.rp-fitem img { width: 5cqw; min-width: 30px; height: auto; }
+/* the printed tile is a 26.3pt rounded square */
+.rp-fitem img { width: 4.42cqw; min-width: 30px; height: auto; }
 .rp-scope--1 :is(.rp-scope-name, .rp-fitem-value) { color: #9ca0a1; }
 .rp-scope--2 :is(.rp-scope-name, .rp-fitem-value) { color: #54b078; }
 .rp-scope--3 :is(.rp-scope-name, .rp-fitem-value) { color: #204534; }
@@ -1134,6 +1299,9 @@
   .rp-metrics { gap: 18px; }
   .rp-metric img { width: 42px; min-width: 0; }
   .rp-findings { padding: 18px 16px; margin: 22px 0; }
+  /* stacked, there are no two columns for the panel's rule to divide */
+  .rp-findings::before { display: none; }
+  .rp-findings-head { grid-template-columns: 1fr; gap: 6px; }
   .rp-scope-block { grid-template-columns: 1fr; gap: 10px; }
   .rp-scope-block + .rp-scope-block { margin-top: 18px; padding-top: 18px; }
   .rp-fitems { grid-template-columns: 1fr; gap: 12px; }
@@ -1473,6 +1641,10 @@
   font-size: max(15px, 2.52cqw); line-height: 1.25;
   color: var(--sr-green-deep);
 }
+/* A kicker that opens a page has no block above it on that page, so its lead is
+   the page join being counted twice — the seam rule on .rp-sec .rp-in cannot
+   reach it from there, this one can. */
+.rp-sec .rp-in > h4.rp-kicker:first-child { margin-top: 0; }
 
 /* ---- the print's bulleted lists: an olive ● against ink copy ------------ */
 .rp-dots { margin: 0 0 1.3em; padding: 0; list-style: none; }
@@ -2113,10 +2285,13 @@
 
 /* 7. SMALL CAPS THE PRINT SETS AND THE SITE HAD LOST. Each of these is set in
    full capitals on the sheet; the markup keeps them as words so a reader and a
-   search engine get the words, and the case is a matter for the stylesheet. */
+   search engine get the words, and the case is a matter for the stylesheet.
+   The .rp-statcol headings are left out on purpose: Bebas Neue draws capitals
+   in its lowercase slots too, and the subset carries only the letters the
+   mixed-case markup uses, so forcing uppercase sent R, X, Y, H and I to the
+   fallback face — comment 10. */
 .rp-sec .rp-goals h3,
 .rp-sec .rp-in .rp-progress h3,
-.rp-sec .rp-in .rp-statcol h3,
 .rp-sec .rp-in h4.rp-kicker,
 .rp-quote-name, .rp-donut-key { text-transform: uppercase; }
 
@@ -2214,10 +2389,10 @@
 .rp-eco-body li { font-size: max(11px, 1.344cqw); }
 .rp-notes-cols li, .rp-sec .rp-notes p.rp-notes-sub { font-size: max(11px, 1.512cqw); }
 .rp-bar-head, .rp-bar { font-size: max(11px, 1.176cqw); }
-/* The caption under a figure, and the note beside an illustration, are set at
-   13pt in the print — a size the eye reads, not a footnote. They were at 7pt,
-   which is what made "Financing Package" almost disappear under its own number. */
-.rp-sec .rp-stat p { font-size: max(13px, 2.184cqw); }
+/* The caption under a figure is set at 11.6pt in the print — "Financing for
+   Eco-tourism" on printed page 29 — a size the eye reads, not the 7pt footnote
+   it started at, and not the 13pt of the guess that replaced it. */
+.rp-sec .rp-stat p { font-size: max(12px, 1.95cqw); }
 .rp-statcol dd { font-size: max(11px, 1.562cqw); }
 
 /* ============================================================================

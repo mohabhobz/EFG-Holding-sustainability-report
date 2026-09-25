@@ -69,3 +69,20 @@
   src: url('../assets/fonts/ABCNormal-Bold.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: block;
 }
+
+/* ----------------------------------------------------------------------------
+ * BEBAS NEUE BOLD — the one condensed face in the book
+ *
+ * The two panel headings on printed page 30 and the band on 31 are not set in
+ * ABC Normal at all: "Vortex Energy" measures 128.5pt at 26.52pt, which no
+ * weight of ABC Normal comes near. Set in the wrong face they ran 69% wide and
+ * filled their panels. This subset was lifted out of the report PDF the same
+ * way the ABC Normal files were — 29 glyphs, which is every character the book
+ * sets in it, so the headings keep the print's mixed case rather than being
+ * capitalised into letters the subset does not carry.
+ * -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('../assets/fonts/BebasNeue-Bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}

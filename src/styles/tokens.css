@@ -45,6 +45,9 @@
    * licence position — these files were lifted from the report PDF. */
   --sr-sans: "ABC Normal", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
   --sr-book: "ABC Normal Book", var(--sr-sans);
+  /* The one condensed face in the book — the two panel headings on printed
+   * page 30, the band on 31, and the chart title on 87. Nothing else. */
+  --sr-display: "Bebas Neue", var(--sr-sans);
 
   /* Print sets body at 10/13pt. That is a print measure; on screen the same
    * copy needs 15.5–17.5px and looser leading to read at arm's length. */

@@ -378,19 +378,24 @@ export default function SocialInvestment() {
             <img className="rp-media rp-media--small" src={misrInsurance}
                  width="600" height="341" alt="Misr Insurance" />
           </div>
-        </div>
-      </article>
 
-      {/* ---- printed page 52 ---- */}
-      <article className="rp rp-sec">
-        <div className="rp-in">
+          {/* This sentence closes the partnerships narrative that runs down
+              printed page 51, and the print only carries it to the next sheet
+              because the sheet ran out. Left at the head of page 52 in a scroll
+              it read as a dropped paragraph standing in front of the Tanmeyah
+              panel, so it comes back to the column it finishes. */}
           <p className="rp-lead rp-lead--sm">
             Collectively, these partnerships reflect Tanmeyah’s strategy of
             combining growth with prudence—expanding its addressable market and
             improving customer accessibility, while reinforcing risk controls,
             operational efficiency, and portfolio sustainability.
           </p>
+        </div>
+      </article>
 
+      {/* ---- printed page 52 ---- */}
+      <article className="rp rp-sec">
+        <div className="rp-in">
           <div className="rp-progress">
             <p className="rp-progress-title">
               <b>Tanmeyah</b>2025 Progress at a Glance
