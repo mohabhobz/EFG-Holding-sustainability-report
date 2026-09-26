@@ -47,7 +47,7 @@ A = [
   ('env/p23-eo-charger',       11, (630.9,359.6,887.5,493.1),   'art',  400, 900),
   ('env/p24-banknxt',          12, (391.6,130.1,561.1,153.0),   'mark', 900, 900),
   # env/p24-icon-hand is retired: the figure and the hands are one piece of vector art,
-  # exported path for path as src/assets/report/env/p24-figure-financing.svg.
+  # exported path for path as env/p24-figure-financing.svg by tools/export-vector.py.
   ('env/p25-tomorrow',         12, (1034.4,119.1,1151.9,160.9), 'mark', 900, 900),
   ('env/p25-team',             12, (630.7,214.9,1154.6,375.1),  'art',  300, 1400),
   ('env/p25-infinity',         12, (626.0,562.7,770.6,602.7),   'mark', 900, 900),
@@ -133,7 +133,8 @@ A = [
   ('soc/p56-hermes-one',    28, (493,299,559,366),          'flat', 900, 600),
   ('soc/p56-poster',        28, (362.0,392.3,559.3,579.9),  'flat', 400, 800),
   ('soc/p56-kenzi',         28, (35,590,152,679),   'flat', 700, 600),
-  ('soc/p57-hand',          28, (991,482,1120,592),        'flat', 800, 700),
+  # soc/p57-hand is retired: exported with its figure as soc/p57-figure-financing.svg
+  # by tools/export-vector.py.
   # ---- Section 3, pages 58 to 77 -----------------------------------------
   ('soc/p58-dialysis',      29, (304.7,453.4,560.3,764.0),  'flat', 400, 900),
   ('soc/p59-panel',         29, (646.8,93.9,1139.4,775.1),  'flat', 330, 1500),
@@ -160,12 +161,8 @@ A = [
   ('soc/p71-student-2',     35, (631.3,562.4,811.3,747.4),  'flat', 400, 700),
   ('soc/p73-classroom',     36, (631.3,139.3,1155.1,453.2), 'flat', 330, 1400),
   ('soc/p73-foundation',    36, (636,485,930,530),          'mark', 700, 1100),
-  ('soc/p74-photo-1',       37, (387.0,162.1,561.3,309.6),  'flat', 400, 700),
-  ('soc/p74-photo-2',       37, (35.0,311.0,207.2,425.8),   'flat', 400, 700),
-  ('soc/p74-photo-3',       37, (389.8,432.3,559.8,549.3),  'flat', 400, 700),
-  # the photograph only — the box used to reach down into the card's heading
-  ('soc/p74-photo-4',       37, (38.1,558.4,201.0,667.4),   'flat', 400, 700),
-  ('soc/p74-photo-5',       37, (390.4,677.6,558.3,789.6),  'flat', 400, 700),
+  # soc/p74-photo-1..5 are taken straight from the PDF by tools/extract-raw-photos.py:
+  # the first crop took a line of the card above and its rule with it.
   ('soc/p75-academy',       37, (631.7,361.5,700.5,417.9),  'flat', 900, 600),
   ('soc/p76-montessori',    38, (34.6,379.1,350.3,764.0), 'flat', 400, 900),
   ('soc/p76-circle-1',      38, (298.4,402.0,402.1,503.7),  'flat', 500, 500),

@@ -35,7 +35,7 @@ import financeSmes from '../assets/report/soc/p55-efg-finance-smes.webp';
 import hermesOne from '../assets/report/soc/p56-hermes-one.webp';
 import poster56 from '../assets/report/soc/p56-poster.webp';
 import kenzi from '../assets/report/soc/p56-kenzi.webp';
-import handIcon57 from '../assets/report/soc/p57-hand.webp';
+import financingFigure57 from '../assets/report/soc/p57-figure-financing.svg';
 import dialysis from '../assets/report/soc/p58-dialysis.webp';
 import panel59 from '../assets/report/soc/p59-panel.webp';
 import signing61 from '../assets/report/soc/p61-signing.webp';
@@ -692,11 +692,11 @@ export default function SocialInvestment() {
             </div>
 
             <div>
-              <div className="rp-stat rp-stat--inline">
-                <div className="rp-stat-fig"><span className="rp-stat-u">EGP 2.458 BN</span></div>
-                <img className="rp-icon" src={handIcon57} width="700" height="597"
-                     style={{ '--w': '21.68cqw' }} alt="" />
-              </div>
+              {/* One piece of vector artwork in the PDF, the figure's outlined
+                  numerals over the wrist — exported path for path by
+                  tools/export-vector.py, the figure carried in the alt text. */}
+              <img className="rp-logo rp-logo--end" src={financingFigure57} width="153" height="111"
+                   style={{ '--w': 'max(182px, 25.69cqw)', '--wm': '220px' }} alt="EGP 2.458 BN" />
               {/* The print sets the three percentages as type on the slices, so
                   they are type here too rather than pixels inside a picture. */}
               <figure className="rp-figure-fig rp-chart">
@@ -1454,7 +1454,7 @@ export default function SocialInvestment() {
                   <h3>{title}</h3>
                   <p>{lines}</p>
                 </div>
-                <img src={photo} width="700" height="500" alt="" />
+                <img src={photo} width="700" height="463" alt="" />
               </div>
             ))}
           </div>

@@ -131,11 +131,11 @@ what was done:
 
 ### After the second round
 
-- **Page 24, EGP 1,161 BN.** The figure and the two hands are one piece of
+- **Pages 24 and 57, EGP 1,161 BN and EGP 2.458 BN.** The figure and the two hands are one piece of
   vector artwork in the PDF, the numerals outlined and drawn over the wrist.
   Masking the numerals out of a raster crop kept breaking the hand, so the whole
-  lockup is exported path for path as `p24-figure-financing.svg`, with the
-  figure in its alt text. It is the one place a printed figure is not HTML text,
+  lockup is exported path for path (`tools/export-vector.py`), with the figure
+  in its alt text. These are the two places a printed figure is not HTML text,
   at EFG's request.
 - **Page 41, the participant cards.** The crops carried the print's own olive
   outline, so each card showed two. The photographs are now the raw images out

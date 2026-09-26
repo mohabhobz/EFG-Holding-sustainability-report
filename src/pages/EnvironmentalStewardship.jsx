@@ -673,7 +673,7 @@ export default function EnvironmentalStewardship() {
                 are exported together, path for path, as one SVG. The alt text
                 carries the figure for a reader and a search engine. */}
             <img className="rp-logo" src={financingFigure} width="126" height="63"
-                 style={{ '--w': 'max(150px, 21.175cqw)' }} alt="EGP 1,161 BN" />
+                 style={{ '--w': 'max(150px, 21.175cqw)', '--wm': '180px' }} alt="EGP 1,161 BN" />
           </div>
 
           <p className="rp-lead rp-lead--sm">

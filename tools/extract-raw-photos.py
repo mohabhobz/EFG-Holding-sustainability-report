@@ -23,23 +23,28 @@ ROOT = Path(__file__).resolve().parent.parent
 PDF = ROOT / 'public' / 'EFG-Holding-Sustainability-Report-2025.pdf'
 OUT = ROOT / 'src' / 'assets' / 'report'
 
-# (output name, sheet, left edge of the region the photographs sit in)
+# (output name, sheet, region of the sheet the photographs sit in)
 JOBS = [
-    ('env/p41-photo-{n}', 20, 900),   # printed page 41, the six participant cards
+    ('env/p41-photo-{n}', 20, (900, 0, 1191, 842)),   # printed page 41, the six participant cards
+    ('soc/p74-photo-{n}', 37, (0, 150, 569, 800)),    # printed page 74, the Foundation's year
 ]
 
 
 def main():
     doc = pymupdf.open(PDF)
-    for name, sheet, xmin in JOBS:
+    for name, sheet, region in JOBS:
         page = doc[sheet]
+        area = pymupdf.Rect(region)
         images = sorted(
-            ((i['xref'], i['bbox']) for i in page.get_image_info(xrefs=True) if i['bbox'][0] > xmin),
+            ((i['xref'], i['bbox']) for i in page.get_image_info(xrefs=True)
+             if area.contains(pymupdf.Rect(i['bbox']))),
             key=lambda t: t[1][1])
-        clips = [x['scissor'] for x in page.get_drawings(extended=True)
-                 if x['type'] == 'clip' and x['scissor'][0] > xmin]
+        clips = [pymupdf.Rect(x['scissor']) for x in page.get_drawings(extended=True)
+                 if x['type'] == 'clip' and area.contains(pymupdf.Rect(x['scissor']))
+                 and x['scissor'][2] - x['scissor'][0] < 300]
         for n, (xref, bb) in enumerate(images, 1):
-            clip = min(clips, key=lambda c: abs(c[1] - bb[1]))
+            # the clip that covers most of this picture is the frame it is shown in
+            clip = max(clips, key=lambda c: (c & pymupdf.Rect(bb)).get_area())
             pix = pymupdf.Pixmap(doc, xref)
             if pix.alpha:
                 pix = pymupdf.Pixmap(pix, 0)
