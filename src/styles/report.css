@@ -267,7 +267,9 @@
   .rp-spread .rp-toc a { grid-template-columns: 1fr auto; column-gap: 1.6cqw; }
   .rp-spread .rp-toc-folio { text-align: right; }
 
-  .rp-spread .rp-abbr dl { font-size: 2.9cqw; grid-template-columns: 14cqw 1fr; }
+  /* The glossary is set at the list's own size so the two leaves read as one
+     spread — the print sets it two points smaller, EFG asked for them equal. */
+  .rp-spread .rp-abbr dl { font-size: 2.72cqw; grid-template-columns: 13.2cqw 1fr; }
 }
 
 /* Under 900px a leaf would be narrower than a phone holds a printed page, so
@@ -353,9 +355,9 @@
 
 .rp-abbr dl {
   display: grid;
-  grid-template-columns: 9.744cqw 1fr;
+  grid-template-columns: 11.6cqw 1fr;
   margin: 0;
-  font-size: max(16px, 1.848cqw);
+  font-size: max(16px, 2.184cqw);   /* the contents list's size, not the print's 11pt */
   line-height: 1.818;
 }
 .rp-abbr dt,
@@ -1257,14 +1259,21 @@
 .rp-progress li { margin-bottom: .5em; }
 
 .rp-participants { margin: 3cqw 0; display: grid; gap: 2.9cqw; }
+/* ONE OUTLINE. The card's olive stroke is drawn here and only here; the
+   photograph is the raw image out of the PDF, with no frame of its own, and
+   takes the print's clip — a slant from 9.2% in at the top to the card's edge
+   at the foot — while the card's own radius rounds its right-hand corners.
+   Printed page 41: the card is 522.8 x 85.2pt, the photograph 153.1pt wide,
+   flush with the card's right, top and bottom edges. */
 .rp-participant {
-  display: grid; grid-template-columns: 1fr 29.6cqw; gap: 2cqw; align-items: stretch;
-  border: .5px solid var(--sr-olive); border-radius: 1cqw; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 25.72cqw; align-items: stretch;
+  min-height: 14.31cqw;
+  border: .5px solid var(--sr-olive); border-radius: 2.02cqw; overflow: hidden;
 }
 .rp-participant-body { padding: 1.8cqw 2cqw 1.8cqw 7cqw; align-self: center; }
 .rp-sec .rp-participant-body h3 { margin: 0 0 .35em; font-size: max(15px, 2.184cqw); color: var(--sr-green-deep); }
 .rp-sec .rp-participant-body p { margin: 0; font-size: max(15px, 2.184cqw); line-height: 1.3; }
-.rp-participant img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rp-participant img { width: 100%; height: 100%; object-fit: cover; display: block; clip-path: polygon(9.2% 0, 100% 0, 100% 100%, 0 100%); }
 
 .rp-curriculum {
   margin: 3cqw 0 2.1cqw; padding: 1.5cqw; text-align: center;
@@ -1313,7 +1322,7 @@
   .rp-progress ul { margin-bottom: 22px; }
   .rp-participant { grid-template-columns: 1fr; }
   .rp-participant-body { padding: 16px 18px; }
-  .rp-participant img { height: 150px; }
+  .rp-participant img { height: 150px; clip-path: none; }
   .rp-pillars { grid-template-columns: 1fr; gap: 12px; }
   .rp-pillar-head { min-height: 0; }
   .rp-curriculum { padding: 14px; margin: 22px 0 14px; }
@@ -2564,3 +2573,15 @@
 
 /* 26. The donut's key on printed page 129 is set in title case. */
 .rp-donut-key { text-transform: none; }
+
+/* ---- printed page 36 · the financed-emissions panel ---------------------- */
+/* An SVG with real text (tools/build-financed-svg.py), drawn on the print's own
+   grid, so it scales with the page. Under 700px the panel would set its type at
+   four pixels; there it keeps a readable width and scrolls sideways in its own
+   frame instead of shrinking. */
+.rp-fe { margin: 2.6cqw 0 1cqw; }
+.rp-fe svg { display: block; width: 100%; height: auto; }
+@media (max-width: 700px) {
+  .rp-fe { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-inline: -20px; padding-inline: 20px; }
+  .rp-fe svg { width: 1100px; max-width: none; }
+}

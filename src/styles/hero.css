@@ -12,20 +12,21 @@
  * position: with line-height 1 the cap top sits a fraction of an em below the
  * box top, and that fraction is the same for every size, so it is written once.
  * ========================================================================== */
-/* THE SHEET TAKES THE HEADER'S COLUMN. A cover is the one page a reader is
-   meant to be struck by, and an A4 sheet shrunk to fit a 16:9 window is a
-   thumbnail with white all round it. So the sheet is as wide as every other
-   page of the site — the `.wrap` measure and gutter, beginning under the EFG
-   lockup and ending under the menu control — and takes its height from that
-   width at the printed proportion. On a laptop that is taller than the window,
-   and the reader scrolls a little to reach the PRI mark: the client asked for
-   the cover of the report, and a page of the report is taller than a screen.
-   Because the sheet's width is set from outside it, `.cv-in` is the container:
-   every cqw inside measures against the sheet itself. */
+/* THE COVER FITS THE SCREEN. The sheet is sized from the window's height, so
+   the whole composition — title to PRI mark — is in view at once with no
+   scroll, and it never grows wider than the header's column. What makes it
+   large rather than a thumbnail is that the paper the print leaves empty is
+   not drawn: the band of white above THE POWER (22.6cqw of an A4 sheet) is
+   trimmed to 4cqw, so the visible sheet is 100 x 122.8 instead of 100 x 141.4
+   and every point of the window's height goes to the type and the plaque.
+   Nothing inside moves relative to anything else — each top is the printed
+   one less the same trim. `.cv-in` is the container: every cqw inside
+   measures against the sheet itself. */
 .cv {
   box-sizing: border-box;
   width: 100%;
-  padding-block: clamp(10px, 1.8svh, 24px);
+  --cv-pad: clamp(10px, 1.8svh, 24px);
+  padding-block: var(--cv-pad);
   padding-inline: var(--sr-gutter);
   max-width: var(--sr-measure);
   margin-inline: auto;
@@ -33,13 +34,16 @@
   /* a definite column, so the sheet's `width: 100%` has something to measure
      against — an auto column would be sized by the sheet and collapse it */
   grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
   background: var(--sr-white);
 }
 .cv-in {
   container-type: inline-size;
-  width: 100%;
+  /* the lesser of the column and the width the window's height allows */
+  width: min(100%, calc((100svh - var(--sr-header-h) - 1px - 2 * var(--cv-pad)) * 100 / 122.8));
   position: relative;
-  aspect-ratio: 595.276 / 841.89;
+  aspect-ratio: 100 / 122.8;
+  --trim: 18.6cqw;        /* printed paper above the title that is not drawn */
   font-family: var(--sr-sans);
   color: var(--sr-green-deep);
   --cap: .161em;          /* box top → cap top, ABC Normal at line-height 1 */
@@ -59,24 +63,24 @@
   line-height: 1; text-transform: uppercase;
 }
 .cv-t1, .cv-t2 { font-size: 9.525cqw; }
-.cv-t1 { font-weight: 400; top: calc(22.611cqw - var(--cap)); }
-.cv-t2 { font-weight: 700; top: calc(31.649cqw - var(--cap)); }
-.cv-theme { font-size: 3.024cqw; font-weight: 400; top: calc(39.998cqw - var(--cap)); }
-.cv-plaque { left: 22.090cqw; top: 49.472cqw; width: 55.690cqw; height: auto; }
+.cv-t1 { font-weight: 400; top: calc(22.611cqw - var(--trim) - var(--cap)); }
+.cv-t2 { font-weight: 700; top: calc(31.649cqw - var(--trim) - var(--cap)); }
+.cv-theme { font-size: 3.024cqw; font-weight: 400; top: calc(39.998cqw - var(--trim) - var(--cap)); }
+.cv-plaque { left: 22.090cqw; top: calc(49.472cqw - var(--trim)); width: 55.690cqw; height: auto; }
 .cv-y1, .cv-y2 { font-size: 4.032cqw; }
-.cv-y1 { font-weight: 400; top: calc(116.315cqw - var(--cap)); }
-.cv-y2 { font-weight: 700; top: calc(120.061cqw - var(--cap)); }
+.cv-y1 { font-weight: 400; top: calc(116.315cqw - var(--trim) - var(--cap)); }
+.cv-y2 { font-weight: 700; top: calc(120.061cqw - var(--trim) - var(--cap)); }
 
 .cv-sig {
-  left: 77.208cqw; top: calc(130.344cqw - var(--cap));
+  left: 77.208cqw; top: calc(130.344cqw - var(--trim) - var(--cap));
   font-size: 2.083cqw; line-height: 1; font-style: italic; color: var(--sr-black);
 }
-.cv-pri { left: 77.158cqw; top: 133.083cqw; width: 18.681cqw; height: auto; }
+.cv-pri { left: 77.158cqw; top: calc(133.083cqw - var(--trim)); width: 18.681cqw; height: auto; }
 
 /* THE ONE ADDITION: the print's 45pt of clear paper under REPORT 2025, used
    for the download the page owes a reader. */
 .cv-btn {
-  left: 50%; top: 125.5cqw; transform: translateX(-50%);
+  left: 50%; top: calc(125.5cqw - var(--trim)); transform: translateX(-50%);
   display: inline-flex; align-items: center;
   padding: 1.1cqw 2.6cqw; border-radius: 999px;
   background: var(--sr-olive); color: var(--sr-white);

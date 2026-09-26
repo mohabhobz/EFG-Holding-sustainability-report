@@ -27,7 +27,8 @@ import chart22 from '../assets/report/env/p22-chart.webp';
 import vortexIgnis from '../assets/report/env/p23-vortex-ignis.webp';
 import eoCharger from '../assets/report/env/p23-eo-charger.webp';
 import bankNxt from '../assets/report/env/p24-banknxt.webp';
-import handIcon from '../assets/report/env/p24-icon-hand.webp';
+import financingFigure from '../assets/report/env/p24-figure-financing.svg';
+import financedSvg from '../assets/report/env/p36-financed.svg?raw';
 import tomorrow from '../assets/report/env/p25-tomorrow.webp';
 import teamPhoto from '../assets/report/env/p25-team.webp';
 import infinity from '../assets/report/env/p25-infinity.webp';
@@ -169,14 +170,6 @@ const SCOPE_TOTALS = [
   ['Scope 3', '5,414', '#b5ffd1', '#124734'],
 ];
 
-const FINANCED = [
-  ['Commercial & Residential Real Estate (Factoring)', '10,099', '71', '59%', '2.7%', '4.0'],
-  ['Commercial & Residential Real Estate (Leasing)', '10,286', '33', '30%', '2.8%', '4.0'],
-  ['Oil & Gas (Factoring)', '378,442', '35,571', '9%', '94%', '4.0'],
-  ['Transport (Leasing)', '1,036', '279', '1.3%', '0.3%', '4.0'],
-  ['Leasing total', '11,422', '38', '61%', '2.9%', '4.0'],
-  ['Factoring total', '389,141', '8,166', '39%', '97%', '4.0'],
-];
 
 /* Where each arc's own percentage sits: the angle of its middle, clockwise
    from twelve, and whether it needs dark ink because its arc is pale. */
@@ -675,11 +668,12 @@ export default function EnvironmentalStewardship() {
 
           <div className="rp-head-logo">
             <h2>Environmental Financing Portfolio</h2>
-            <div className="rp-stat rp-stat--inline">
-              <div className="rp-stat-fig"><span className="rp-stat-u">EGP 1,161 BN</span></div>
-              <img className="rp-icon" src={handIcon} width="700" height="614"
-                   style={{ '--w': '12.27cqw' }} alt="" />
-            </div>
+            {/* The figure and the hands are one piece of vector artwork in the
+                PDF — the numerals are outlines, drawn over the wrist — so they
+                are exported together, path for path, as one SVG. The alt text
+                carries the figure for a reader and a search engine. */}
+            <img className="rp-logo" src={financingFigure} width="126" height="63"
+                 style={{ '--w': 'max(150px, 21.175cqw)' }} alt="EGP 1,161 BN" />
           </div>
 
           <p className="rp-lead rp-lead--sm">
@@ -1373,42 +1367,12 @@ export default function EnvironmentalStewardship() {
             <p className="rp-total">400,563 mtCO<sup>2</sup>e</p>
           </div>
 
-          <div className="rp-tablewrap">
-            <table className="rp-financed">
-              <caption className="sr-only">
-                EFG Corp-Solutions financed emissions by sector, 2024
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col" rowSpan={2}>Sector</th>
-                  <th scope="col" rowSpan={2} className="rp-num">Financed emissions<br /><small>(mtO<sub>2</sub>e)</small></th>
-                  <th scope="col" rowSpan={2} className="rp-num">Financed emissions intensity<br /><small>(mtO<sub>2</sub>e/$M lent)</small></th>
-                  <th scope="col" colSpan={2}>Percentage</th>
-                  <th scope="col" rowSpan={2} className="rp-num">Data quality score</th>
-                </tr>
-                <tr>
-                  <th scope="col" className="rp-num">Exposure from carbon intensive sectors</th>
-                  <th scope="col" className="rp-num">Financed emissions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {FINANCED.map(([sector, emissions, intensity, exposure, share, quality], i) => (
-                  <tr key={i}>
-                    <th scope="row">{sector}</th>
-                    <td className="rp-num">{emissions}</td>
-                    <td className="rp-num">{intensity}</td>
-                    <td className="rp-num">{exposure}</td>
-                    <td className="rp-num">{share}</td>
-                    <td className="rp-num">{quality}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="rp-callouts">
-            <p><b>Highest emitting sector</b> Over 17 times bigger than emissions of all other sectors combined!</p>
-            <p><b>Highest emission intensity</b> Over 92 times bigger than emission intensity of all other sectors combined!</p>
-          </div>
+          {/* The print's financed-emissions panel is a flat JPEG in the PDF, so
+              there is no vector to lift. It is redrawn as an SVG on the same
+              2184 x 988 grid by tools/build-financed-svg.py — bars, chips, tags
+              and rules measured off the raster, every word and figure real
+              text — and scales with the page. */}
+          <div className="rp-fe" dangerouslySetInnerHTML={{ __html: financedSvg }} />
         </div>
       </article>
 
@@ -1708,7 +1672,7 @@ export default function EnvironmentalStewardship() {
                   <h3>{title}</h3>
                   <p>{names}</p>
                 </div>
-                <img src={photo} width="700" height="395" alt="" />
+                <img src={photo} width="640" height="355" alt="" />
               </div>
             ))}
           </div>

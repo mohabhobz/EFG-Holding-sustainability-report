@@ -54,8 +54,8 @@ words inside it stay text and can be read out, searched and copied:
 
 - page 24 and page 57 pies, page 33 donut — conic gradients with the shares set
   as type on the arcs
-- page 36 financed emissions — a real table; the printed artwork was unreadable
-  on a phone
+- page 36 financed emissions — the printed panel is a flat JPEG, so it is
+  redrawn as an SVG with real text (`tools/build-financed-svg.py`)
 - page 84 policy environment — and every policy name is the link the PDF gives
   it, to the same page on efgholding.com
 - page 87 asset management, page 97 information security by numbers,
@@ -88,9 +88,10 @@ words inside it stay text and can be read out, searched and copied:
    **Download PDF** button, which the print does not have, is set in the 45pt of
    clear paper under REPORT 2025.
 7. **The cover and the contents spread are two separate pages**, `/` and
-   `/contents`. The spread takes the header's column and is sized so it fits one
-   screen; the cover takes the same column and is taller than the window, which
-   is what EFG asked for. Under 900px the spread stacks. The old
+   `/contents`. Both are sized so they fit one screen without scrolling. The
+   cover does it by not drawing the empty paper above the title — 22.6cqw of the
+   sheet trimmed to 4cqw — so the whole composition, title to PRI mark, gets the
+   full height of the window; nothing inside it moves relative to anything else. Under 900px the spread stacks. The old
    `/abbreviations` address still resolves: it is redirected to
    `/contents#abbreviations` in `App.jsx`.
 8. **The head and foot margins of a section page are half the print's** — the
@@ -106,7 +107,7 @@ what was done:
 
 | # | Comment | Done |
 |---|---|---|
-| 1 | Enlarge the cover visual | The cover now takes the header's column and is taller than the window; you scroll a little to the PRI mark. An A4 sheet cannot fill a 16:9 screen and also fit it. |
+| 1 | Enlarge the cover visual | The cover fits the window's height with no scroll, and the paper the print leaves empty above the title is trimmed so the plaque and type get that height — the plaque is 359px at 1440×900, against about 220px when EFG commented |
 | 2 | Contents too small against the report | Both lists set larger, the spread aligned to the header at both ends; the illustration back to the printed 40.4% of the leaf |
 | 3 | Pie: shares not on the circle, pie too big, bold Q | Pie cut from 42cqw to the printed 32.9; each share stands on its own slice at its measured angle and radius; the Q was a hole in the Book face — see the note below |
 | 4 | No space between a picture and the copy | `.rp-figure` bottom margin is the print's 15.8pt (2.58cqw) |
@@ -119,7 +120,7 @@ what was done:
 | 11, 16, 17 | Excessive white space | The head and foot margins of a section page are cut to 3.5cqw and 2.5cqw, so every seam between two pages is the print's 36pt block gap |
 | 12 | Scope table not as designed, pixelated | Scope 1's three groups stand in one row as the print sets them, the panel's vertical rule is drawn full height (`.rp-findings::before`), and the fifteen icons are recut at 360px |
 | 13 | 400,563 layout | The sentence and the figure share one line |
-| 14 | Financed emissions table design | **Open — see below** |
+| 14 | Financed emissions table design | Redrawn as the print's infographic — sector tags, scope bars, callout arrows, dashed highlight and rule, chips — as an SVG with every word real text; it scales with the page and scrolls sideways in its own frame under 700px |
 | 15 | Paragraph separated by the tables | Moved to finish the column it continues |
 | 18 | Valu logo cropped | Recut |
 | 19 | White behind the Pharco and Almoosa logos | The ground is keyed out; `crop.py` grew an `unwhite` step for logos the file paints on a white rectangle |
@@ -127,6 +128,19 @@ what was done:
 | 21 | Text font and alignment | The section face was wrong — see the note below |
 | 22 | CAPACITY BUILDING to title case | Done, that heading only |
 | 23 | Duplicated Tanmeyah paragraph | As 6: the photograph's crop took in the paragraph above it |
+
+### After the second round
+
+- **Page 24, EGP 1,161 BN.** The figure and the two hands are one piece of
+  vector artwork in the PDF, the numerals outlined and drawn over the wrist.
+  Masking the numerals out of a raster crop kept breaking the hand, so the whole
+  lockup is exported path for path as `p24-figure-financing.svg`, with the
+  figure in its alt text. It is the one place a printed figure is not HTML text,
+  at EFG's request.
+- **Page 41, the participant cards.** The crops carried the print's own olive
+  outline, so each card showed two. The photographs are now the raw images out
+  of the PDF (`tools/extract-raw-photos.py`); the card draws the one outline and
+  the print's slanted clip is CSS.
 
 ### How the second round was run
 
@@ -154,13 +168,6 @@ rows. The audit script for this is worth keeping.
 the same report writes Volta, and so does the company. Set as Volta.
 
 ### Open
-
-**Printed page 36's financed-emissions table.** The print sets it as an
-infographic — coloured sector tags, horizontal bars, a dashed rule before the
-totals. It is rebuilt here as a plain table so the figures are real text and
-searchable. EFG say the design is wrong; reproducing the artwork faithfully in
-HTML is a redesign of that panel, not an adjustment, so it wants a decision
-before the work starts.
 
 **A full page-by-page audit was run afterwards** and found further differences
 from the print that EFG have not raised — missing olive divider rules on about

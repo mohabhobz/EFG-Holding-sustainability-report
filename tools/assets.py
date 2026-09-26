@@ -46,11 +46,8 @@ A = [
   ('env/p23-vortex-ignis',     11, (985,92,1158,158),           'mark', 700, 1100),
   ('env/p23-eo-charger',       11, (630.9,359.6,887.5,493.1),   'art',  400, 900),
   ('env/p24-banknxt',          12, (391.6,130.1,561.1,153.0),   'mark', 900, 900),
-  # the print sets this mark as a lockup with EGP 1,161 BN across it, and the
-  # words overlap the drawing — no rectangle takes one without the other. The
-  # site sets the figure as text, so the lettering is masked out of the file.
-  ('env/p24-icon-hand',        12, (474,318,544,387),           'flat', 800, 700,
-   [(474, 318, 499, 359), (495, 334, 505, 361)]),
+  # env/p24-icon-hand is retired: the figure and the hands are one piece of vector art,
+  # exported path for path as src/assets/report/env/p24-figure-financing.svg.
   ('env/p25-tomorrow',         12, (1034.4,119.1,1151.9,160.9), 'mark', 900, 900),
   ('env/p25-team',             12, (630.7,214.9,1154.6,375.1),  'art',  300, 1400),
   ('env/p25-infinity',         12, (626.0,562.7,770.6,602.7),   'mark', 900, 900),
@@ -79,12 +76,8 @@ A = [
   ('env/p38-icon-paper',       19, (113,625,161,676),           'flat', 900, 400),
   ('env/p38-icon-cloud',       19, (249,624,363,681),           'flat', 800, 700),
   ('env/p38-icon-impact',      19, (423,612.4,495.9,687.7),     'flat', 800, 600),
-  ('env/p41-photo-1',          20, (999.7,165.2,1154.6,252.7),  'flat', 400, 700),
-  ('env/p41-photo-2',          20, (1001.4,270.0,1154.6,356.8), 'flat', 400, 700),
-  ('env/p41-photo-3',          20, (1000.9,374.0,1154.6,460.5), 'flat', 400, 700),
-  ('env/p41-photo-4',          20, (1000.9,477.0,1154.6,564.7), 'flat', 400, 700),
-  ('env/p41-photo-5',          20, (1000.9,580.8,1154.6,668.2), 'flat', 400, 700),
-  ('env/p41-photo-6',          20, (1000.6,684.3,1154.4,772.6), 'flat', 400, 700),
+  # env/p41-photo-1..6 are taken straight from the PDF by tools/extract-raw-photos.py:
+  # a crop of the page took the printed card outline with it (EFG's comment on page 41).
 
   # the fifteen tiles in the findings panel, printed page 34 — each is a filled
   # rounded square with clear ground round it, so the fit finds its true edge
