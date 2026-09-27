@@ -142,6 +142,13 @@ what was done:
   of the PDF (`tools/extract-raw-photos.py`); the card draws the one outline and
   the print's slanted clip is CSS.
 
+- **Justified running text.** Counted off the PDF, 253 of the 331 paragraphs of
+  four lines or more are justified; the rest are lists, captions and panel copy.
+  The section pages had been set ragged-right; their running text is now
+  justified with hyphenation on screens wider than 700px, like the two letters,
+  and every page stays ragged-right on a phone. Panels, cards and captions keep
+  their own alignment.
+
 ### How the second round was run
 
 A senior product designer reviewed each comment against the PDF, a front-end

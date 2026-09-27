@@ -449,6 +449,29 @@
   line-height: 1.114;
 }
 .rp-sec .rp-in p { text-align: left; hyphens: manual; }
+/* RUNNING TEXT IS JUSTIFIED, AS THE PRINT SETS IT. Counted off the PDF, 253 of
+   the 331 paragraphs of four lines or more are justified, and the ones that are
+   not are lists, captions and the copy inside panels. So justification goes to
+   the running text only — a paragraph standing in the page, in its columns or in
+   a sector's copy, and the leads — while panels, cards, captions and figure
+   labels keep their own alignment. Hyphenation comes with it, so the word
+   spaces stay even. Below 700px a line holds about forty characters and
+   justifying it opens rivers, so phones stay ragged-right, as the letters do. */
+@media (min-width: 701px) {
+  .rp-sec .rp-in > p:not([class]),
+  .rp-sec .rp-in > p.rp-lead,
+  .rp-sec .rp-cols > p:not([class]),
+  .rp-sec .rp-two > p:not([class]),
+  .rp-sec .rp-two > p.rp-lead,
+  .rp-sec .rp-two > p.rp-story,
+  .rp-sec .rp-two > div:not([class]) > p:not([class]),
+  .rp-sec .rp-sector-body > p:not([class]) { text-align: justify; hyphens: auto; text-wrap: pretty; }
+}
+/* and the few panels that set their own justification come off it on a phone too */
+@media (max-width: 700px) {
+  .rp-sec .rp-in .rp-speak p, .rp-sec .rp-in .rp-findings-head p.rp-lead,
+  .rp-sec .rp-in .rp-intern blockquote p, .rp-sec .rp-in .rp-cols3 p { text-align: left; hyphens: manual; }
+}
 
 /* The opening sentence of a section, set larger than the text under it. */
 .rp-lead {
