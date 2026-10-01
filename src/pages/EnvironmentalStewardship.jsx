@@ -1119,7 +1119,7 @@ export default function EnvironmentalStewardship() {
           <p>
             Understanding our environmental impact begins with measuring it. EFG
             Holding released its second{' '}
-            <span className="rp-link">Carbon Footprint Report</span> - the first
+            <a className="rp-link" href="https://efgholding.com/uploads/EFG_Holding_Carbon_Footprint_Report_2024_e4ac153497.pdf" target="_blank" rel="noopener noreferrer">Carbon Footprint Report</a> - the first
             comprehensive assessment encompassing all its facilities and
             operations - covering the reporting period from January 1 to December
             31, 2024. This year has been designated as the base year against which
@@ -1328,7 +1328,7 @@ export default function EnvironmentalStewardship() {
           <div className="rp-cols">
             <p>
               In 2025, EFG Holding released its first{' '}
-              <span className="rp-link">financed emissions assessment</span>. As a
+              <a className="rp-link" href="https://efgholding.com/uploads/Financed_Emissions_Report_2024_c97b16ecc3.pdf" target="_blank" rel="noopener noreferrer">financed emissions assessment</a>. As a
               pilot exercise, the report focuses on a single line of business, EFG
               Corp-Solutions, with the aim of progressively expanding coverage to
               additional business lines in future assessments. The analysis

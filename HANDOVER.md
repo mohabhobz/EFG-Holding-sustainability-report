@@ -149,6 +149,16 @@ what was done:
   and every page stays ragged-right on a phone. Panels, cards and captions keep
   their own alignment.
 
+- **Page 76, the Montessori poster and circles** (CSR team). The poster was a
+  crop of the rendered page and carried the left halves of the three circles
+  that overlap it, so each circle showed a second, ghost rim. The poster and the
+  three photographs are now the raw images out of the PDF; the poster's rounded
+  corners and each circle's clip and 2pt white rule are CSS.
+- **The Carbon Footprint Report and financed emissions assessment links**
+  (CSR team), on printed pages 32 and 36, are live links to the two PDFs on
+  efgholding.com, as the print links them. Every other link in the PDF was
+  already on the site.
+
 ### How the second round was run
 
 A senior product designer reviewed each comment against the PDF, a front-end

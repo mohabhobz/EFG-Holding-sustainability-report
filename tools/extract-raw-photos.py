@@ -27,12 +27,17 @@ OUT = ROOT / 'src' / 'assets' / 'report'
 JOBS = [
     ('env/p41-photo-{n}', 20, (900, 0, 1191, 842)),   # printed page 41, the six participant cards
     ('soc/p74-photo-{n}', 37, (0, 150, 569, 800)),    # printed page 74, the Foundation's year
+    ('soc/p76-circle-{n}', 38, (290, 395, 410, 730)),  # printed page 76, the three round photographs
+    # printed page 76, the poster: the rendered crop took in the left halves of the
+    # three circles that overlap it, which showed as ghost arcs behind them
+    ('soc/p76-montessori', 38, (30, 375, 355, 768), 400),
 ]
 
 
 def main():
     doc = pymupdf.open(PDF)
-    for name, sheet, region in JOBS:
+    for name, sheet, region, *opt in JOBS:
+        maxw = opt[0] if opt else 300
         page = doc[sheet]
         area = pymupdf.Rect(region)
         images = sorted(
@@ -41,7 +46,7 @@ def main():
             key=lambda t: t[1][1])
         clips = [pymupdf.Rect(x['scissor']) for x in page.get_drawings(extended=True)
                  if x['type'] == 'clip' and area.contains(pymupdf.Rect(x['scissor']))
-                 and x['scissor'][2] - x['scissor'][0] < 300]
+                 and x['scissor'][2] - x['scissor'][0] < maxw]
         for n, (xref, bb) in enumerate(images, 1):
             # the clip that covers most of this picture is the frame it is shown in
             clip = max(clips, key=lambda c: (c & pymupdf.Rect(bb)).get_area())

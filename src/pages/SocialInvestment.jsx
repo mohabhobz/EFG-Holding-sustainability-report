@@ -1530,12 +1530,12 @@ export default function SocialInvestment() {
           </div>
 
           <div className="rp-montessori">
-            <img src={montessori} width="738" height="900"
+            <img src={montessori} width="540" height="661"
                  alt="Montessori Education — a pioneering approach in Upper Egypt, Young Scholars’ Academy" />
             <div className="rp-mfigures">
               {montessoriFigures.map(([figure, label, photo]) => (
                 <div className="rp-mfigure" key={label}>
-                  <img src={photo} width="500" height="490" alt="" />
+                  <img src={photo} width="425" height="424" alt="" />
                   <div><b>{figure}</b><span>{label}</span></div>
                 </div>
               ))}

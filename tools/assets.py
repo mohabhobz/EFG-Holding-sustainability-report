@@ -164,10 +164,8 @@ A = [
   # soc/p74-photo-1..5 are taken straight from the PDF by tools/extract-raw-photos.py:
   # the first crop took a line of the card above and its rule with it.
   ('soc/p75-academy',       37, (631.7,361.5,700.5,417.9),  'flat', 900, 600),
-  ('soc/p76-montessori',    38, (34.6,379.1,350.3,764.0), 'flat', 400, 900),
-  ('soc/p76-circle-1',      38, (298.4,402.0,402.1,503.7),  'flat', 500, 500),
-  ('soc/p76-circle-2',      38, (298.4,512.1,402.1,613.8),  'flat', 500, 500),
-  ('soc/p76-circle-3',      38, (298.4,622.3,402.1,723.9),  'flat', 500, 500),
+  # soc/p76-montessori and soc/p76-circle-1..3 are taken straight from the PDF by
+  # tools/extract-raw-photos.py: the poster crop carried the circles' left halves.
   ('soc/p77-zainab',        38, (631.3,257.0,804.4,464.7),  'flat', 400, 800),
   ('soc/p77-alnour',        38, (1076.6,478.0,1154.6,558.5),'flat', 900, 600),
   ('soc/p78-photo-1',       39, (36.96,238.16,290.9,478.16), 'flat', 400, 800),

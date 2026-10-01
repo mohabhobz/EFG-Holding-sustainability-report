@@ -1544,12 +1544,18 @@
    a circle. */
 .rp-montessori { display: grid; grid-template-columns: 53cqw 1fr; gap: 0; align-items: center; margin: 3cqw 0; }
 .rp-mfigures { margin-left: -8.71cqw; }
-.rp-montessori > img { width: 100%; height: auto; }
+/* Both files are the raw images out of the PDF (tools/extract-raw-photos.py).
+   The poster used to be a crop of the rendered page, and it carried the left
+   halves of the three circles that overlap it — they showed as a second, ghost
+   rim behind each circle. The poster's 28pt rounded corners and each circle's
+   round clip and 2pt white rule are drawn here instead. */
+.rp-montessori > img { width: 100%; height: auto; border-radius: 8.91% / 7.27%; }
 .rp-mfigures { display: grid; gap: 1.8cqw; }
 .rp-mfigure { display: grid; grid-template-columns: 17.1cqw 1fr; align-items: center; }
 .rp-mfigure img {
-  width: 100%; height: auto; border-radius: 50%;
-  border: 2px solid var(--sr-white); background: #2b9c7a; position: relative; z-index: 1;
+  box-sizing: border-box; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover;
+  border-radius: 50%; border: max(2px, .336cqw) solid var(--sr-white);
+  background: #2b9c7a; position: relative; z-index: 1;
 }
 .rp-mfigure div { background: #f4f4e5; padding: 1.4cqw 1.6cqw 1.4cqw 4cqw; margin-left: -2.4cqw; }
 .rp-sec .rp-mfigure b {
