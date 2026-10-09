@@ -159,6 +159,12 @@ what was done:
   efgholding.com, as the print links them. Every other link in the PDF was
   already on the site.
 
+- **Page 53, the fintech ecosystem** (CSR team) is now the print's
+  hub-and-spoke diagram, not a list: the hub and the five platforms on a grid
+  measured off the sheet, each name where the print stands it and each
+  description breaking on the print's lines, with the five spokes as a
+  decorative SVG on the same box. Below 900px it stacks into the hub and a list.
+
 ### How the second round was run
 
 A senior product designer reviewed each comment against the PDF, a front-end

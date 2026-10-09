@@ -8,10 +8,10 @@
  * folio 44, but printed pages 44 and 45 finish the Agri-Tech school and belong
  * to Section Two, which is where they are. The divider is on 46–47.
  *
- * The fintech ecosystem on page 53 is printed as a hub-and-spoke diagram. Here
- * it is the hub and the five platforms it names, without the connecting lines:
- * the lines carry no information a list does not, and every platform's name,
- * colour and description stays real text.
+ * The fintech ecosystem on page 53 is the print's hub-and-spoke diagram: the
+ * hub and the five platforms sit on a grid measured off the sheet, and the five
+ * spokes are a decorative SVG laid over it on the same grid. Every platform's
+ * name, colour and description stays real text. Under 900px it stacks.
  */
 import { Fragment } from 'react';
 
@@ -152,12 +152,26 @@ const products = [
 ];
 
 /* ---- printed page 53: the fintech ecosystem ------------------------------ */
+/* [name, colour, description, grid slot] — the slot is where the print sets it
+   round the hub: top and foot of the hub's column, and three down the right. */
 const fintech = [
-  ['EFG Finance SMEs', '#0372aa', 'Expanded access to formal finance for underserved micro and small enterprises'],
-  ['Corp-Solutions', '#36b0c9', 'Channelling capital toward sectors that expand economic participation'],
-  ['Kaf', '#831f82', 'Tech-led, affordable insurance for everyday protection'],
-  ['Valu', '#ff5100', 'An integrated suite of consumer and merchant solutions promoting financial empowerment and inclusion'],
-  ['EFG Hermes ONE', '#5948eb', 'Opening wealth-building opportunities to new investor segments'],
+  ['EFG Finance SMEs', '#0372aa', 'Expanded access to formal finance for underserved micro and small enterprises', 'smes'],
+  ['Corp-Solutions', '#36b0c9', 'Channelling capital toward sectors that expand economic participation', 'corp'],
+  ['Kaf', '#831f82', 'Tech-led, affordable insurance for everyday protection', 'kaf'],
+  ['Valu', '#ff5100', 'An integrated suite of consumer and merchant solutions promoting financial empowerment and inclusion', 'valu'],
+  ['EFG Hermes ONE', '#5948eb', 'Opening wealth-building opportunities to\u00a0new investor segments', 'hermes'],
+];
+
+/* The five spokes, in points on the diagram's own box: it starts at the hub's
+   left edge and the top of EFG FINANCE SMES (sheet x 631.3, y 420.2) and is the
+   full 526.85pt measure wide by 347.1pt deep. Each spoke runs from the hub to a
+   4pt dot beside its platform. */
+const SPOKES = [
+  [85.3, 123.0, 85.3, 66.2],     // up, to EFG Finance SMEs
+  [85.3, 223.6, 85.3, 280.5],    // down, to EFG Hermes ONE
+  [244.0, 135.7, 314.6, 65.6],   // up and right, to Corp-Solutions
+  [260.5, 169.8, 314.0, 169.8],  // right, to Kaf
+  [244.0, 210.9, 314.6, 281.0],  // down and right, to Valu
 ];
 
 export default function SocialInvestment() {
@@ -452,10 +466,18 @@ export default function SocialInvestment() {
             </p>
           </div>
 
-          <p className="rp-hub">The EFG Holding<br />Fintech Ecosystem</p>
-          <div className="rp-spokes">
-            {fintech.map(([name, colour, body]) => (
-              <div className="rp-spoke" key={name}>
+          <div className="rp-eco-map">
+            <svg className="rp-eco-lines" viewBox="0 0 526.85 347.1" preserveAspectRatio="none" aria-hidden="true">
+              {SPOKES.map(([x1, y1, x2, y2]) => (
+                <g key={`${x2}-${y2}`}>
+                  <line x1={x1} y1={y1} x2={x2} y2={y2} />
+                  <circle cx={x2} cy={y2} r="2" />
+                </g>
+              ))}
+            </svg>
+            <p className="rp-hub">The EFG Holding<br />Fintech Ecosystem</p>
+            {fintech.map(([name, colour, body, slot]) => (
+              <div className={`rp-spoke rp-spoke--${slot}`} key={name}>
                 <h4 style={{ color: colour }}>{name}</h4>
                 <p>{body}</p>
               </div>
