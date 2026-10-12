@@ -165,6 +165,22 @@ what was done:
   description breaking on the print's lines, with the five spokes as a
   decorative SVG on the same box. Below 900px it stacks into the hub and a list.
 
+- **EFG's higher-resolution pictures (October 2026).** EFG supplied 21 files
+  ("Sus report pics 2026"). Twenty-three site pictures now use them, each cut
+  to the same framing as the picture it replaced (`tools/replace-hires.py`,
+  which matches every file against the old picture): the logos on pages 44,
+  55, 63, 65, 67, 68 and 69, the page 49 award, the page 71 portraits, the
+  page 25 team photograph and EV charger, the three ONE posters on page 107,
+  the page 123 Valu poster, the six page 41 photographs (cut from EFG's single
+  collage) and the page 37 partners strip (rebuilt with the new German
+  Cooperation, GIZ and Frankfurt School logos; Bank NXT and "Implemented by:"
+  are still the PDF's, as EFG sent no replacement). The supplied page 56 poster
+  is the site's own file. Every picture EFG did not send is unchanged. Note
+  that EFG's page 41 photographs are cropped tighter than the print's.
+  **Re-running `tools/build-assets.py` or `tools/extract-raw-photos.py` would
+  overwrite these with the PDF's lower-resolution copies — run
+  `tools/replace-hires.py` again afterwards.**
+
 ### How the second round was run
 
 A senior product designer reviewed each comment against the PDF, a front-end

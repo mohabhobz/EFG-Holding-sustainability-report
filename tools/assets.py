@@ -14,6 +14,9 @@ crop is deliberately a slice of a larger field.
           'flat' used exactly as boxed
   mask    optional: rectangles of the page, in points, to clear after the
           crop — for a mark the print sets with its caption written across it
+
+NOTE: 23 of these pictures were later replaced with EFG's own higher-resolution
+files by tools/replace-hires.py. Run it again after rebuilding from this list.
 """
 A = [
   # ---- the printed cover, sheet 0 ---------------------------------------
